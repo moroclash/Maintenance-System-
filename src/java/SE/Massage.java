@@ -11,6 +11,11 @@ import java.util.ArrayList;
  *
  * @author moroclash
  */
+<<<<<<< HEAD
+public class Massage {
+     
+}
+=======
 public class Massage extends MSG{
     private ArrayList<Comment> My_Commint;
     private int Reciver;
@@ -39,3 +44,4 @@ public class Massage extends MSG{
     
     
  }
+>>>>>>> 1a6159337d60f87ff7db1643928e96ef161fa4d4
