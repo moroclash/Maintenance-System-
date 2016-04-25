@@ -29,7 +29,7 @@ public class System_manage {
     }
     public ArrayList<Complain> All_complains(String State)
     {
-        return null
+        return null;
     }
     public ArrayList<Employee> Show_empty_technicals()
     {
@@ -95,7 +95,7 @@ public class System_manage {
     {
         return null;
     }
-    public boolean Send_Message(General_message message,int Sender_id,int Reciver_id)
+    public boolean Send_Message(General_massge message,int Sender_id,int Reciver_id)
     {
         return true;
     }

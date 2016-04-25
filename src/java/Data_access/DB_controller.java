@@ -6,7 +6,9 @@
 package Data_access;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.HashMap;
 
 /**
@@ -15,7 +17,7 @@ import java.util.HashMap;
  */
 public class DB_controller {
     
-    private Connection DB_controller;
+    private static Connection DB_controller;
 
     public void setDB_controller(Connection DB_controller) {
         this.DB_controller = DB_controller;
@@ -25,27 +27,35 @@ public class DB_controller {
         return DB_controller;
     }
     
-    public void Connect ()
+    public static void Connect ()
     {
         
     }
-    public void Close ()
+    public static void Close ()
     {
         
     }
-    public ResultSet Select (String FieldName , String TableName , String Condetion)
+    public static ResultSet Select (String FieldName , String TableName , String Condetion)
     {
       return null;  
     }
-    public boolean Delete (String TableName , String Condition)
+    public static boolean Delete (String TableName , String condition)
+{
+  String  Query="DELETE FROM "+TableName+" WHERE "+condition;  
+  try {
+              PreparedStatement pre = DB_controller.prepareStatement(Query); 
+              
+              return true;
+        } catch (SQLException ex){
+            ex.getStackTrace();
+            return false;
+        }
+}
+    public static boolean Update (String TableName , String FieldName , String Condition)
     {
         return true;
     }
-    public boolean Update (String TableName , String FieldName , String Condition)
-    {
-        return true;
-    }
-    public boolean Insert(String TableName , HashMap<String,String> values)
+    public static boolean Insert(String TableName , HashMap<String,String> values)
     {
         return true;
     }
