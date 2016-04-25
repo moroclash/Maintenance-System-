@@ -11,6 +11,7 @@ import java.util.ArrayList;
  *
  * @author moroclash
  */
+
 public class Massage extends MSG{
 
     private ArrayList<Comment> My_Commint;
@@ -37,7 +38,4 @@ public class Massage extends MSG{
     {
         return false;
     }
-    
-    
- }
-
+}

@@ -20,14 +20,6 @@ public class DB_controller {
     
     private static Connection DB_controller;
 
-    public void setDB_controller(Connection DB_controller) {
-        this.DB_controller = DB_controller;
-    }
-
-    public Connection getDB_controller() {
-        return DB_controller;
-    }
-    
     public static void Connect ()
     {
        try {
@@ -56,11 +48,11 @@ public class DB_controller {
     public static boolean Delete (String TableName , String condition)
 {
   String  Query="DELETE FROM "+TableName+" WHERE "+condition;  
-  try {
+      try {
               PreparedStatement pre = DB_controller.prepareStatement(Query); 
               
               return true;
-        } catch (SQLException ex){
+          } catch (SQLException ex){
             ex.getStackTrace();
             return false;
         }
