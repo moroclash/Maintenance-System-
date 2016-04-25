@@ -10,5 +10,5 @@ package SE;
  * @author moroclash
  */
 public class Massage {
-    
+     
 }

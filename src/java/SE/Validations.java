@@ -4,6 +4,8 @@
  * and open the template in the editor.
  */
 package SE;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import java.util.Date;
 
@@ -12,7 +14,52 @@ import java.util.Date;
  * @author moroclash
  */
 public  class Validations {
+    private Pattern pattern;
+    private Matcher matcher;
+    private static final String Password_PATTERN ="^((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%])(?=\\S+$).{6,20})"; 
+    /*
+            (?=.*\d)		#   must contains one digit from 0-9
+            (?=.*[a-z])		#   must contains one lowercase characters
+            (?=.*[A-Z])		#   must contains one uppercase characters
+            (?=.*[@#$%])		#   must contains one special symbols in the list "@#$%"
+            .		#     match anything with previous condition checking
+            {6,20}	#        length at least 6 characters and maximum of 20
+       */
+    private static final String Date_PATTERN = "(0?[1-9]|[12][0-9]|3[01])/(0?[1-9]|1[012])/((19|20)\\\\d\\\\d)";
+    /*
+    (			#start of group #1
+ 0?[1-9]		#  01-09 or 1-9
+ |                  	#  ..or
+ [12][0-9]		#  10-19 or 20-29
+ |			#  ..or
+ 3[01]			#  30, 31
+) 			#end of group #1
+  /			#  follow by a "/"
+   (			#    start of group #2
+    0?[1-9]		#	01-09 or 1-9
+    |			#	..or
+    1[012]		#	10,11,12
+    )			#    end of group #2
+     /			#	follow by a "/"
+      (			#	  start of group #3
+       (19|20)\\d\\d	#	    19[0-9][0-9] or 20[0-9][0-9]
+       )		#	  end of group #3
+    */
+    private static final String EMAIL_PATTERN = 
+		"^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+		+ "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
     
+    
+    
+    public  Pattern Email_compile() {
+          return pattern = Pattern.compile(EMAIL_PATTERN);
+	}
+    public  Pattern Date_compile() {
+          return pattern = Pattern.compile(Date_PATTERN);
+	}
+    public  Pattern Password_compile() {
+          return pattern = Pattern.compile(Password_PATTERN);
+	}
    public static boolean Is_digit(String Word)
    {
       try{
@@ -40,86 +87,28 @@ public  class Validations {
        return true;
    }
    
-   public static boolean Is_email(String Word)
+   public  boolean Is_email(String Word)
    {    //anything@3digit at least .com  
-       int len=Word.length()-4;
-       int com=Word.length()-4;
-       int a []=new int[2];
-       while (len!=0)
-       {
-            char s=Word.charAt(len); 
-           if(s=='@' && len >3 && Is_alpha(Word.substring(len)))
-           {
-               a[0]=1;                
-           }
-           len --;    
-       }
-       
-            if(".com".equals(Word.substring(com)))
-                   a[1]=1;
-       
-        if(a[0]==1&&a[1]==1)   
-       return true;
-        else 
-            return false;
+       pattern=this.Email_compile();
+       matcher = pattern.matcher(Word);
+		return matcher.matches();
    }
    
    
-   public static boolean Is_passord(String Word)
-   {
-       boolean test1,test2,test3=true;
-       test1=Is_alpha(Word);
-       test2=Is_digit(Word);
-       if(test1 || test2)
-           return false;
-       else
-       {
-           int len =Word.length();
-           int i=0,k=0;
-           while(len!=0)
-           {
-               test3=true;
-               int  s=(int)Word.indexOf(len);
-               
-               if(s<=65&&s>=90&&i==0)
-               {
-                   i ++;
-               }
-              if(s<=97&&s>=122&&k==0)
-              {
-                  k++;
-              }
-              if(k==1&&i==1)
-              {
-                  test3=false;
-                  break;
-              }
-           }
-           return !(test1 || test2||test3);
-       }
+   public  boolean Is_passord(String Word)
+   { //9 digit
        
+        pattern=this.Password_compile();
+       matcher = pattern.matcher(Word);
+		return matcher.matches();
    }
    
-   public static boolean Is_date(String Word)
+   public  boolean Is_date(String Word)
    {
        //1920-02-30 OR 30-02-1964
-     String s1=Word.substring(1,4),s2=Word.substring(6, 7),s3=Word.substring(9, 10);
-     if(Is_digit(s1)&&Is_digit(s2)&&Is_digit(s3))
-     {
-         if(Integer.parseInt(s3)<32&&Integer.parseInt(s3)>0&&Integer.parseInt(s2)<13&&Integer.parseInt(s3)>0)
-         return true; 
-         
-     }
-     else
-     {
-         String s6=Word.substring(1,2),s5=Word.substring(4,5),s4=Word.substring(7, 10);
-         if(Is_digit(s6)&&Is_digit(s5)&&Is_digit(s4))
-             {
-                 if(Integer.parseInt(s6)<32&&Integer.parseInt(s6)>0&&Integer.parseInt(s5)<13&&Integer.parseInt(s5)>0)
-                 return true;
-             }
-     }
-     return false;
+       pattern=this.Date_compile();
+       matcher = pattern.matcher(Word);
+		return matcher.matches();
    }
    
    public static boolean Is_double(String Word)
