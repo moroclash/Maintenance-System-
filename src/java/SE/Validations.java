@@ -14,8 +14,8 @@ import java.util.Date;
  * @author moroclash
  */
 public  class Validations {
-    private Pattern pattern;
-    private Matcher matcher;
+    private static Pattern pattern;
+    private static Matcher matcher;
     private static final String Password_PATTERN ="^((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%])(?=\\S+$).{6,20})"; 
     /*
             (?=.*\d)		#   must contains one digit from 0-9
@@ -51,13 +51,13 @@ public  class Validations {
     
     
     
-    public  Pattern Email_compile() {
+    public static Pattern Email_compile() {
           return pattern = Pattern.compile(EMAIL_PATTERN);
 	}
-    public  Pattern Date_compile() {
+    public static Pattern Date_compile() {
           return pattern = Pattern.compile(Date_PATTERN);
 	}
-    public  Pattern Password_compile() {
+    public static Pattern Password_compile() {
           return pattern = Pattern.compile(Password_PATTERN);
 	}
    public static boolean Is_digit(String Word)
@@ -87,26 +87,26 @@ public  class Validations {
        return true;
    }
    
-   public  boolean Is_email(String Word)
+   public static boolean Is_email(String Word)
    {    //anything@3digit at least .com  
-       pattern=this.Email_compile();
+       pattern= Email_compile();
        matcher = pattern.matcher(Word);
 		return matcher.matches();
    }
    
    
-   public  boolean Is_passord(String Word)
+   public static boolean Is_passord(String Word)
    { //9 digit
        
-        pattern=this.Password_compile();
+        pattern= Password_compile();
        matcher = pattern.matcher(Word);
 		return matcher.matches();
    }
    
-   public  boolean Is_date(String Word)
+   public static boolean Is_date(String Word)
    {
        //1920-02-30 OR 30-02-1964
-       pattern=this.Date_compile();
+       pattern= Date_compile();
        matcher = pattern.matcher(Word);
 		return matcher.matches();
    }
