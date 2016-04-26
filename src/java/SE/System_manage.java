@@ -9,6 +9,9 @@ import Data_access.DB_controller;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -167,8 +170,36 @@ public class System_manage {
     public Order Search_order(int Order_id) {
         return null;
     }
-
-    public boolean Send_Message(General_massge message, int Sender_id, int Reciver_id) {
+    public int getDateID()
+    {
+         DB_controller.Connect();
+         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+         Date date = new Date();
+         HashMap<String,String> Date=new HashMap<>(1);
+         Date.put("Date", date.toString());
+         DB_controller.Insert("date", Date);
+         ResultSet isDate=DB_controller.Select("Date_id", "date", "Date="+date.toString());
+         try
+         {
+             return isDate.getInt("Date_id");
+              
+         }
+         catch(Exception s){
+             s.printStackTrace();
+             return -1;
+         }
+    }
+    public boolean Send_Message(General_massge message) {
+        DB_controller.Connect();
+        HashMap<String,String> Mass=new HashMap<>(1);
+        
+        Mass.put("Content",message.getContent());
+        Mass.put("sender_id",String.valueOf(message.getSender_id()));
+        Mass.put("Type_id", message.getMassage_type());
+        DB_controller.Insert(null, Mass);
+        DB_controller.Insert("message",Mass);
+        DB_controller.Select(null, null, null);
+        
         return true;
     }
   //Emad
