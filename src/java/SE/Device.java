@@ -16,6 +16,11 @@ class Device {
     private int state;
     private HashMap <String , String > My_info;
 
+    
+    public void push(String key,String Value)
+    {
+        
+    }
     public void setId(int Id) {
         this.Id = Id;
     }

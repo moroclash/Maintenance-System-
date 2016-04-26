@@ -9,6 +9,9 @@ import Data_access.DB_controller;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 /**
  *
@@ -87,20 +90,116 @@ public class System_manage {
     public Feedback Search_feedback(int Order_id) {
         return null;
     }
-
+//Emad
     public Device Search_device(int Device_id) {
+        DB_controller.Connect();
+        ResultSet result=DB_controller.Select("*","Device","Device_ID="+Device_id);
+        int Model=-1;
+        int companyID=-1;
+        int Type_id=-1;
+          Device D=new Device();        
+        try
+        {
+         while(result.next())
+        {
+          D.setId(result.getInt("Device_id"));
+          D.setState(result.getInt("state_id"));
+          Model=result.getInt("Model_id");
+        }
+         result=DB_controller.Select("*","model","Model_id="+Model);
+         while(result.next())
+         {
+             D.push("Model", result.getString("Name"));
+             companyID=result.getInt("Comp_device_id");
+         }
+         result=DB_controller.Select("*","main_factor","Main_factor_id="+companyID);
+         while(result.next())
+         {
+             D.push("Copmany", result.getString("Name"));
+         }
+         result=DB_controller.Select("*","company_have_device","Main_factor_id="+companyID);
+         while(result.next())
+         {
+             Type_id=result.getInt("Device_type_id");
+         }
+         result=DB_controller.Select("*","Device_type","Device_Type_id="+Type_id);
+         while(result.next())
+         {
+             D.push("Type",result.getString("name"));
+         }
+         return D;
+        }
+        catch(Exception E)
+        {
+            System.out.println("Error in Search_DEVICE");
+        }
         return null;
     }
-
-    public boolean Up_complain_to_manager(Complain complain) {
-        return true;
+    //Emad
+    public boolean Up_complain_to_manager(Complain complain,int Branch_ID) {
+        DB_controller.Connect();
+        ResultSet result=DB_controller.Select("*", "branch","Branch_id="+Branch_ID);
+        int Manager_id=-1;
+        int MessageID=-1;
+        try
+        {
+            while(result.next())
+            {
+                Manager_id=result.getInt("Manager_ID");
+            }
+         result=DB_controller.Select("*", "recieved","Message_ID="+complain.Id);  
+         while(result.next())
+         {
+             MessageID=result.getInt("Message_ID");
+         }
+         HashMap <String,String>H=new HashMap();
+         H.put("Reciever_id", Integer.toString(Manager_id));
+         H.put("Message_ID", Integer.toString(MessageID));
+         
+         DB_controller.Insert("recieved",H);
+         DB_controller.Close();
+         return true;
+        }
+        catch(Exception E)
+        {
+            System.out.println("Error in UP Complain To manager");
+        }
+        return false;
     }
 
     public Order Search_order(int Order_id) {
         return null;
     }
-
-    public boolean Send_Message(General_massge message, int Sender_id, int Reciver_id) {
+    public int getDateID()
+    {
+         DB_controller.Connect();
+         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+         Date date = new Date();
+         HashMap<String,String> Date=new HashMap<>(1);
+         Date.put("Date", date.toString());
+         DB_controller.Insert("date", Date);
+         ResultSet isDate=DB_controller.Select("Date_id", "date", "Date="+date.toString());
+         try
+         {
+             return isDate.getInt("Date_id");
+              
+         }
+         catch(Exception s){
+             s.printStackTrace();
+             return -1;
+         }
+    }
+    public boolean Send_Message(General_massge message) {
+        DB_controller.Connect();
+        HashMap<String,String> Mass=new HashMap<>(1);
+        
+        Mass.put("Content",message.getContent());
+        Mass.put("sender_id",String.valueOf(message.getSender_id()));
+        Mass.put("Type_id", message.getMassage_type());
+        DB_controller.Insert(null, Mass);
+        DB_controller.Insert("message",Mass);
+        DB_controller.Select(null, null, null);
+        
         return true;
     }
   //Emad
@@ -118,7 +217,7 @@ public class System_manage {
     //Emad
     public User Search_user_by_id(int User_id) {
         DB_controller.Connect();
-        ResultSet result=DB_controller.Select("*","user",Integer.toString(User_id));
+        ResultSet result=DB_controller.Select("*","user","User_ID="+User_id);
         User U=new User();        
         try
         {
@@ -130,16 +229,11 @@ public class System_manage {
                 U.setGander(result.getString("GENDER"));
                 U.setPassword(result.getString("Password"));
             }
-        ResultSet result2=DB_controller.Select("*","phone",Integer.toString(User_id));
+        ResultSet result2=DB_controller.Select("*","phone","User_ID="+User_id);
             while(result2.next())
             {
                 U.setPhones(result2.getString("phone"));
-            }
-        ResultSet result3=DB_controller.Select("*","address",Integer.toString(User_id));
-            while(result3.next())
-            {
-                U.setAddress(result2.getString("Address"));
-            }               
+            }             
         }
         catch(Exception e)
         {
@@ -151,37 +245,8 @@ public class System_manage {
     }
     //Emad
     public User Search_user_by_name(String Name) {
-        DB_controller.Connect();
-        ResultSet result=DB_controller.Select("*","user",Name);
-        User U=new User();        
-        try
-        {
-            while(result.next())
-            {
-                U.setF_name(result.getString("FNAME"));
-                U.setL_name(result.getString("LNAME"));
-                U.setEmail(result.getString("Email"));
-                U.setGander(result.getString("GENDER"));
-                U.setPassword(result.getString("Password"));
-            }
-        ResultSet result2=DB_controller.Select("*","phone",Name);
-            while(result2.next())
-            {
-                U.setPhones(result2.getString("phone"));
-            }
-        ResultSet result3=DB_controller.Select("*","address",Name);
-            while(result3.next())
-            {
-                U.setAddress(result2.getString("Address"));
-            }               
-        }
-        catch(Exception e)
-        {
-            System.out.println("Error in Search User By ID");
-        }
-        if(U==null)
-            return null;
-        return U;    }
+        return null;
+   }
     //Sala7
     public boolean Update_user(int User_id)
     {
@@ -202,7 +267,7 @@ public class System_manage {
     //Emad
     public boolean Delete_user(int User_id) {
         DB_controller.Connect();
-        boolean check=DB_controller.Delete("user",Integer.toString(User_id));
+        boolean check=DB_controller.Delete("user","User_ID="+User_id);
         return check;
     }
     //Emad
@@ -212,7 +277,7 @@ public class System_manage {
         int Summtion = 0;
         int Persatage = 0;
         try {
-            ResultSet result = DB_controller.Select("Branch_ID", "Feedback", Integer.toString(Branch_id));
+            ResultSet result = DB_controller.Select("Branch_ID", "Feedback", "User_ID="+Branch_id);
             while (result.next())
             {
                 Summtion=+result.getInt("Service_quality");
@@ -231,7 +296,7 @@ public class System_manage {
     //Emad
     public boolean Block_user(int User_id) {
         DB_controller.Connect();
-        boolean check = DB_controller.Update("user", "Block=1", Integer.toString(User_id));
+        boolean check = DB_controller.Update("user", "Block=1","User_ID="+User_id);
         DB_controller.Close();        
         return check;
     }
@@ -239,7 +304,7 @@ public class System_manage {
     //Emad
     public boolean Unblock_user(int User_id) {
         DB_controller.Connect();
-        boolean check = DB_controller.Update("user", "Block=0", Integer.toString(User_id));
+        boolean check = DB_controller.Update("user", "Block=0","User_ID="+User_id);
         DB_controller.Close();        
         return check;
     }

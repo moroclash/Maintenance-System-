@@ -11,13 +11,13 @@ package SE;
  */
 public class Complain extends Massage{
     
-    private Order Order_id ;
+    private int Order_id ;
 
-    public void setOrder_id(Order Order_id) {
+    public void setOrder_id(int Order_id) {
         this.Order_id = Order_id;
     }
 
-    public Order getOrder_id() {
+    public int getOrder_id() {
         return Order_id;
     }
     

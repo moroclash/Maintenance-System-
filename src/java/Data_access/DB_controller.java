@@ -71,13 +71,10 @@ public class DB_controller {
     public static boolean Insert(String TableName, HashMap<String, String> values) {
         String key = "";
         String value = "";
-        String k;
-        String v;
-        for (Map.Entry<String, String> entry : values.entrySet()) {
-            k = entry.getKey();
-            v = entry.getValue();
-            key += k + ",";
-            value += v + ",";
+        for (Map.Entry<String, String> entry : values.entrySet())
+        {
+            key += entry.getKey() + ",";
+            value += entry.getValue() + ",";
         }
         String Attributes = "";
         String Values = "";
