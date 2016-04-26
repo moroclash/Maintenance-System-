@@ -3,9 +3,17 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/Maintance-phas2/src/java/SE/User.java</file>
-            <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/Maintance-phas2/src/java/SE/Validations.java</file>
-            <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/Maintance-phas2/src/java/SE/Massage.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Bill.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Massage.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/Data_access/DB_controller.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Validations.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Comment.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/System_manage.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/General_massge.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Order.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/MSG.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Time_chooser.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/User.java</file>
         </group>
     </open-files>
 </project-private>

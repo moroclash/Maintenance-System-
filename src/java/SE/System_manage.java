@@ -5,146 +5,264 @@
  */
 package SE;
 
+import Data_access.DB_controller;
+import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
  * @author emad
  */
 public class System_manage {
-    private ArrayList<Requist>Request_buffer;
+
+    private ArrayList<Requist> Request_buffer;
     private ArrayList<Order> Order_buffer;
     private ArrayList<Complain> Comblain_buffer;
-    public boolean Regist_customer(Customer customer)
-    {
+
+    public boolean Regist_customer(Customer customer) {
         return true;
     }
-    public ArrayList<Requist> Show_requists(String State)
-    {
+
+    public ArrayList<Requist> Show_requists(String State) {
         return null;
     }
-    public ArrayList<String> Empty_time(int x,int y)
-    {
+
+    public ArrayList<String> Empty_time(int x, int y) {
         return null;
     }
-    public ArrayList<Complain> All_complains(String State)
-    {
+
+    public ArrayList<Complain> All_complains(String State) {
         return null;
     }
-    public ArrayList<Employee> Show_empty_technicals()
-    {
+
+    public ArrayList<Employee> Show_empty_technicals() {
         return null;
     }
-    public ArrayList<Order> Show_empty_Order()
-    {
+
+    public ArrayList<Order> Show_empty_Order() {
         return null;
     }
-    public ArrayList<Employee> Show_all_employee(int Branch_id)
-    {
+
+    public ArrayList<Employee> Show_all_employee(int Branch_id) {
         return null;
     }
-    public Branch Search_branch (int Branch_id)
-    {
+
+    public Branch Search_branch(int Branch_id) {
         return null;
     }
-    public ArrayList<Employee> Show_all_employee(String Employee_type)
-    {
+
+    public ArrayList<Employee> Show_all_employee(String Employee_type) {
         return null;
     }
-    public Object Log_in (String User_Name,String Password)
-    {
+
+    public Object Log_in(String User_Name, String Password) {
         return null;
     }
-    public ArrayList <Requist> Show_my_requist()
-    {
+
+    public ArrayList<Requist> Show_my_requist() {
         return null;
     }
-    public boolean Delete_requist(int Requist_id)
-    {
-       return true; 
-    }
-    public Requist Search_requist(int Requist_id)
-    {
-        return null;
-    }
-    public boolean Reply_message(int Message_id,Comment comment)
-    {
+
+    public boolean Delete_requist(int Requist_id) {
         return true;
     }
-    public boolean Give_order(Order order)
-    {
-        return true;
-    }
-     public Bill Search_bill(int Branch_id)
-    {
+
+    public Requist Search_requist(int Requist_id) {
         return null;
     }
-    public Feedback Search_feedback(int Order_id)
-    {
+
+    public boolean Reply_message(int Message_id, Comment comment) {
+        return true;
+    }
+
+    public boolean Give_order(Order order) {
+        return true;
+    }
+
+    public Bill Search_bill(int Branch_id) {
         return null;
     }
-    public Device Search_device(int Device_id)
-    {
+
+    public Feedback Search_feedback(int Order_id) {
         return null;
     }
-    public boolean Up_complain_to_manager(Complain complain)
-    {
-        return true;
-    }
-    public Order Search_order(int Order_id)
-    {
+
+    public Device Search_device(int Device_id) {
         return null;
     }
-    public boolean Send_Message(General_massge message,int Sender_id,int Reciver_id)
-    {
+
+    public boolean Up_complain_to_manager(Complain complain) {
         return true;
     }
-    public boolean Add_User(User user)
-    {
-        return true;
-    }
-    public User Search_user_by_id(int User_id)
-    {
+
+    public Order Search_order(int Order_id) {
         return null;
     }
-    public User Search_user_by_name(String Name)
-    {
-        return null;
-    }
-    public boolean Update_user(int User_id)
-    {
+
+    public boolean Send_Message(General_massge message, int Sender_id, int Reciver_id) {
         return true;
     }
-    public boolean Delete_user(int User_id)
-    {
+  //Emad
+    public boolean Add_User(User user) {
+        DB_controller.Connect();
+        HashMap<String,String> U=new HashMap<String,String>();
+        U.put("Fname",user.getF_name());
+        U.put("Lname",user.getL_name());
+        U.put("Email", user.getEmail());
+        U.put("Password", user.getPassword());
+        U.put("Gender",user.getGander());
+        boolean check =DB_controller.Insert("USER", U);
+        return check;
+    }
+    //Emad
+    public User Search_user_by_id(int User_id) {
+        DB_controller.Connect();
+        ResultSet result=DB_controller.Select("*","user",Integer.toString(User_id));
+        User U=new User();        
+        try
+        {
+            while(result.next())
+            {
+                U.setF_name(result.getString("FNAME"));
+                U.setL_name(result.getString("LNAME"));
+                U.setEmail(result.getString("Email"));
+                U.setGander(result.getString("GENDER"));
+                U.setPassword(result.getString("Password"));
+            }
+        ResultSet result2=DB_controller.Select("*","phone",Integer.toString(User_id));
+            while(result2.next())
+            {
+                U.setPhones(result2.getString("phone"));
+            }
+        ResultSet result3=DB_controller.Select("*","address",Integer.toString(User_id));
+            while(result3.next())
+            {
+                U.setAddress(result2.getString("Address"));
+            }               
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error in Search User By ID");
+        }
+        if(U==null)
+            return null;
+        return U;
+    }
+    //Emad
+    public User Search_user_by_name(String Name) {
+        DB_controller.Connect();
+        ResultSet result=DB_controller.Select("*","user",Name);
+        User U=new User();        
+        try
+        {
+            while(result.next())
+            {
+                U.setF_name(result.getString("FNAME"));
+                U.setL_name(result.getString("LNAME"));
+                U.setEmail(result.getString("Email"));
+                U.setGander(result.getString("GENDER"));
+                U.setPassword(result.getString("Password"));
+            }
+        ResultSet result2=DB_controller.Select("*","phone",Name);
+            while(result2.next())
+            {
+                U.setPhones(result2.getString("phone"));
+            }
+        ResultSet result3=DB_controller.Select("*","address",Name);
+            while(result3.next())
+            {
+                U.setAddress(result2.getString("Address"));
+            }               
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error in Search User By ID");
+        }
+        if(U==null)
+            return null;
+        return U;    }
+
+    public boolean Update_user(int User_id) {
         return true;
     }
-    public int Branch_quality(int Branch_id)
-    {
-        return 1;
+    //Emad
+    public boolean Delete_user(int User_id) {
+        DB_controller.Connect();
+        boolean check=DB_controller.Delete("user",Integer.toString(User_id));
+        return check;
     }
-    public boolean Block_user(int User_id)
-    {
+    //Emad
+    public int Branch_quality(int Branch_id) {
+        DB_controller.Connect();
+        int NumberOfRows = 0;
+        int Summtion = 0;
+        int Persatage = 0;
+        try {
+            ResultSet result = DB_controller.Select("Branch_ID", "Feedback", Integer.toString(Branch_id));
+            while (result.next())
+            {
+                Summtion=+result.getInt("Service_quality");
+                NumberOfRows++;
+            }
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error in Branch Quality");
+        }
+        Persatage=(Summtion/(NumberOfRows*100))*100;
+        DB_controller.Close();
+        return Persatage;
+    }
+
+    //Emad
+    public boolean Block_user(int User_id) {
+        DB_controller.Connect();
+        boolean check = DB_controller.Update("user", "Block=1", Integer.toString(User_id));
+        DB_controller.Close();        
+        return check;
+    }
+
+    //Emad
+    public boolean Unblock_user(int User_id) {
+        DB_controller.Connect();
+        boolean check = DB_controller.Update("user", "Block=0", Integer.toString(User_id));
+        DB_controller.Close();        
+        return check;
+    }
+
+    public boolean Accept_order(int Order_id) {
         return true;
     }
-    public boolean Unblock_user(int User_id)
-    {
+
+    public boolean Is_fixed(Bill bill) {
         return true;
     }
-    public boolean Accept_order(int Order_id)
-    {
+
+    public boolean Return_order(int Order_id, String Technical_description) {
         return true;
     }
-    public boolean Is_fixed(Bill bill)
-    {
-        return true;
-    }
-    public boolean Return_order(int Order_id,String Technical_description)
-    {
-        return true;
-    }
-    public ArrayList<Order> Show_my_order()
-    {
-        return null;
+
+    //Emad
+    public ArrayList<Order> Show_my_order() {
+        DB_controller.Connect();
+        ResultSet result = DB_controller.Select("*", "order_fixable", "1");
+        try {
+            while (result.next()) {
+                Order order = new Order();
+                order.setId(result.getInt("Order_fixable_id"));
+                order.setDate(result.getInt("Date_start_id"));
+                order.setDate_requist(result.getInt("recept_date_id"));
+                order.setState(result.getInt("state_id"));
+                order.setTecnical_description(result.getString("Technical_description"));
+                order.setMy_Service(result.getInt("Service_id"));
+                order.setMy_requist(result.getInt("Requist_id"));
+                this.Order_buffer.add(order);
+            }
+        } catch (Exception e) {
+            System.out.println("Error in Show_ALL_ORDER");
+        }
+        DB_controller.Close();
+        return this.Order_buffer;
     }
 }

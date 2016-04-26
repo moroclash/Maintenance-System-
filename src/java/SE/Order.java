@@ -11,18 +11,18 @@ package SE;
  */
 public class Order {
     private int Id;
-    private Requist My_requist;
-    private String Date;
+    private int My_requist;
+    private int Date;
     private String Tecnical_description;
-    private Employee My_Service ;
+    private int My_Service ;
     private int State;
-    private String Date_requist;
+    private int Date_requist;
 
-    public void setDate(String Date) {
+    public void setDate(int Date) {
         this.Date = Date;
     }
 
-    public void setDate_requist(String Date_requist) {
+    public void setDate_requist(int Date_requist) {
         this.Date_requist = Date_requist;
     }
 
@@ -30,11 +30,11 @@ public class Order {
         this.Id = Id;
     }
 
-    public void setMy_Service(Employee My_Service) {
+    public void setMy_Service(int My_Service) {
         this.My_Service = My_Service;
     }
 
-    public void setMy_requist(Requist My_requist) {
+    public void setMy_requist(int My_requist) {
         this.My_requist = My_requist;
     }
 
@@ -46,11 +46,11 @@ public class Order {
         this.Tecnical_description = Tecnical_description;
     }
 
-    public String getDate() {
+    public int getDate() {
         return Date;
     }
 
-    public String getDate_requist() {
+    public int getDate_requist() {
         return Date_requist;
     }
 
@@ -58,11 +58,11 @@ public class Order {
         return Id;
     }
 
-    public Employee getMy_Service() {
+    public int getMy_Service() {
         return My_Service;
     }
 
-    public Requist getMy_requist() {
+    public int getMy_requist() {
         return My_requist;
     }
 

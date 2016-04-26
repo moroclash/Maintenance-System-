@@ -50,7 +50,7 @@ public class DB_controller {
   String  Query="DELETE FROM "+TableName+" WHERE "+condition;  
       try {
               PreparedStatement pre = DB_controller.prepareStatement(Query); 
-              
+              pre.execute();
               return true;
           } catch (SQLException ex){
             ex.getStackTrace();
