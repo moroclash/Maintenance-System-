@@ -10,7 +10,7 @@ package SE;
  * @author moroclash
  */
 public class MSG {
-    private int Id;
+    public int Id;
     private String Date;
     private String Time;
     private String Content;
