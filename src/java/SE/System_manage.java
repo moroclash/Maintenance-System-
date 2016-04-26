@@ -182,8 +182,21 @@ public class System_manage {
         if(U==null)
             return null;
         return U;    }
-
-    public boolean Update_user(int User_id) {
+    //Sala7
+    public boolean Update_user(int User_id)
+    {
+        System_manage m = new System_manage();
+        DB_controller.Connect();
+        if (m.Search_user_by_id(User_id)== null) {
+            return false;
+        }
+        else{
+            Employee emp = new Employee();
+            DB_controller.Update(" user " , " Fname =" + emp.getF_name() + " Lname = " + emp.getL_name() + " Password = " + emp.getPassword()
+                    + " Email = " + emp.getEmail() + " gender = " + emp.getGander() ," User_id = " + User_id );
+            DB_controller.Update( "  " , "  " , "  " );
+        }
+        DB_controller.Close();
         return true;
     }
     //Emad
@@ -230,17 +243,38 @@ public class System_manage {
         DB_controller.Close();        
         return check;
     }
-
-    public boolean Accept_order(int Order_id) {
+   //Sala7
+   public boolean Accept_order(int Order_id)
+    {   
+        DB_controller.Connect();
+        System_manage m = new System_manage();
+        if(m.Search_order(Order_id)==null){
+            DB_controller.Close();
+            return false;
+        }
+        else{
+        DB_controller.Update("order_fixable " , " State_id = " + 4 , " Order_fixable_id = " + Order_id );
+            }
+        DB_controller.Close();
         return true;
     }
-
-    public boolean Is_fixed(Bill bill) {
+   //Sala7
+     public boolean Is_fixed(Bill bill , String Technical_description , int order_id , int device_id)
+    {   DB_controller.Connect();
+        DB_controller.Update("order_fixable " , " State_id = " + 2 + " Technical_description = " + Technical_description , " Order_fixable_id = " + order_id );
+        DB_controller.Update("device ", " State_id = " + 2 , " Device_id = " + device_id );
+        
+        
+        
+        DB_controller.Close();
         return true;
     }
-
-    public boolean Return_order(int Order_id, String Technical_description) {
-        return true;
+   //Sala7
+    public void Return_order(int Order_id,String Technical_description)
+    {
+        DB_controller.Connect();
+        DB_controller.Update("order_fixable " , " State_id = " + 3 + " Technical_description = " + Technical_description , " Order_fixable_id = " + Order_id );
+        DB_controller.Close();
     }
 
     //Emad
