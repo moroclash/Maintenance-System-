@@ -24,7 +24,7 @@ public class DB_controller {
     public static void Connect() {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/maintenenceWEB?zeroDateTimeBehavior=convertToNull", "root", "");
+            DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
             System.out.println("ConnectionDB Done");
         } catch (Exception x) {
             System.out.println("Eroro LL2sf fe el Coonection");

@@ -13,7 +13,7 @@ class Request {
     private int ID;
     private int Date_id;
     private int State_id;
-    private Device My_device;
+    private int My_device;
 
     public void setID(int ID) {
         this.ID = ID;
@@ -23,7 +23,7 @@ class Request {
         this.State_id = State_id;
     }
 
-    public void setMy_device(Device My_device) {
+    public void setMy_device(int My_device) {
         this.My_device = My_device;
     }
 
@@ -43,7 +43,7 @@ class Request {
         return Date_id;
     }
 
-    public Device getMy_device() {
+    public int getMy_device() {
         return My_device;
     }
     
