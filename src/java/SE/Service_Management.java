@@ -151,7 +151,10 @@ public class Service_Management {
         {
            ResultSet result=DB.Select("*", "Branch","Address_ID="+request.getAddress_ID());
             {
+                while(result.next())
+                {
                 Branch_ID=result.getInt("Branch_ID");
+                }
             }
             OptionID=S.Search_User_OptionByName("Branch_ID");
             result=DB.Select("*", "user_selected_option_values","User_option_id="+OptionID);
@@ -186,12 +189,12 @@ public class Service_Management {
                     FDATE += Date.charAt(i);
                 }
             }
-            result = DB.Select("*", "time_chooser", "time=" + FDATE);
+            result = DB.Select("*", "time_chooser", "times=" + FDATE);
             while (result.next())
             {
                 FID = result.getInt("Time_Chooser_ID");
             }
-            result = DB.Select("*", "time_choosed", "Time_chooser_id=" + FID +"and Brancg_ID="+Branch_ID);
+            result = DB.Select("*", "time_choosed", "Time_chooser_id=" + FID +" and Branch_ID="+Branch_ID);
             while (result.next()) 
             {
                 NumberOfOrdersAtDay++;
