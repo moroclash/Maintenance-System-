@@ -3,19 +3,33 @@ package SE;
 
 import Data_access.DB_controller;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Branch {
     private int Id;
-    private String Location;
+
+
+    private int Address_id;
+
     private int Manager_id;
     private ArrayList<String> phones;
     private ArrayList <Integer> Subscriber;
     private String notfy_message;
-
-    public void setMnager_id(int Mnager_id) {
+    
+    public void setMnager_id(int Mnager_id){
         this.Manager_id = Mnager_id;
+    }
+
+    public int getAddress_id() {
+        return Address_id;
+    }
+
+    public void setAddress_id(int Address_id) {
+        this.Address_id = Address_id;
     }
 
     public int getMnager_id() {
@@ -23,7 +37,7 @@ public class Branch {
     }
 
     
-    
+    //sala7
     public  void push (String value)
     {
        this.phones.add(value); 
@@ -42,23 +56,77 @@ public class Branch {
         this.Id = Id;
     }
 
-    public String getLocation() {
-        return Location;
-    }
-
-    public void setLocation(String Location) {
-        this.Location = Location;
-    }
-
     public ArrayList<String> getPhones() {
         return phones;
     }
+    //sala7
+     public ArrayList<String> getPhones_branch( int branch_id ) {
+         
+         ArrayList <String> phone = null;
+         DB_controller DB = DB_controller.Get_DB_controller();
+         DB.Connect();
+         
+         ResultSet result = null;
+         result = DB.Select(" phone ", " branch_phone ", " Branch_id = " + branch_id);
+         String Phone = "";
+         try {
+            while(result.next())
+            {
+               phone.add(result.getString("phone"));
+            }
+            return phone;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            DB.Close();
+        }
+        DB.Close();
+        return null;
+     }
     
+     //Emad T
    public double Show_salaris()
    {
-       return 0.0;
+       DB_controller DB=DB_controller.Get_DB_controller();
+       ArrayList<Integer> EmployeesSalaries=new ArrayList<Integer>();
+       DB.Connect();
+       int Total_Salary=0;
+       int ID_SALARY=-1;
+       int Branch_ID=-1;       
+       try
+       {
+           ResultSet result =DB.Select("*", "User_OPTION","Name='Salary'");
+           while(result.next())
+           {
+               ID_SALARY=result.getInt("User_Option_ID");
+           }
+            result =DB.Select("*", "user_selected_option","Name='Branch_ID'");
+           while(result.next())
+           {
+               Branch_ID=result.getInt("User_Option_ID");
+           }           
+           result=DB.Select("*", "user_selected_option", "User_Option_ID="+Branch_ID);
+           while(result.next())
+           {
+               EmployeesSalaries.add(result.getInt("User_Type_ID"));
+           }
+           System_manage S=System_manage.Get_System_manage();
+           for(int i=0;i<EmployeesSalaries.size();i++)
+           {
+               result=DB.Select("*", "user_selected_option_values", " User_ID="+EmployeesSalaries.get(i)+" User_Option_ID="+ID_SALARY);
+               while(result.next())
+               {
+                   Total_Salary +=Integer.getInteger(result.getString("Value"));
+               }
+           }
+       }
+       catch(Exception E)
+       {
+           System.out.println("Error in Show Salaries");
+       }
+       DB.Close();
+       return Total_Salary;
    }
-   //Emad
+   //Emad T
     public double Get_quality() {
         DB_controller.Get_DB_controller().Connect();
         int NumberOfRows = 0;
@@ -67,27 +135,90 @@ public class Branch {
         try {
             ResultSet result = DB_controller.Get_DB_controller().Select("*", "Feedback", "Branch_ID=" + Id);
             while (result.next()) {
-                Summtion = Summtion+result.getInt("Service_quality");
+                Summtion = Summtion+result.getInt("System_quality");
                 NumberOfRows++;
             }
         } catch (Exception e) {
-            System.out.println("Error in Branch Quality");
+            System.out.println("Error in GET Quality");
         }
         Persatage = (Summtion / (NumberOfRows*100))*100;
         DB_controller.Get_DB_controller().Close();
         return Persatage;
     }
-   public int Service_guality()
+    //Emad T
+   public double Service_guality()
    {
-       return 0;
+        DB_controller.Get_DB_controller().Connect();
+        int NumberOfRows = 0;
+        int Summtion = 0;
+        double Persatage = 0;
+        DB_controller DB=DB_controller.Get_DB_controller();
+        DB.Connect();
+        ResultSet result=DB.Select("System_quality", "feedback","1");
+        try
+        {
+            while(result.next())
+            {
+                Summtion = Summtion+result.getInt("Service_quality");
+                NumberOfRows++;                
+            }
+        }
+        catch(Exception E)
+        {
+            System.out.println("Error in Service Quality");
+        }
+        Persatage = (Summtion / (NumberOfRows*100))*100;
+        DB.Close();
+        return Persatage;
    }
    public ArrayList <Bill> Show_accounting()
    {
        return null;
    }
+   //Emad T
    public ArrayList <Employee> Show_employee()
    {
-    return null;   
+       System_manage S=System_manage.Get_System_manage();
+       Service_Management Ser=Service_Management.Get_Serive_Management();
+       ArrayList <Employee> E=new ArrayList<Employee>();
+    DB_controller DB=DB_controller.Get_DB_controller();
+    DB.Connect();
+    int Gender_ID;
+    ResultSet result=DB.Select("*","user","Type_ID=1 Or Type_ID=2 Or Type_ID=3 Or Type_ID=4");
+    int USer_ID=-1;
+        try 
+        {
+            while(result.next())
+            {
+                Employee Em=new Employee();
+                USer_ID=result.getInt("User_ID");
+                Em.setID(USer_ID);
+                Em.setAdditional_data(S.Get_Option_Values_OF_USER(USer_ID));
+                Gender_ID=result.getInt("Gender");
+                Em.setF_name(result.getString("Fname"));
+                Em.setL_name(result.getString("Lname"));
+                Em.setEmail(result.getString("Email"));
+                Em.setPassword(result.getString("Password"));
+                Em.setType_id(result.getInt("Type_ID"));
+                Em.setBlock(result.getInt("Block"));
+                Em.setPhones(Ser.Get_User_Phone(USer_ID));
+                Em.setAddresses(Ser.Get_User_Address(USer_ID));
+                if(Gender_ID==1)
+                {
+                    Em.setGander("Male");
+                }
+                else
+                {
+                    Em.setGander("Female");
+                }
+                E.add(Em);
+            }
+        }
+        catch(Exception Er)
+        {
+            System.out.println("Error in Show Employee");
+        }
+        return null;
    }
 
     public void SetNotfy_message(Notify notfy) {
