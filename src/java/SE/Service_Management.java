@@ -133,7 +133,7 @@ public class Service_Management {
     }
     
     //Emad
-    Time_chooser Get_Three_Date(Request request,Time_chooser Chose)
+    public Time_chooser Get_Three_Date(Request request,Time_chooser Chose)
     {
         ArrayList<String> Dates=new ArrayList<String>();
         String Date = "";
