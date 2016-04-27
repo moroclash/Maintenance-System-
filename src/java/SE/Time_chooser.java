@@ -15,6 +15,12 @@ class Time_chooser {
    private ArrayList <String> Time;
    private String Selected_time;
 
+   
+   
+    public void add (String S)
+    {
+        this.Time.add(S);
+    }
     public void setTime(ArrayList<String> Time) {
         this.Time = Time;
     }

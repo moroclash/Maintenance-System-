@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author moroclash
  */
-public class User {
+public abstract class User {
     
     private int ID;
     private String F_name;
