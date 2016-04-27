@@ -16,8 +16,6 @@ import java.util.Date;
  */
 public class MAin {
     public static void main(String[] args) {
-        System_manage M=new System_manage();
-        
-        M.Show_my_order();
+        DB_controller.Connect();
     }
 }

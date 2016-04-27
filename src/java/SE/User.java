@@ -17,9 +17,10 @@ public class User {
     private int Type_id;
     private String Gander;
     private HashMap<String, String> Additional_data;
-    private ArrayList<String> Phones;
+    private ArrayList<String> Phones=new ArrayList<String>();
     private ArrayList<String> Addresses;
     private ArrayList<Massage> Inbox;
+    private int Block;
 
     public void setF_name(String F_name) {
         this.F_name = F_name;
@@ -68,6 +69,12 @@ public class User {
     public int getType_id() {
         return Type_id;
     }
+    public void setBlock(int Block) {
+        this.Block= Block;
+    }
+    public int getBlock() {
+        return this.Block;
+    }    
     public void setAddress(String Address) {
         this.Addresses.add(Address);
     }

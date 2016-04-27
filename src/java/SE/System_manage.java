@@ -19,8 +19,8 @@ import java.text.SimpleDateFormat;
  */
 public class System_manage {
 
-    private ArrayList<Requist> Request_buffer;
-    private ArrayList<Order> Order_buffer;
+    private ArrayList<Request> Request_buffer;
+    private ArrayList<Order> Order_buffer=new ArrayList<Order>();
     private ArrayList<Complain> Comblain_buffer;
 
     public boolean Regist_customer(Customer customer) {
@@ -54,15 +54,16 @@ public class System_manage {
     //Emad
     public ArrayList<Complain> All_complains(int State) {
         DB_controller.Connect();
-        ResultSet result = DB_controller.Select("*", "Message_type", "Name=Complain");
+        ResultSet result = DB_controller.Select("*", "Message_type", "Name='Complain'");
         ArrayList<Complain> C = new ArrayList<Complain>();
         int ID = 0;
         try {
             while (result.next()) {
                 ID = result.getInt("Message_type_id");
             }
-            result = DB_controller.Select("*", "reciecer", "Message_id=" + ID + "+and State_id=" + State);
+            result = DB_controller.Select("*", "recieved", "Message_id=" + ID + " and State_id=" + State);
             while (result.next()) {
+                
                 Complain complain = new Complain();
                 complain.Id = ID;
                 complain.setReciver(result.getInt("Reciever_id"));
@@ -100,7 +101,7 @@ public class System_manage {
         return null;
     }
 
-    public ArrayList<Requist> Show_my_requist() {
+    public ArrayList<Request> Show_my_requist() {
         return null;
     }
 
@@ -108,7 +109,7 @@ public class System_manage {
         return true;
     }
 
-    public Requist Search_requist(int Requist_id) {
+    public Request Search_requist(int Requist_id) {
         return null;
     }
 
@@ -237,6 +238,7 @@ public class System_manage {
         U.put("Email", user.getEmail());
         U.put("Password", user.getPassword());
         U.put("Gender", user.getGander());
+        U.put("Block", ""+user.getBlock());
         boolean check = DB_controller.Insert("USER", U);
         return check;
     }
@@ -244,6 +246,7 @@ public class System_manage {
     //Emad
     public User Search_user_by_id(int User_id) {
         DB_controller.Connect();
+        String S;
         ResultSet result = DB_controller.Select("*", "user", "User_ID=" + User_id);
         User U = new User();
         try {
@@ -256,15 +259,13 @@ public class System_manage {
             }
             ResultSet result2 = DB_controller.Select("*", "phone", "User_ID=" + User_id);
             while (result2.next()) {
-                U.setPhones(result2.getString("phone"));
+                U.setPhones(result2.getString("Phone"));
             }
+            return U;
         } catch (Exception e) {
-            System.out.println("Error in Search User By ID");
+            System.out.println("Error in Search User By ID"+e);
         }
-        if (U == null) {
-            return null;
-        }
-        return U;
+        return null;
     }
 
     //Emad
@@ -296,21 +297,21 @@ public class System_manage {
     }
 
     //Emad
-    public int Branch_quality(int Branch_id) {
+    public double Branch_quality(int Branch_id) {
         DB_controller.Connect();
         int NumberOfRows = 0;
         int Summtion = 0;
-        int Persatage = 0;
+        double Persatage = 0;
         try {
-            ResultSet result = DB_controller.Select("Branch_ID", "Feedback", "User_ID=" + Branch_id);
+            ResultSet result = DB_controller.Select("*", "Feedback", "Branch_ID=" + Branch_id);
             while (result.next()) {
-                Summtion = +result.getInt("Service_quality");
+                Summtion = Summtion+result.getInt("Service_quality");
                 NumberOfRows++;
             }
         } catch (Exception e) {
             System.out.println("Error in Branch Quality");
         }
-        Persatage = (Summtion / (NumberOfRows * 100)) * 100;
+        Persatage = (Summtion / (NumberOfRows*100))*100;
         DB_controller.Close();
         return Persatage;
     }
@@ -366,7 +367,7 @@ public class System_manage {
     public ArrayList<Order> Show_my_order() {
         DB_controller.Connect();
         ResultSet result = DB_controller.Select("*", "order_fixable", "1");
-        try {
+        try {            
             while (result.next()) {
                 Order order = new Order();
                 order.setId(result.getInt("Order_fixable_id"));
