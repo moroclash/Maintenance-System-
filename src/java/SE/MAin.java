@@ -19,13 +19,12 @@ import java.util.Map;
  */
 public class MAin {
     public static void main(String[] args) {
-            User s = new User();
-            s.setID(1);
-            ArrayList<General_massge> gg = s.Show_my_massage(5);
-            for(General_massge g : gg)
-            {
-                System.out.println(g.getContent() +"   " + g.getSender_id()+"   "+g.getDate_id());
-            }
+           
+        System_manage s = System_manage.Get_System_manage();
+        System.out.println(s.Get_near_branch(17));
+            
+            
+            
             
         }
     }

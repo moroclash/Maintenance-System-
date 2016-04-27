@@ -229,7 +229,8 @@ public class Service_Management {
     }
     
     //Emad
-    ArrayList<Order> Show_My_Order(int Employee_id) {
+    public ArrayList<Order> Show_My_Order(int Employee_id) {
+        ArrayList<Order> or=new ArrayList<Order>();
         DB_controller DB=DB_controller.Get_DB_controller();
         ResultSet result=DB.Select("*", "order_fixable", "Service_ID="+Employee_id);
         ResultSet result2=null;
@@ -251,6 +252,7 @@ public class Service_Management {
                     S.add(result.getInt("Technical_ID"));
                 }
                 O.setMy_Technical_id(S);
+                or.add(O);
             }
         }
         catch(Exception E)
@@ -258,7 +260,9 @@ public class Service_Management {
             
         }
         DB.Close();
+        return or;
     }
+
 
     //Emad
     //pre Path Type_OPTION_ID(text,int,....),and Name OF Type
@@ -286,7 +290,7 @@ public class Service_Management {
                 order.setDate_start_id(result.getInt("Date_start_id"));
                 order.setDate_end_id(result.getInt("recept_date_id"));
                 order.setState(result.getInt("state_id"));
-                order.setTecnical_description(result.getString("Technical_description"));
+                order.setTecnical_description(result.getInt("Technical_description"));
                 order.setMy_service_id(result.getInt("Service_id"));
                 order.setMy_requist_id(result.getInt("Requist_id"));
                 O.add(order);
@@ -339,7 +343,7 @@ public class Service_Management {
             HashMap<String, String> Order = new HashMap<>(10);
             Order.put("Requist_id", String.valueOf(order.getMy_requist_id()));
             Order.put("Date_start_id", String.valueOf(order.getDate_start_id()));
-            Order.put("Technical_description", order.getTecnical_description());
+            Order.put("Technical_description", Integer.toString(order.getTecnical_description()));
             Order.put("Service_id", String.valueOf(order.getMy_service_id()));
             Order.put("State_id", "3");//wait fix
             Order.put("date_End_id", String.valueOf(order.getMy_requist_id()));
@@ -544,22 +548,25 @@ public class Service_Management {
     }
 
     //omar 0_0
-    boolean Add_New_Phone_To_User(String New_phone, int User_id) {
+
+    public int Add_New_Phone_To_User(String New_phone,int User_id)
+    {
         Validations v = Validations.Get_Validations();
-        if (!v.Is_digit(New_phone)) {
-            return false;
-        }
+        if(!v.Is_digit(New_phone))
+            return 0;
         DB_controller.Get_DB_controller().Connect();
         HashMap<String, String> m = new HashMap<>();
         m.put("User_id", Integer.toString(User_id));
-        m.put("Phone", New_phone);
-        DB_controller.Get_DB_controller().Insert("phone", m);
+        m.put("Phone",New_phone);
+        int x = DB_controller.Get_DB_controller().Insert("phone", m);
         DB_controller.Get_DB_controller().Close();
-        return true;
+        return x;    
     }
 
     //omar 0_0
-    boolean Delete_User_Phone(int Phone_id) {
+
+    public boolean Delete_User_Phone(int Phone_id)
+    {
         DB_controller.Get_DB_controller().Connect();
         boolean z = DB_controller.Get_DB_controller().Delete("phone", "phone_id=" + Phone_id);
         DB_controller.Get_DB_controller().Close();
@@ -567,10 +574,11 @@ public class Service_Management {
     }
 
     //omar 0_0
-    boolean Update_User_Phone(int Old_phone_id, String New_phone) {
-        if (!Validations.Get_Validations().Is_digit(New_phone)) {
+
+    public boolean Update_User_Phone(int Old_phone_id,String New_phone)
+    {
+        if(!Validations.Get_Validations().Is_digit(New_phone))
             return false;
-        }
         DB_controller.Get_DB_controller().Connect();
         boolean z = DB_controller.Get_DB_controller().Update("phone", "phone=" + New_phone, "Phone_id=" + Old_phone_id);
         DB_controller.Get_DB_controller().Close();
@@ -578,7 +586,9 @@ public class Service_Management {
     }
 
     //omar 0_0
-    HashMap<Integer, String> Get_User_Phone(int User_id) {
+
+    public HashMap<Integer,String> Get_User_Phone(int User_id)
+    {
         try {
             HashMap<Integer, String> m = new HashMap<>();
             DB_controller.Get_DB_controller().Connect();
@@ -639,3 +649,4 @@ public class Service_Management {
         return null;
     }
 }
+

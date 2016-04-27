@@ -17,6 +17,7 @@ class Request {
     private int State_id;
     private int Address_ID;
     private int User_id;
+    private int Address_id;
     private ArrayList<Integer> Device_id;
 
     public void setAddress_ID(int Address_ID) {
@@ -26,6 +27,7 @@ class Request {
     public int getAddress_ID() {
         return Address_ID;
     }
+
     
     
     public void setUser_id(int User_id) {
