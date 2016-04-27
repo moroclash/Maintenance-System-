@@ -49,12 +49,12 @@ public class Branch {
    }
    //Emad
     public double Get_quality() {
-        DB_controller.Connect();
+        DB_controller.Get_DB_controller().Connect();
         int NumberOfRows = 0;
         int Summtion = 0;
         double Persatage = 0;
         try {
-            ResultSet result = DB_controller.Select("*", "Feedback", "Branch_ID=" + Id);
+            ResultSet result = DB_controller.Get_DB_controller().Select("*", "Feedback", "Branch_ID=" + Id);
             while (result.next()) {
                 Summtion = Summtion+result.getInt("Service_quality");
                 NumberOfRows++;
@@ -63,7 +63,7 @@ public class Branch {
             System.out.println("Error in Branch Quality");
         }
         Persatage = (Summtion / (NumberOfRows*100))*100;
-        DB_controller.Close();
+        DB_controller.Get_DB_controller().Close();
         return Persatage;
     }
    public int Service_guality()
@@ -103,23 +103,23 @@ public class Branch {
    {
         try
        {
-           System_manage s = new System_manage();
-            DB_controller.Connect();
+           System_manage s =System_manage.Get_System_manage();
+            DB_controller.Get_DB_controller().Connect();
             HashMap<String,String> Mass=new HashMap<>(10);
             int id=s.Get_date_iD();
             String time=s.Get_time();
             Mass.put("Content",message.getContent());
             Mass.put("sender_id",String.valueOf(message.getSender_id()));
-            Mass.put("Type_id", Integer.toString(message.getMassage_type()));
+            Mass.put("Type_id", Integer.toString(message.getMassage_type_id()));
             Mass.put("Date_id", String.valueOf(id));
             Mass.put("Time", time);
             Mass.put("Parent_id", "0");
-            int idmass= DB_controller.Insert("message",Mass);
+            int idmass= DB_controller.Get_DB_controller().Insert("message",Mass);
             Mass=new  HashMap<String, String>(5);
             Mass.put("Reciever_id", String.valueOf(message.getReciver()));
             Mass.put("Message_id", String.valueOf(idmass));
             Mass.put("State_id", "5");
-            DB_controller.Insert("recieved", Mass);
+            DB_controller.Get_DB_controller().Insert("recieved", Mass);
        }//END Try
        catch(Exception ex)
        {

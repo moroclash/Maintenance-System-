@@ -41,8 +41,9 @@ public class Service_Management {
     }
 //Emad
    public ArrayList<Request> Show_requists(int State) {
-       DB_controller.Connect();
-       ResultSet result = DB_controller.Select("*", "request", "State_id=" + State);
+       DB_controller DB=DB_controller.Get_DB_controller();
+       DB.Connect();
+       ResultSet result = DB.Select("*", "request", "State_id=" + State);
        ArrayList<Request> R = new ArrayList<Request>();
        try {
            while (result.next()) {
@@ -80,25 +81,26 @@ public class Service_Management {
     }
     //Emad
     public ArrayList<Order> Show_all_order(int state) {
-        DB_controller.Connect();
+        DB_controller DB=DB_controller.Get_DB_controller();
+        DB.Connect();
         ArrayList<Order> O=new ArrayList<Order>();
-        ResultSet result = DB_controller.Select("*", "order_fixable", "State_id="+state);
+        ResultSet result = DB.Select("*", "order_fixable", "State_id="+state);
         try {            
             while (result.next()) {
                 Order order = new Order();
                 order.setId(result.getInt("Order_fixable_id"));
-                order.setDate(result.getInt("Date_start_id"));
-                order.setDate_requist(result.getInt("recept_date_id"));
+                order.setDate_start_id(result.getInt("Date_start_id"));
+                order.setDate_end_id(result.getInt("recept_date_id"));
                 order.setState(result.getInt("state_id"));
                 order.setTecnical_description(result.getString("Technical_description"));
-                order.setMy_Service(result.getInt("Service_id"));
-                order.setMy_requist(result.getInt("Requist_id"));
+                order.setMy_service_id(result.getInt("Service_id"));
+                order.setMy_requist_id(result.getInt("Requist_id"));
                 O.add(order);
             }
         } catch (Exception e) {
             System.out.println("Error in Show_all_ORDER");
         }
-        DB_controller.Close();
+        DB.Close();
         return O;
     }
     boolean Cancel_Request(int Request_id)
@@ -110,9 +112,10 @@ public class Service_Management {
          try
         {
             //Table request
-            DB_controller.Connect();
+            DB_controller DB=DB_controller.Get_DB_controller();
+            DB.Connect();
             Request request=new Request();
-            ResultSet res=DB_controller.Select("*", "request", "Request_id="+Requist_id);
+            ResultSet res=DB.Select("*", "request", "Request_id="+Requist_id);
             request.setID(Requist_id);
             request.setState_id(res.getInt("ate_id"));
             request.setDate_id(res.getInt("Date_id"));//lw h8er el Date id to int 
@@ -120,12 +123,12 @@ public class Service_Management {
             //END Table Reqest
             
             //Table device_of_this_request
-            ResultSet Devices=DB_controller.Select("Device_id", "device_of_this_request", "request_id="+Requist_id);
+            ResultSet Devices=DB.Select("Device_id", "device_of_this_request", "request_id="+Requist_id);
             while(Devices.next())
             {
                 Devices_ID.add(Devices.getInt("Device_id"));             
             }
-            request.setMy_device(Devices_ID);
+            request.setDevice_id(Devices_ID);
             return request;
         }//END TRy
         catch(Exception e)
@@ -137,28 +140,29 @@ public class Service_Management {
      //Mohamed RAdwan
      public boolean Give_order(Order order) {
         try{
-            DB_controller.Connect();
+            DB_controller DB=DB_controller.Get_DB_controller();
+            DB.Connect();
             //Table order_fixable 
             HashMap<String,String> Order=new HashMap<>(10); 
-            Order.put("Requist_id", String.valueOf(order.getMy_requist()));
-            Order.put("Date_start_id",String.valueOf(Get_date_iD()));
+            Order.put("Requist_id", String.valueOf(order.getMy_requist_id()));
+            Order.put("Date_start_id",String.valueOf(order.getDate_start_id()));
             Order.put("Technical_description",order.getTecnical_description());
-            Order.put("Service_id",String.valueOf(order.getMy_Service()));
+            Order.put("Service_id",String.valueOf(order.getMy_service_id()));
             Order.put("State_id","3");//wait fix
-            Order.put("date_End_id",String.valueOf(order.getDate_requist()));
-            DB_controller.Insert("order_fixable", Order);
+            Order.put("date_End_id",String.valueOf(order.getMy_requist_id()));
+            DB.Insert("order_fixable", Order);
             //end teabl order_fixable
 
             //Table device_of_this_request
             HashMap<String,String> ordflexde=new HashMap<>(1);
             int counter=0;
-            Request req= Search_requist(order.getMy_requist());
-            ArrayList<Integer> dev=req.getMy_device();
+            Request req= Search_requist(order.getMy_requist_id());
+            ArrayList<Integer> dev=req.getDevice_id();
             int id_request=req.getID();
             ArrayList<Integer> ID_rder_flexible_details=new ArrayList<>();
             for(Integer d:dev)
             {
-              ResultSet result =  DB_controller.Select("Device_of_this_request_id", "device_of_this_request", "Device_id="+d+" request_id="+id_request);
+              ResultSet result =  DB.Select("Device_of_this_request_id", "device_of_this_request", "Device_id="+d+" request_id="+id_request);
               ID_rder_flexible_details.add(result.getInt("Device_of_this_request_id"));
             }
 
@@ -180,7 +184,7 @@ public class Service_Management {
             {
                 ordflexde.put("Technical_id",String.valueOf(Techincal_ID.get(counter)));
                 ordflexde.put("Order_id",String.valueOf(d));
-                DB_controller.Insert("order_flixer",ordflexde);
+                DB_controller.Get_DB_controller().Insert("order_flixer",ordflexde);
                 ordflexde=new HashMap<>(1);
                 counter ++;
             }//end table order_flixer
@@ -195,8 +199,8 @@ public class Service_Management {
      }
 //Emad
     public Device Search_device(int Device_id) {
-        DB_controller.Connect();
-        ResultSet result = DB_controller.Select("*", "Device", "Device_ID=" + Device_id);
+        DB_controller DB=DB_controller.Get_DB_controller();
+        ResultSet result = DB.Select("*", "Device", "Device_ID=" + Device_id);
         int Model = -1;
         int companyID = -1;
         int Type_id = -1;
@@ -207,20 +211,20 @@ public class Service_Management {
                 D.setState(result.getInt("state_id"));
                 Model = result.getInt("Model_id");
             }
-            result = DB_controller.Select("*", "model", "Model_id=" + Model);
+            result = DB.Select("*", "model", "Model_id=" + Model);
             while (result.next()) {
                 D.push("Model", result.getString("Name"));
                 companyID = result.getInt("Comp_device_id");
             }
-            result = DB_controller.Select("*", "main_factor", "Main_factor_id=" + companyID);
+            result = DB.Select("*", "main_factor", "Main_factor_id=" + companyID);
             while (result.next()) {
                 D.push("Copmany", result.getString("Name"));
             }
-            result = DB_controller.Select("*", "company_have_device", "Main_factor_id=" + companyID);
+            result = DB.Select("*", "company_have_device", "Main_factor_id=" + companyID);
             while (result.next()) {
                 Type_id = result.getInt("Device_type_id");
             }
-            result = DB_controller.Select("*", "Device_type", "Device_Type_id=" + Type_id);
+            result = DB.Select("*", "Device_type", "Device_Type_id=" + Type_id);
             while (result.next()) {
                 D.push("Type", result.getString("name"));
             }
@@ -233,16 +237,16 @@ public class Service_Management {
     //Sala7
 
     public void Return_order(int Order_id, String Technical_description) {
-        DB_controller.Connect();
-        DB_controller.Update("order_fixable ", " State_id = " + 3 + " Technical_description = " + Technical_description, " Order_fixable_id = " + Order_id);
-        DB_controller.Close();
+        DB_controller DB=DB_controller.Get_DB_controller();
+        DB.Update("order_fixable ", " State_id = " + 3 + " Technical_description = " + Technical_description, " Order_fixable_id = " + Order_id);
+        DB.Close();
     }
     //omar
     public String get_address_from_db(int Address_id)
     {
+            DB_controller DB=DB_controller.Get_DB_controller();        
         try {
-            Data_access.DB_controller.Connect();
-            ResultSet res = Data_access.DB_controller.Select("*","address", "Address_id="+Address_id);
+            ResultSet res = DB.Select("*","address", "Address_id="+Address_id);
             if(res==null)
             {
                 return "";
@@ -251,42 +255,42 @@ public class Service_Management {
                 if(res.getInt("Parent_id")==0)
                 {
                     String s = res.getString("Address");
-                    Data_access.DB_controller.Close();
+                    DB.Close();
                     return s ;
                 }
                 else
                 {
                     int x = res.getInt("Parent_id");
                     String s =res.getString("Address");
-                    Data_access.DB_controller.Close();
+                    DB.Close();
                     return s+","+get_address_from_db(x);
                 }
             }
         } catch (SQLException ex) {
             Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Data_access.DB_controller.Close();
+        DB.Close();
         return "";
     }
 //omar
    public boolean Add_new_address_to_user(int District_id,String Street, String Num_of_home,int user_id){
-       if(Validations.Is_alphanumaric(Street)&&Validations.Is_alphanumaric(Num_of_home))
+       if(Validations.Get_Validations().Is_alphanumaric(Street)&&Validations.Get_Validations().Is_alphanumaric(Num_of_home))
        { 
            try {
-               Data_access.DB_controller.Connect();
+               DB_controller.Get_DB_controller().Connect();
                HashMap<String, String> hash = new HashMap<String, String>();
                hash.put("Address", Street);
                hash.put("Parent_id", Integer.toString(District_id));
-               int x = Data_access.DB_controller.Insert("address", hash);
+               int x =DB_controller.Get_DB_controller().Insert("address", hash);
                hash.clear();
                hash.put("Address", Num_of_home);
                hash.put("Parent_id", Integer.toString(x));
-               x=Data_access.DB_controller.Insert("address", hash);
+               x=DB_controller.Get_DB_controller().Insert("address", hash);
                hash.clear();
                hash.put("Address_id", Integer.toString(x));
                hash.put("User_id", Integer.toString(user_id));
-               Data_access.DB_controller.Insert("user_address", hash);
-               Data_access.DB_controller.Close();
+               DB_controller.Get_DB_controller().Insert("user_address", hash);
+               DB_controller.Get_DB_controller().Close();
                return true;
            } catch (Exception ex) {
                Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -297,25 +301,25 @@ public class Service_Management {
    }
 //omar
    public boolean Delete_user_address(int Address_id,int user_id) {
-           Data_access.DB_controller.Connect();
-           boolean z = Data_access.DB_controller.Delete("address", "Address_id="+Address_id);
-           Data_access.DB_controller.Delete("user_address", "Address_id="+Address_id+" and User_id="+user_id);
-           Data_access.DB_controller.Close();
+           DB_controller.Get_DB_controller().Connect();
+           boolean z = DB_controller.Get_DB_controller().Delete("address", "Address_id="+Address_id);
+           DB_controller.Get_DB_controller().Delete("user_address", "Address_id="+Address_id+" and User_id="+user_id);
+           DB_controller.Get_DB_controller().Close();
            return z ;
    }
       public boolean Update_address(int Old_num_of_home_id,String new_Street ,String new_num_of_home) {
-       if(Validations.Is_alpha(new_Street)&&Validations.Is_alphanumaric(new_num_of_home))
+       if(Validations.Get_Validations().Is_alpha(new_Street)&&Validations.Get_Validations().Is_alphanumaric(new_num_of_home))
        { 
            try {
-               Data_access.DB_controller.Connect();
-               Data_access.DB_controller.Update("address","Address="+new_num_of_home,"Address_id="+Old_num_of_home_id);
-               ResultSet res = Data_access.DB_controller.Select("Parent_id", "address", "Address_id="+Old_num_of_home_id);
+               DB_controller.Get_DB_controller().Connect();
+               Data_access.DB_controller.Get_DB_controller().Update("address","Address="+new_num_of_home,"Address_id="+Old_num_of_home_id);
+               ResultSet res = DB_controller.Get_DB_controller().Select("Parent_id", "address", "Address_id="+Old_num_of_home_id);
                int x = 0;
                while (res.next()) {                    
                    x = res.getInt("Parent_id"); 
                }
-               boolean z = Data_access.DB_controller.Update("address", "Address='"+new_Street+"'", "Address_id="+x);
-               Data_access.DB_controller.Close();
+               boolean z =DB_controller.Get_DB_controller().Update("address", "Address='"+new_Street+"'", "Address_id="+x);
+               Data_access.DB_controller.Get_DB_controller().Close();
                return z;
            } catch (SQLException ex) {
                Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
@@ -328,49 +332,49 @@ public class Service_Management {
     {
         try {
             HashMap<Integer,String> m = new HashMap<>();
-            Data_access.DB_controller.Connect();
-            ResultSet res = Data_access.DB_controller.Select("Address_id", "user_address", "User_id="+User_id);
+            DB_controller.Get_DB_controller().Connect();
+            ResultSet res = Data_access.DB_controller.Get_DB_controller().Select("Address_id", "user_address", "User_id="+User_id);
             int x=0;
             while(res.next())
             {
                 x = res.getInt("Address_id");
-                m.put(x,new System_manage().get_address_from_db(x));
+                m.put(x,this.get_address_from_db(x));
             }
-            Data_access.DB_controller.Close();
+            DB_controller.Get_DB_controller().Close();
             return m;
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Data_access.DB_controller.Close();
+        DB_controller.Get_DB_controller().Close();
         return null;    }
     //omar
     boolean Add_New_Phone_To_User(String New_phone,int User_id)
     {
-        if(!Validations.Is_digit(New_phone))
+        if(!Validations.Get_Validations().Is_digit(New_phone))
             return false;
-        Data_access.DB_controller.Connect();
+        DB_controller.Get_DB_controller().Connect();
         HashMap<String,String> m = new HashMap<>();
         m.put("User_id", Integer.toString(User_id));
         m.put("Phone",New_phone);
-        Data_access.DB_controller.Insert("phone", m);
-        Data_access.DB_controller.Close();
+        DB_controller.Get_DB_controller().Insert("phone", m);
+        DB_controller.Get_DB_controller().Close();
         return true;    }
     //omar
     boolean Delete_User_Phone(int Phone_id)
     {
-        Data_access.DB_controller.Connect();
-        boolean z = Data_access.DB_controller.Delete("phone", "phone_id="+Phone_id);
-        Data_access.DB_controller.Close();
+        DB_controller.Get_DB_controller().Connect();
+        boolean z = DB_controller.Get_DB_controller().Delete("phone", "phone_id="+Phone_id);
+        DB_controller.Get_DB_controller().Close();
         return z;
     }
     //omar
     boolean Update_User_Phone(int Old_phone_id,String New_phone)
     {
-        if(!Validations.Is_digit(New_phone))
+        if(!Validations.Get_Validations().Is_digit(New_phone))
             return false;
-        Data_access.DB_controller.Connect();
-        boolean z = Data_access.DB_controller.Update("phone", "phone="+New_phone , "Phone_id="+Old_phone_id);
-        Data_access.DB_controller.Close();
+        DB_controller.Get_DB_controller().Connect();
+        boolean z =DB_controller.Get_DB_controller().Update("phone", "phone="+New_phone , "Phone_id="+Old_phone_id);
+        DB_controller.Get_DB_controller().Close();
         return z;
     }
     //omar
@@ -378,32 +382,32 @@ public class Service_Management {
     {
         try {
             HashMap<Integer,String> m = new HashMap<>();
-            Data_access.DB_controller.Connect();
-            ResultSet res = Data_access.DB_controller.Select("*", "phone", "User_id="+User_id);
+            DB_controller.Get_DB_controller().Connect();
+            ResultSet res = DB_controller.Get_DB_controller().Select("*", "phone", "User_id="+User_id);
             while(res.next())
             {
                 m.put(res.getInt("Phone_id"),res.getString("phone"));
             }
-            Data_access.DB_controller.Close();
+            DB_controller.Get_DB_controller().Close();
             return m;
         } catch (SQLException ex) {
             Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        Data_access.DB_controller.Close();
+        DB_controller.Get_DB_controller().Close();
         return null;
     }
 //sala7
    public String Show_satate(int state)
    {
-       DB_controller.Connect();
-       ResultSet result = DB_controller.Select("State", " state ", " State_id = " + state);
+       DB_controller.Get_DB_controller().Connect();
+       ResultSet result = DB_controller.Get_DB_controller().Select("State", " state ", " State_id = " + state);
        String res= "";
        try {
            while(result.next())
            {
              res = result.getString("State");
            }
-           DB_controller.Close();
+           DB_controller.Get_DB_controller().Close();
        } catch (SQLException ex) {
            ex.printStackTrace();
        }
@@ -411,15 +415,15 @@ public class Service_Management {
    }
    //Emad
  public ArrayList<Complain> Show_complains(int State) {
-       DB_controller.Connect();
-       ResultSet result = DB_controller.Select("*", "Message_type", "Name='Complain'");
+       DB_controller.Get_DB_controller().Connect();
+       ResultSet result = DB_controller.Get_DB_controller().Select("*", "Message_type", "Name='Complain'");
        ArrayList<Complain> C = new ArrayList<Complain>();
        int ID = 0;
        try {
            while (result.next()) {
                ID = result.getInt("Message_type_id");
            }
-           result = DB_controller.Select("*", "recieved", "Message_id=" + ID + " and State_id=" + State);
+           result = DB_controller.Get_DB_controller().Select("*", "recieved", "Message_id=" + ID + " and State_id=" + State);
            while (result.next()) {
                
                Complain complain = new Complain();
