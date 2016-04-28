@@ -5,13 +5,14 @@ import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author moroclash
  */
 public class User {
-
+    public int id;
     private String F_name;
     private String L_name;
     private String Email;
@@ -161,7 +162,7 @@ public class User {
         return true;
     }
     //Emad
-    public String Search_Option(int Option_ID)
+    public String Search_OptionByID(int Option_ID)
     {
         DB_controller.Connect();
         ResultSet result=DB_controller.Select("*","user_option","User_Option_ID="+Option_ID);
@@ -178,6 +179,24 @@ public class User {
         }
         return null;
     }
+    //Emad
+    public int Search_OptionByName(String Option_Name)
+    {
+        DB_controller.Connect();
+        ResultSet result=DB_controller.Select("*","user_option","Name="+Option_Name);
+        try
+        {
+            while(result.next())
+            {
+                return result.getInt("User_option_id");
+            }
+        }
+        catch(Exception E)
+        {
+            System.out.println("Error in Search Option");
+        }
+        return -1;
+    }    
     //Emad
     public boolean add_option (int Type_ID,String Name)
     {
@@ -221,5 +240,25 @@ public class User {
             System.out.println("Error in All Option Available");
         }
         return A;
+    }
+    //Emad
+    public void Insert_Option_Values(User U)
+    {
+        int i=0;
+        ArrayList<Integer> IDs_Of_Options=new ArrayList<Integer>();
+        for(Map.Entry<String,String> entry:U.getAdditional_data().entrySet())
+        {
+            IDs_Of_Options.add(Search_OptionByName(entry.getKey()));
+        }
+        DB_controller.Connect();
+        for(Map.Entry<String,String> entry:U.getAdditional_data().entrySet())
+        {
+        HashMap <String,String> H=new HashMap<String,String>();
+            H.put("User_ID",Integer.toString(U.id));
+            H.put("User_option_id", Integer.toString(IDs_Of_Options.get(i)));
+            H.put("value",entry.getValue());
+            DB_controller.Insert("user_selected_option_values", H);
+            i++;
+        }
     }
 }
