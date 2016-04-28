@@ -29,6 +29,10 @@ public class DB_controller {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
             DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
             System.out.println("ConnectionDB Done");
+              Class.forName("com.mysql.jdbc.Driver");
+
+            DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
+            System.out.println("Done");
         } catch (Exception x) {
             System.out.println("Eroro LL2sf fe el Coonection");
         }
@@ -44,6 +48,17 @@ public class DB_controller {
     }
 
     public static ResultSet Select(String FieldName, String TableName, String Condetion) {
+        String Query="SELECT" +FieldName+ "FROM"+ TableName+ "WHERE" +Condetion;
+        try
+        {
+            PreparedStatement pre=DB_controller.prepareStatement(Query);
+            ResultSet result=pre.executeQuery();
+            return result;
+        }
+        catch(Exception e)
+        {
+            System.out.println("Error in select");
+        }
         return null;
     }
 
@@ -71,13 +86,14 @@ public class DB_controller {
     }
 
     //Emad
-    public static boolean Insert(String TableName, HashMap<String, String> values) {
+    public static int Insert(String TableName, HashMap<String, String> values) {
         String key = "";
         String value = "";
+        ResultSet rs=null;
         for (Map.Entry<String, String> entry : values.entrySet())
         {
-            key += entry.getKey() + ",";
-            value += entry.getValue() + ",";
+            key +=entry.getKey() + ",";
+            value +="'"+ entry.getValue()+"'" + ",";
         }
         String Attributes = "";
         String Values = "";
@@ -89,16 +105,18 @@ public class DB_controller {
         }
         Attributes = "(" + Attributes + ")";
         Values = "(" + Values + ")";
-        String Query = "INSERT INTO " + TableName + " " + Attributes + " VALUES '" + Values + "' ";
+        String Query = "INSERT INTO " + TableName + " " + Attributes + " VALUES " + Values + " ";
         try {
-            PreparedStatement pre = DB_controller.prepareStatement(Query);
-            pre.execute();
-            return true;
+            PreparedStatement pre = DB_controller.prepareStatement(Query,Statement.RETURN_GENERATED_KEYS);
+            pre.executeUpdate();
+            rs=pre.getGeneratedKeys();
+            rs.next();
+            return rs.getInt(1);                    
         } catch (SQLException ex)
         {
-            System.out.println("Error in Insert Function");
-            return false;
+            System.out.println("Error in Insert Function"+ex);
         }
+        return -1;
     }
     
     

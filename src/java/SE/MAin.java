@@ -5,6 +5,7 @@
  */
 package SE;
 
+import Data_access.DB_controller;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,9 +16,6 @@ import java.util.Date;
  */
 public class MAin {
     public static void main(String[] args) {
-       DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-         Date date = new Date();
-       
-	       System.err.println(dateFormat.format(date));
+        DB_controller.Connect();
     }
 }

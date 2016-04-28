@@ -5,6 +5,8 @@
  */
 package SE;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author moroclash
@@ -15,8 +17,18 @@ public class Order {
     private int Date;
     private String Tecnical_description;
     private int My_Service ;
+    private ArrayList<Integer> My_Technical_id ;
     private int State;
     private int Date_requist;
+
+    public ArrayList<Integer> getMy_Technical_id() {
+        return My_Technical_id;
+    }
+
+    public void setMy_Technical_id(ArrayList<Integer> My_Technical_id) {
+        this.My_Technical_id = My_Technical_id;
+    }
+    
 
     public void setDate(int Date) {
         this.Date = Date;

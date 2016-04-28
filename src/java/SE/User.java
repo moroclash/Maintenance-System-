@@ -1,5 +1,6 @@
 package SE;
 
+import Data_access.DB_controller;
 import java.lang.reflect.Array;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -103,19 +104,11 @@ public class User {
         return Type_id;
     }
 
+
     public HashMap<Integer, String> getAddresses() {
         return Addresses;
     }    
     
-    //omar
-    public boolean Update_address(int address_id,String new_address) {
-        if(Validations.Is_alphanumaric(new_address))
-        { 
-            Addresses.replace(address_id, new_address);
-            return true;
-        }
-        return false;
-    }
 
     //omar
     public ArrayList<General_massge> Show_all_my_rescived_massage() {
@@ -248,4 +241,80 @@ public class User {
     
     
 
+    //Emad
+    public boolean add_new_user(String Name,int Parent_id)
+    {
+        DB_controller.Connect();
+        HashMap<String,String> H=new HashMap<String,String>();
+        H.put("Name", Name);
+        H.put("parent_id",Integer.toString(Parent_id));
+        int Check=DB_controller.Insert("type_user", H);
+        DB_controller.Close();
+        if(Check==-1)
+            return false;
+        return true;
+    }
+    
+    //Emad
+    public String Search_Option(int Option_ID)
+    {
+        DB_controller.Connect();
+        ResultSet result=DB_controller.Select("*","user_option","User_Option_ID="+Option_ID);
+        try
+        {
+            while(result.next())
+            {
+                return result.getString("Name");
+            }
+        }
+        catch(Exception E)
+        {
+            System.out.println("Error in Search Option");
+        }
+        return null;
+    }
+    //Emad
+    public boolean add_option (int Type_ID,String Name)
+    {
+        DB_controller.Connect();
+        HashMap<String,String> H=new HashMap<String,String>();
+        H.put("Name",Name);
+        H.put("Type_id", Integer.toString(Type_ID));
+        int check=DB_controller.Insert("user_option", H);
+        if(check==-1)
+            return false;
+        return true;
+    }
+    //Emad
+    public void Add_User_Option (int user_type_id,int []Options_id)
+    {
+        DB_controller.Connect();
+        for(int i=0;i<Options_id.length;i++)
+        {
+            HashMap<String,String> H=new HashMap<String,String>();
+            H.put("User_Type_ID",Integer.toString(user_type_id));
+            H.put("user_option_id",Integer.toString(Options_id[i]));
+            DB_controller.Insert("User_Selected_Option", H);
+        }
+        DB_controller.Close();
+    }
+    //Emad
+    public ArrayList<Integer> All_Options_Available(int Type_ID)
+    {
+        DB_controller.Connect();
+        ArrayList<Integer> A=new ArrayList<Integer>();
+        ResultSet result=DB_controller.Select("*", "user_selected_option","user_type_id="+Type_ID);
+        try
+        {
+            while(result.next())
+            {
+                A.add(result.getInt("user_option_id"));
+            }
+        }
+        catch(Exception E)
+        {
+            System.out.println("Error in All Option Available");
+        }
+        return A;
+    }
 }
