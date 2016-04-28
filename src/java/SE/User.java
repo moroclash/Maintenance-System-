@@ -24,18 +24,10 @@ public class User {
     private String Password;
     private int Type_id;
     private String Gander;
-<<<<<<< HEAD
-    private HashMap<Integer, String> Additional_data=new HashMap<Integer,String>();
-    private ArrayList<String> Phones=new ArrayList<String>();
-    private ArrayList<String> Addresses;
-    private ArrayList<Massage> Inbox;
-    private int Block;
-=======
-    private HashMap<String, String> Additional_data;
+    private HashMap<Integer, String> Additional_data;
     private HashMap<Integer,String> Phones;
     private HashMap<Integer,String> Addresses;
     private boolean Block;
->>>>>>> d51e86ad1738792236d30a513ebd40b2cdf56f8d
 
     public void setBlock(boolean Block) {
         this.Block = Block;
@@ -234,7 +226,6 @@ public class User {
         return Phones;
     }
 
-<<<<<<< HEAD
     public void Add_new_phone(String New_phone) {
 
     }
@@ -248,31 +239,14 @@ public class User {
     }
 
     public HashMap<Integer, String> getAdditional_data() {
-=======
-    
-    //////////////////////////////
-    
-    public HashMap<String, String> getAdditional_data() {
->>>>>>> d51e86ad1738792236d30a513ebd40b2cdf56f8d
         return Additional_data;
     }
-    public void setAdditional_data(HashMap  <Integer, String>Additional_data) {
-        this.Additional_data= Additional_data;
-    }    
 
-    public boolean Add_new_additional_info(String Key, String Value) {
-        return false;
+    public void setAdditional_data(HashMap<Integer, String> Additional_data) {
+        this.Additional_data = Additional_data;
     }
 
-    public boolean Delete_additional_info(String Key) {
-        return false;
-    }
 
-    public boolean Update_additional_info(String Old_key, String New_key, String New_value) {
-        return false;
-    }
-    
-    
     
  
     
@@ -387,22 +361,13 @@ public class User {
     {
         HashMap <Integer,String> H=new HashMap<Integer,String> ();
         DB_controller.Connect();
-        ResultSet result=DB_controller.Select("*","user_selected_option_values","User_ID="+id);
+        ResultSet result=DB_controller.Select("*","user_selected_option_values","User_ID="+User_id);
         try
         {
-<<<<<<< HEAD
             while(result.next())
             {
                 H.put((result.getInt("User_option_id")),result.getString("Value"));
             }
-=======
-        HashMap <String,String> H=new HashMap<String,String>();
-            H.put("User_ID",Integer.toString(U.getID()));
-            H.put("User_option_id", Integer.toString(IDs_Of_Options.get(i)));
-            H.put("value",entry.getValue());
-            DB_controller.Insert("user_selected_option_values", H);
-            i++;
->>>>>>> d51e86ad1738792236d30a513ebd40b2cdf56f8d
         }
         catch(Exception E)
         {
