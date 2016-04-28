@@ -11,7 +11,7 @@ package SE;
  */
 public class Feedback {
     private int Id;
-    private Order My_order;
+    private int My_order;
     private int System_quality;
     private int Service_quality;
 
@@ -19,10 +19,15 @@ public class Feedback {
         this.Id = Id;
     }
 
-    public void setMy_order(Order My_order) {
+    public void setMy_order(int My_order) {
         this.My_order = My_order;
     }
 
+    public int getMy_order() {
+        return My_order;
+    }
+
+    
     public void setService_quality(int Service_quality) {
         this.Service_quality = Service_quality;
     }
@@ -33,10 +38,6 @@ public class Feedback {
 
     public int getId() {
         return Id;
-    }
-
-    public Order getMy_order() {
-        return My_order;
     }
 
     public int getService_quality() {

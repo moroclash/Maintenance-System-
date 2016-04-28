@@ -7,11 +7,14 @@ package SE;
 
 import Data_access.DB_controller;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,6 +28,23 @@ public class System_manage {
 
     public boolean Regist_customer(Customer customer) {
         return true;
+    }
+    //sala7
+    public String Show_satate(int state)
+    {
+        DB_controller.Connect();
+        ResultSet result = DB_controller.Select("State", " state ", " State_id = " + state);
+        String res= "";
+        try {
+            while(result.next())
+            {
+              res = result.getString("State");
+            }
+            DB_controller.Close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return res;
     }
 
     //Emad
@@ -89,8 +109,35 @@ public class System_manage {
         return null;
     }
 
+   //sala7
     public Branch Search_branch(int Branch_id) {
-        return null;
+        
+        DB_controller.Connect();
+        Branch branch = new Branch();
+        ResultSet result = DB_controller.Select("*", " branch ", " Branch_id =" +Branch_id);
+        int location=-1;
+        try {
+            while(result.next())
+            {
+              branch.setId(result.getInt("Branch_id"));
+              branch.setUser_id(result.getInt("User_id"));
+              location = result.getInt("");
+            }
+            result = DB_controller.Select("Address", "address", "Address_id = " + location);
+            while(result.next())
+            {
+                branch.setLocation(result.getString("Address"));
+            }
+            result = DB_controller.Select("phone", "branch_phone", " Branch_id = " + Branch_id);
+            while (result.next())
+            {
+              branch.push(result.getString("phone"));
+            }
+        } catch (SQLException ex) {
+            DB_controller.Close();
+            return null;
+        }
+        return branch;
     }
 
     public ArrayList<Employee> Show_all_employee(String Employee_type) {
@@ -108,10 +155,41 @@ public class System_manage {
         return null;
     }
 
+   //sala7
     public Object Log_in(String User_Name, String Password) {
+        
+        DB_controller.Connect();
+        System_manage system = new System_manage();
+        Employee employee ;
+        Customer customer ;
+        
+        ResultSet result = DB_controller.Select(" name ", " type_user ", " Type_user_id = 4 ");
+        String name = "";
+        try {
+            while(result.next())
+            {
+              name = result.getString("name");
+            }
+        } catch (SQLException ex) {
+        }
+        result =DB_controller.Select("User_id", " user ", " Email = " + User_Name +"and"+ "Password = " + Password);
+        try {
+            while(result.next())
+            {   
+                if(name.equals("customer"))
+                {
+                  customer = (Customer) system.Search_user_by_id(result.getInt("EMP_ID"));
+                  return customer;
+                }
+                else{
+                  employee = (Employee) system.Search_user_by_id(result.getInt("EMP_ID"));
+                return employee;
+                }
+            }
+        } catch (SQLException ex) {
+        }
         return null;
     }
-
     public ArrayList<Request> Show_my_requist(int userID) {
         try
         {
@@ -265,12 +343,55 @@ public class System_manage {
         return true;
     }//END Give_order
 
-    public Bill Search_bill(int Branch_id) {
+    //sala7
+    public Bill Search_bill(int Order_id) {
+        
+        DB_controller.Connect();
+        Bill bill = new Bill();
+        int Method_ID=-1;
+        ResultSet result = DB_controller.Select("*" , " bill " , " Order_id = " + Order_id );
+        try {
+            while(result.next()){
+               bill.setId(result.getInt("BILL_id"));
+               bill.setDate_id(result.getInt("Date_id"));
+               bill.setCost(result.getDouble("Cost"));
+               bill.setMy_order(result.getInt("Order_id"));
+               bill.setTime(result.getString("Time"));
+               Method_ID=result.getInt("Payment_method_id");
+            }
+               result=DB_controller.Select("Payment_method_id", "parent_methode " , "parent_methode_id = " + Method_ID);
+               while(result.next())
+               {
+                   bill.push("Payment_Method",result.getString("Methode"));
+               }
+               return bill;
+        } catch (SQLException ex) {
+            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+            DB_controller.Close();
+        }
         return null;
     }
 
+    //sala7
     public Feedback Search_feedback(int Order_id) {
-        return null;
+        Feedback feedback = new Feedback();
+        DB_controller.Connect();
+        ResultSet result = DB_controller.Select("*", "feedback", " Order_id = " + Order_id);
+        try {
+            while(result.next())
+            {
+              feedback.setId(result.getInt("Feedback_id"));
+              feedback.setMy_order(result.getInt("Order_id"));
+              feedback.setService_quality(result.getInt("System_quality"));
+              feedback.setSystem_quality(result.getInt("Service_quality"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+            DB_controller.Close();
+            return null;
+        }
+        DB_controller.Close();
+        return feedback;
     }
 //Emad
 
@@ -556,13 +677,20 @@ public class System_manage {
         DB_controller.Close();
         return true;
     }
-    //Sala7
-
-    public boolean Is_fixed(Bill bill, String Technical_description, int order_id, int device_id) {
-        DB_controller.Connect();
-        DB_controller.Update("order_fixable ", " State_id = " + 2 + " Technical_description = " + Technical_description, " Order_fixable_id = " + order_id);
-        DB_controller.Update("device ", " State_id = " + 2, " Device_id = " + device_id);
-
+   //Sala7
+     public boolean Is_fixed(Bill bill , String Technical_description , int order_id , int device_id)
+    {   DB_controller.Connect();
+        DB_controller.Update("order_fixable " , " State_id = 2"+" Technical_description = " + Technical_description , " Order_fixable_id = " + order_id );
+        DB_controller.Update("device ", " State_id = 2" , " Device_id = " + device_id );
+        Bill bill2 = new Bill(); 
+        int payment = 1;
+        HashMap<String,String> U=new HashMap<String,String>();
+        U.put("BILL_id",Integer.toString(bill.getId()));
+        U.put("Date_id", Integer.toString(bill.getDate_id()));
+        U.put("Cost", Double.toString(bill.getCost()));
+        U.put("Order_id", Integer.toString(bill.getMy_order()));
+        U.put("Time", bill.getTime());
+        DB_controller.Insert("bill", U);
         DB_controller.Close();
         return true;
     }

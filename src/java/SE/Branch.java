@@ -7,11 +7,28 @@ public class Branch {
     private int Id;
     private String Location;
     private ArrayList<String> phones;
+    private int user_id;
 
+    public  void push (String value)
+    {
+       this.phones.add(value); 
+    }
     public int getId() {
         return Id;
     }
 
+    public void setPhones(ArrayList<String> phones) {
+        this.phones = phones;
+    }
+
+    public void setUser_id(int user_id) {
+        this.user_id = user_id;
+    }
+
+    public int getUser_id() {
+        return user_id;
+    }
+ 
     public void setId(int Id) {
         this.Id = Id;
     }
