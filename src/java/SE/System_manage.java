@@ -117,7 +117,47 @@ public class System_manage {
         return true;
     }
 
-    public boolean Give_order(Order order) {
+     public boolean Give_order(Order order) {
+        DB_controller.Connect();
+        //Table order_fixable 
+        HashMap<String,String> Order=new HashMap<>(10); 
+        Order.put("Requist_id", String.valueOf(order.getMy_requist()));
+        Order.put("Date_start_id",String.valueOf(Get_date_iD()));
+        Order.put("Technical_description",order.getTecnical_description());
+        Order.put("Service_id",String.valueOf(order.getMy_Service()));
+        Order.put("State_id","3");//wait fix
+        Order.put("date_End_id",String.valueOf(order.getDate_requist()));
+        DB_controller.Insert("order_fixable", Order);
+        //end teabl order_fixable
+        
+        //Table order_flexible_details
+        HashMap<String,String> ordflexde=new HashMap<>(1);
+        Request req= Search_requist(order.getMy_requist());
+        ArrayList<Integer> dev=req.getMy_device();
+        int id_order=0; 
+        ArrayList<Integer> ID_rder_flexible_details=new ArrayList<>();
+        for(Integer d:dev)
+        {
+            ordflexde.put("Flexible_id",String.valueOf(id_order));
+            ordflexde.put("Device_id",String.valueOf(d));
+            DB_controller.Insert("order_flexible_details",ordflexde);
+            ID_rder_flexible_details.add(d);
+            ordflexde=new HashMap<>(1);
+        }
+        //END
+        
+        //Table order_flixer
+        ArrayList<Integer> Techincal_ID= order.getMy_Technical_id();
+        int counter=0;
+        for(Integer d:ID_rder_flexible_details)
+        {
+            ordflexde.put("Technical_id",String.valueOf(Techincal_ID.get(counter)));
+            ordflexde.put("Order_id",String.valueOf(d));
+            DB_controller.Insert("order_flixer",ordflexde);
+            ordflexde=new HashMap<>(1);
+            counter ++;
+        }
+        
         return true;
     }
 
@@ -198,22 +238,7 @@ public class System_manage {
         return null;
     }
 
-    public int getDateID() {
-        DB_controller.Connect();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
-        HashMap<String, String> Date = new HashMap<>(1);
-        Date.put("Date", date.toString());
-        DB_controller.Insert("date", Date);
-        ResultSet isDate = DB_controller.Select("Date_id", "date", "Date=" + date.toString());
-        try {
-            return isDate.getInt("Date_id");
 
-        } catch (Exception s) {
-            s.printStackTrace();
-            return -1;
-        }
-    }
 
     public boolean Send_Message(General_massge message) {
         DB_controller.Connect();
@@ -228,6 +253,33 @@ public class System_manage {
 
         return true;
     }
+     public int Get_date_iD()
+    {
+         DB_controller.Connect();
+         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+         Date date = new Date();
+         HashMap<String,String> Date=new HashMap<>(1);
+         Date.put("Date", date.toString());
+         DB_controller.Insert("date", Date);
+         ResultSet isDate=DB_controller.Select("Date_id", "date", "Date="+date.toString());
+         try
+         {
+             return isDate.getInt("Date_id");
+              
+         }
+         catch(Exception s){    
+             s.printStackTrace();
+             return -1;
+         }
+    }
+    public String Get_time()
+    {
+         DB_controller.Connect();
+         SimpleDateFormat printFormat = new SimpleDateFormat("HH:mm:ss");
+         Date date = new Date();
+         return  date.toString(); 
+    }
+    
     //Emad
 
     public boolean Add_User(User user) {
