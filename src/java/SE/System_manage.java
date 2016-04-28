@@ -582,7 +582,7 @@ public class System_manage {
     }//END Get_time
     
     //Emad
-    public boolean Add_User(User user) {
+    public void Add_User(User user) {
         DB_controller.Connect();
         HashMap<String, String> U = new HashMap<String, String>();
         U.put("Fname", user.getF_name());
@@ -591,10 +591,7 @@ public class System_manage {
         U.put("Password", user.getPassword());
         U.put("Gender", user.getGander());
         U.put("Block", ""+user.getBlock());
-        int check = DB_controller.Insert("USER", U);
-        if(check==-1)
-            return false;
-        return true;
+        user.Insert_Option_Values(user);
     }
 
     //Emad
