@@ -10,8 +10,11 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -24,7 +27,7 @@ public class DB_controller {
     public static void Connect() {
         try {
             Class.forName("com.mysql.jdbc.Driver").newInstance();
-            DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/maintenenceWEB?zeroDateTimeBehavior=convertToNull", "root", "");
+            DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
             System.out.println("ConnectionDB Done");
         } catch (Exception x) {
             System.out.println("Eroro LL2sf fe el Coonection");
@@ -97,5 +100,23 @@ public class DB_controller {
             return false;
         }
     }
-
+    
+    
+    public static void main(String[] args) {
+        
+        try {
+            Connect();
+            String s = "INSERT INTO address ('Address','Parent_id') VALUES ('dasdasdas','2')";
+            //Statement ss = DB_controller.createStatement();
+            PreparedStatement ss = DB_controller.prepareStatement(s);
+            ss.executeQuery();
+//            int x = ss.executeUpdate(s, Statement.RETURN_GENERATED_KEYS);
+            //System.out.println(x);
+            Close();
+        } catch (SQLException ex) {
+            Logger.getLogger(DB_controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
 }

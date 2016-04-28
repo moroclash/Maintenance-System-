@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package SE;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -120,5 +121,21 @@ public  class Validations {
            return false;
        }
    }
+   //omar
+   public static boolean Is_alphanumaric (String string)
+   {
+       pattern = pattern.compile("[0-9a-zA-Z]");
+       matcher = pattern.matcher(string);
+       return matcher.matches();
+   }
+   //omar
+   public static boolean Is_gender(String gender)
+   {
+       if(gender.equalsIgnoreCase("Male")||gender.equalsIgnoreCase("Female"))
+           return true;
+       else
+           return false;
+   }
+   
     
 }

@@ -10,11 +10,11 @@ package SE;
  * @author moroclash
  */
 public class MSG {
-    public int Id;
+    private int Id;
     private String Date;
     private String Time;
     private String Content;
-    private String Massage_type;
+    private int Massage_type;
     private int State;
 
     public void setContent(String Content) {
@@ -41,11 +41,11 @@ public class MSG {
         return Id;
     }
 
-    public void setMassage_type(String Massage_type) {
+    public void setMassage_type(int Massage_type) {
         this.Massage_type = Massage_type;
     }
 
-    public String getMassage_type() {
+    public int getMassage_type() {
         return Massage_type;
     }
 
