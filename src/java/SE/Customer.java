@@ -43,7 +43,7 @@ public class Customer extends User {
     public ArrayList<Order> show_my_order(int User_id) {
         return null;
     }
-
+//Emad
     public boolean forget_My_Password(String email, int Sequirty_question_id, String Answer) {
         DB_controller DB = DB_controller.Get_DB_controller();
         int User_ID = -1;
