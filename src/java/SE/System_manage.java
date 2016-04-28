@@ -569,7 +569,7 @@ public class System_manage {
         U.put("Password", user.getPassword());
         U.put("Gender", user.getGander());
         U.put("Block", ""+user.getBlock());
-        user.Insert_Option_Values(user);
+        user.Insert_Option_Values(user,DB_controller.Insert("user", U));
     }
 
     //Emad
@@ -586,10 +586,7 @@ public class System_manage {
                 U.setGander(result.getString("GENDER"));
                 U.setPassword(result.getString("Password"));
             }
-            ResultSet result2 = DB_controller.Select("*", "phone", "User_ID=" + User_id);
-            while (result2.next()) {
-                U.setPhones(result2.getString("Phone"));
-            }
+            U.setAdditional_data(U.Get_Option_Values_OF_USER(User_id));
             return U;
         } catch (Exception e) {
             System.out.println("Error in Search User By ID"+e);

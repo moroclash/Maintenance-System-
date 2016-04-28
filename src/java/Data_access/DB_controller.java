@@ -43,7 +43,7 @@ public class DB_controller {
     }
 
     public static ResultSet Select(String FieldName, String TableName, String Condetion) {
-        String Query="SELECT" +FieldName+ "FROM"+ TableName+ "WHERE" +Condetion;
+        String Query="SELECT " +FieldName+ " FROM "+ TableName+ " WHERE " +Condetion;
         try
         {
             PreparedStatement pre=DB_controller.prepareStatement(Query);

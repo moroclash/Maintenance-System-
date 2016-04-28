@@ -19,7 +19,7 @@ public class User {
     private String Password;
     private int Type_id;
     private String Gander;
-    private HashMap<String, String> Additional_data;
+    private HashMap<Integer, String> Additional_data=new HashMap<Integer,String>();
     private ArrayList<String> Phones=new ArrayList<String>();
     private ArrayList<String> Addresses;
     private ArrayList<Massage> Inbox;
@@ -133,9 +133,12 @@ public class User {
         return false;
     }
 
-    public HashMap<String, String> getAdditional_data() {
+    public HashMap<Integer, String> getAdditional_data() {
         return Additional_data;
     }
+    public void setAdditional_data(HashMap  <Integer, String>Additional_data) {
+        this.Additional_data= Additional_data;
+    }    
 
     public boolean Add_new_additional_info(String Key, String Value) {
         return false;
@@ -149,17 +152,15 @@ public class User {
         return false;
     }
     //Emad
-    public boolean add_new_user(String Name,int Parent_id)
+    //pre Path the name of new user and the parent id 
+    //post add to table type user
+    public int add_new_user(String Name,int Parent_id)
     {
         DB_controller.Connect();
         HashMap<String,String> H=new HashMap<String,String>();
         H.put("Name", Name);
         H.put("parent_id",Integer.toString(Parent_id));
-        int Check=DB_controller.Insert("type_user", H);
-        DB_controller.Close();
-        if(Check==-1)
-            return false;
-        return true;
+        return DB_controller.Insert("type_user", H);
     }
     //Emad
     public String Search_OptionByID(int Option_ID)
@@ -183,7 +184,7 @@ public class User {
     public int Search_OptionByName(String Option_Name)
     {
         DB_controller.Connect();
-        ResultSet result=DB_controller.Select("*","user_option","Name="+Option_Name);
+        ResultSet result=DB_controller.Select("*","user_option","Name='"+Option_Name+"'");
         try
         {
             while(result.next())
@@ -196,31 +197,28 @@ public class User {
             System.out.println("Error in Search Option");
         }
         return -1;
-    }    
+    }
     //Emad
-    public boolean add_option (int Type_ID,String Name)
+    //pre Path Type_OPTION_ID(text,int,....),and Name OF Type
+    //post Add to Table user_option 
+    public int add_option (int Type_ID,String Name)
     {
         DB_controller.Connect();
         HashMap<String,String> H=new HashMap<String,String>();
         H.put("Name",Name);
         H.put("Type_id", Integer.toString(Type_ID));
-        int check=DB_controller.Insert("user_option", H);
-        if(check==-1)
-            return false;
-        return true;
+        return DB_controller.Insert("user_option", H);
     }
     //Emad
-    public void Add_User_Option (int user_type_id,int []Options_id)
+    public int Add_User_Option (int user_type_id,int Option_ID)
     {
         DB_controller.Connect();
-        for(int i=0;i<Options_id.length;i++)
-        {
             HashMap<String,String> H=new HashMap<String,String>();
             H.put("User_Type_ID",Integer.toString(user_type_id));
-            H.put("user_option_id",Integer.toString(Options_id[i]));
-            DB_controller.Insert("User_Selected_Option", H);
-        }
+            H.put("user_option_id",Integer.toString(Option_ID));
+            int i=DB_controller.Insert("User_Selected_Option", H);
         DB_controller.Close();
+        return i;
     }
     //Emad
     public ArrayList<Integer> All_Options_Available(int Type_ID)
@@ -239,26 +237,59 @@ public class User {
         {
             System.out.println("Error in All Option Available");
         }
+        DB_controller.Close();
         return A;
     }
     //Emad
-    public void Insert_Option_Values(User U)
+    public void Insert_Option_Values(User U,int User_ID)
     {
-        int i=0;
-        ArrayList<Integer> IDs_Of_Options=new ArrayList<Integer>();
-        for(Map.Entry<String,String> entry:U.getAdditional_data().entrySet())
-        {
-            IDs_Of_Options.add(Search_OptionByName(entry.getKey()));
-        }
         DB_controller.Connect();
-        for(Map.Entry<String,String> entry:U.getAdditional_data().entrySet())
+        for(Map.Entry<Integer,String> entry:U.getAdditional_data().entrySet())
         {
-        HashMap <String,String> H=new HashMap<String,String>();
-            H.put("User_ID",Integer.toString(U.id));
-            H.put("User_option_id", Integer.toString(IDs_Of_Options.get(i)));
+            HashMap<String,String> H=new HashMap<String,String> ();
+            H.put("User_ID",Integer.toString(User_ID));
+            H.put("User_option_id",Integer.toString(entry.getKey()));
             H.put("value",entry.getValue());
-            DB_controller.Insert("user_selected_option_values", H);
-            i++;
+            DB_controller.Insert("user_selected_option_values",H);
         }
+        DB_controller.Close();
+    } 
+    //Emad
+    public HashMap <Integer,String> Get_Option_Values_OF_USER(int  User_id)
+    {
+        HashMap <Integer,String> H=new HashMap<Integer,String> ();
+        DB_controller.Connect();
+        ResultSet result=DB_controller.Select("*","user_selected_option_values","User_ID="+id);
+        try
+        {
+            while(result.next())
+            {
+                H.put((result.getInt("User_option_id")),result.getString("Value"));
+            }
+        }
+        catch(Exception E)
+        {
+            System.out.println("Error in GET OPTION VALUES");
+        }
+        return H;
     }
+    //Emad
+    public ArrayList<String> Get_Options_OF_TYPE(int  Type_ID)
+    {
+        ArrayList<String> A=new ArrayList<String>();
+        DB_controller.Connect();
+        ResultSet result=DB_controller.Select("*","user_option","Type_ID="+Type_ID);
+        try
+        {
+            while(result.next())
+            {
+                A.add(result.getString("NAME"));
+            }
+        }
+        catch(Exception E)
+        {
+            System.out.println("Error in GET OPTION OF TYPES");
+        }
+        return A;
+    }      
 }
