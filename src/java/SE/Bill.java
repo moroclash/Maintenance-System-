@@ -16,9 +16,12 @@ public class Bill {
     private int Date_id;
     private Double Cost;
     private HashMap <String , String > Payment_method_option;
-    private Order My_order;
+    private int My_order;
     private String Time;
-
+   public void push(String Key,String Value)
+   {
+    this.Payment_method_option.put(Key, Value);
+   }
     public void setId(int Id) {
         this.Id = Id;
     }
@@ -35,9 +38,11 @@ public class Bill {
         this.Payment_method_option = Payment_method_option;
     }
 
-    public void setMy_order(Order My_order) {
+    public void setMy_order(int My_order) {
         this.My_order = My_order;
     }
+
+   
 
     public void setTime(String Time) {
         this.Time = Time;
@@ -55,12 +60,13 @@ public class Bill {
         return Cost;
     }
 
-    public Order getMy_order() {
-        return My_order;
-    }
-
+   
     public String getTime() {
         return Time;
+    }
+
+    public int getMy_order() {
+        return My_order;
     }
 
     public HashMap<String, String> getPayment_method_option() {

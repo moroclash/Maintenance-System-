@@ -15,6 +15,17 @@ public class Order {
     private int Id;
     private int My_requist;
     private int Date;
+
+    public void setDate(int Date) {
+        this.Date = Date;
+    }
+
+    public int getDate() {
+        return Date;
+    }
+
+    
+    
     private String Tecnical_description;
     private int My_Service ;
     private ArrayList<Integer> My_Technical_id ;
@@ -30,9 +41,6 @@ public class Order {
     }
     
 
-    public void setDate(int Date) {
-        this.Date = Date;
-    }
 
     public void setDate_requist(int Date_requist) {
         this.Date_requist = Date_requist;
@@ -58,10 +66,7 @@ public class Order {
         this.Tecnical_description = Tecnical_description;
     }
 
-    public int getDate() {
-        return Date;
-    }
-
+   
     public int getDate_requist() {
         return Date_requist;
     }

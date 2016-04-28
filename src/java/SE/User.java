@@ -27,6 +27,16 @@ public class User {
     private HashMap<String, String> Additional_data;
     private HashMap<Integer,String> Phones;
     private HashMap<Integer,String> Addresses;
+    private boolean Block;
+
+    public void setBlock(boolean Block) {
+        this.Block = Block;
+    }
+    
+    public boolean getBlock()
+    {
+        return this.Block;
+    }
  
     public void setID(int ID) {
         this.ID = ID;
