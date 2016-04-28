@@ -241,17 +241,34 @@ public class System_manage {
 
 
     public boolean Send_Message(General_massge message) {
-        DB_controller.Connect();
-        HashMap<String, String> Mass = new HashMap<>(1);
-
-        Mass.put("Content", message.getContent());
-        Mass.put("sender_id", String.valueOf(message.getSender_id()));
-        Mass.put("Type_id", message.getMassage_type());
-        DB_controller.Insert(null, Mass);
-        DB_controller.Insert("message", Mass);
-        DB_controller.Select(null, null, null);
-
+       
+        try
+       {
+            DB_controller.Connect();
+            HashMap<String,String> Mass=new HashMap<>(10);
+            int id=Get_date_iD();
+            String time=Get_time();
+            Mass.put("Content",message.getContent());
+            Mass.put("sender_id",String.valueOf(message.getSender_id()));
+            Mass.put("Type_id", message.getMassage_type());
+            Mass.put("Date_id", String.valueOf(id));
+            Mass.put("Time", time);
+            Mass.put("Parent_id", "0");
+            DB_controller.Insert("message",Mass);
+            ResultSet s=  DB_controller.Select("Message_id", "message", "sender_id="+message.getSender_id()+" Date_id="+String.valueOf(id)+" Time="+time);
+            int idmass=s.getInt("Message_id");
+            Mass=new  HashMap<String, String>(5);
+            Mass.put("Reciever_id", String.valueOf(message.getReciver()));
+            Mass.put("Message_id", String.valueOf(idmass));
+            Mass.put("State_id", "5");
+            DB_controller.Insert("recieved", Mass);
+       }
+       catch(Exception ex)
+       {
+           ex.printStackTrace();
+       }
         return true;
+    
     }
      public int Get_date_iD()
     {
