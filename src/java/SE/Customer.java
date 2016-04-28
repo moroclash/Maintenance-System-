@@ -95,7 +95,7 @@ public class Customer extends User{
     {
         DB_controller.Connect();
         HashMap<String,String> H=new HashMap<String,String>();
-        H.put("Message_ID",Integer.toString(complain.Id));
+        H.put("Message_ID",Integer.toString(complain.getId()));
         H.put("Order_ID",Integer.toString(Order_id));
         int check=DB_controller.Insert("Complain’s_order", H);
         DB_controller.Close();

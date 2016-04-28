@@ -3,68 +3,117 @@ package SE;
 import Data_access.DB_controller;
 import java.lang.reflect.Array;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
  * @author moroclash
  */
 public class User {
-    public int id;
+    
+    private int ID;
     private String F_name;
     private String L_name;
     private String Email;
     private String Password;
     private int Type_id;
     private String Gander;
+<<<<<<< HEAD
     private HashMap<Integer, String> Additional_data=new HashMap<Integer,String>();
     private ArrayList<String> Phones=new ArrayList<String>();
     private ArrayList<String> Addresses;
     private ArrayList<Massage> Inbox;
     private int Block;
+=======
+    private HashMap<String, String> Additional_data;
+    private HashMap<Integer,String> Phones;
+    private HashMap<Integer,String> Addresses;
+    private boolean Block;
+>>>>>>> d51e86ad1738792236d30a513ebd40b2cdf56f8d
 
-    public void setF_name(String F_name) {
+    public void setBlock(boolean Block) {
+        this.Block = Block;
+    }
+    
+    public boolean getBlock()
+    {
+        return this.Block;
+    }
+ 
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public int getID() {
+        return ID;
+    }
+
+    //omar
+    public boolean setF_name(String F_name) {
+        if(!Validations.Is_alpha(F_name))
+            return false;
         this.F_name = F_name;
+        return true;
     }
 
     public String getF_name() {
         return F_name;
     }
 
-    public void setEmail(String Email) {
+    
+    //omar
+    public boolean setEmail(String Email) {
+        if(!Validations.Is_email(Email))
+            return false;
         this.Email = Email;
+        return true;
     }
 
     public String getEmail() {
         return Email;
     }
-
-    public void setGander(String Gander) {
+    //omar
+    public boolean setGander(String Gander) {
+        if(!Validations.Is_gender(Gander))
+            return false;
         this.Gander = Gander;
+        return true;
     }
 
     public String getGander() {
         return Gander;
     }
-
-    public void setL_name(String L_name) {
+    //omar
+    public boolean setL_name(String L_name) {
+        if(!Validations.Is_alpha(L_name))
+            return false;
         this.L_name = L_name;
+        return true;
     }
 
     public String getL_name() {
         return L_name;
     }
-
-    public void setPassword(String Password) {
+    
+    //omar
+    public boolean setPassword(String Password) {
+        if(!Validations.Is_passord(Password))
+            return false;
         this.Password = Password;
+        return true;
     }
 
     public String getPassword() {
         return Password;
     }
-
+    
+    //omar
     public void setType_id(int Type_id) {
         this.Type_id = Type_id;
     }
@@ -72,55 +121,120 @@ public class User {
     public int getType_id() {
         return Type_id;
     }
-    public void setBlock(int Block) {
-        this.Block= Block;
-    }
-    public int getBlock() {
-        return this.Block;
-    }    
-    public void setAddress(String Address) {
-        this.Addresses.add(Address);
-    }
-    public ArrayList<String> getAddresses() {
+
+
+    public HashMap<Integer, String> getAddresses() {
         return Addresses;
+    }    
+    
+
+    //omar
+    public ArrayList<General_massge> Show_all_my_rescived_massage() {
+        try {
+            ArrayList<General_massge> m = new ArrayList<>();
+            Data_access.DB_controller.Connect();
+            ResultSet res = Data_access.DB_controller.Select("Message_id", "recieved", "Reciever_id="+getID());
+            int x=0;
+            while(res.next())
+            {
+                x = res.getInt("Message_id");
+                General_massge ms =(General_massge) new System_manage().Search_Massage(x);
+                m.add(ms);
+            }
+            Data_access.DB_controller.Close();
+            return m;
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
-    public void Add_address(String Cuntry, String Area, String Street, String Num_of_home) {
-
+    
+    //omar
+    public ArrayList<General_massge> Show_my_massage_send() {
+        try {
+            ArrayList<General_massge> m = new ArrayList<>();
+            Data_access.DB_controller.Connect();
+            ResultSet res = Data_access.DB_controller.Select("Message_id", "message", "sender_id="+getID());
+            int x=0;
+            while(res.next())
+            {
+                x = res.getInt("Message_id");
+                General_massge ms =(General_massge) new System_manage().Search_Massage(x);
+                m.add(ms);
+            }
+            Data_access.DB_controller.Close();
+            return m;
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    
+    //omar
+    public ArrayList<General_massge> Show_my_massage(int State_id) {
+        try {
+            ArrayList<General_massge> m = new ArrayList<>();
+            ResultSet res = Data_access.DB_controller.Select("Message_id", "recieved", "Reciever_id="+getID()+",State_id="+State_id);
+            int x=0;
+            while(res.next())
+            {
+                x = res.getInt("Message_id");
+                General_massge ms =(General_massge) new System_manage().Search_Massage(x);
+                m.add(ms);
+            }
+            return m;
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
 
-    public boolean Dellet_address(int Address_id) {
-        return false;
+    
+    
+    //omar
+    public void Add_massage(General_massge New_massage) {
+        new System_manage().Send_Message(New_massage);
+    }
+    
+    
+
+    //omar
+    public boolean DeleteMassge_that_send(int Massage_id) {
+            boolean z = false;
+        try {
+            Data_access.DB_controller.Connect();
+            ResultSet res2 = Data_access.DB_controller.Select("Reciever_id","recieved", "Message_id="+Massage_id);
+            int x = 0;
+            while (res2.next()) {
+               x = res2.getInt("Reciever_id");
+            }
+            z = new System_manage().Update_massage_state(Massage_id, x, 6);
+            Data_access.DB_controller.Close();
+            } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        return z;
+    }
+    
+    //omar
+    public boolean Delete_Massge_that_resived(int Massage_id) {
+            Data_access.DB_controller.Connect();
+            boolean z = new System_manage().Update_massage_state(Massage_id, getID(), 7);
+            Data_access.DB_controller.Close();
+            return z;
     }
 
-    public boolean Update_address(int Old_address_id, String Cuntry, String Area, String Street, String Num_of_home) {
-        return false;
+    public void setPhones(HashMap<Integer, String> Phones) {
+        this.Phones = Phones;
     }
 
-    public ArrayList<Massage> Show_all_my_massage() {
-        return Inbox;
-    }
-
-    public ArrayList<Massage> Show_my_massage(int State_id) {
-        return new ArrayList<>();
-    }
-
-    public void Add_massage(Massage New_massage) {
-
-    }
-
-    public boolean DeleteMassge(int Massage_id) {
-        return false;
-    }
-
-    public void setPhones(String Phone) {
-        this.Phones.add(Phone);
-    }
-
-    public ArrayList<String> getPhones() {
+    public HashMap<Integer, String> getPhones() {
         return Phones;
     }
 
+<<<<<<< HEAD
     public void Add_new_phone(String New_phone) {
 
     }
@@ -134,6 +248,12 @@ public class User {
     }
 
     public HashMap<Integer, String> getAdditional_data() {
+=======
+    
+    //////////////////////////////
+    
+    public HashMap<String, String> getAdditional_data() {
+>>>>>>> d51e86ad1738792236d30a513ebd40b2cdf56f8d
         return Additional_data;
     }
     public void setAdditional_data(HashMap  <Integer, String>Additional_data) {
@@ -151,6 +271,13 @@ public class User {
     public boolean Update_additional_info(String Old_key, String New_key, String New_value) {
         return false;
     }
+    
+    
+    
+ 
+    
+    
+
     //Emad
     //pre Path the name of new user and the parent id 
     //post add to table type user
@@ -162,6 +289,7 @@ public class User {
         H.put("parent_id",Integer.toString(Parent_id));
         return DB_controller.Insert("type_user", H);
     }
+    
     //Emad
     public String Search_OptionByID(int Option_ID)
     {
@@ -262,10 +390,19 @@ public class User {
         ResultSet result=DB_controller.Select("*","user_selected_option_values","User_ID="+id);
         try
         {
+<<<<<<< HEAD
             while(result.next())
             {
                 H.put((result.getInt("User_option_id")),result.getString("Value"));
             }
+=======
+        HashMap <String,String> H=new HashMap<String,String>();
+            H.put("User_ID",Integer.toString(U.getID()));
+            H.put("User_option_id", Integer.toString(IDs_Of_Options.get(i)));
+            H.put("value",entry.getValue());
+            DB_controller.Insert("user_selected_option_values", H);
+            i++;
+>>>>>>> d51e86ad1738792236d30a513ebd40b2cdf56f8d
         }
         catch(Exception E)
         {
