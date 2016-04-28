@@ -4,6 +4,8 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
 <<<<<<< HEAD
+=======
+<<<<<<< HEAD
 <<<<<<< HEAD
             <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/SE/MSG.java</file>
             <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/SE/Employee.java</file>
@@ -11,12 +13,17 @@
             <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/SE/System_manage.java</file>
             <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/SE/Validations.java</file>
 =======
+>>>>>>> d51e86ad1738792236d30a513ebd40b2cdf56f8d
             <file>file:/C:/phase-2/Maintenance-System-/src/java/Data_access/DB_controller.java</file>
             <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Device.java</file>
             <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/System_manage.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Feedback.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Requist.java</file>
             <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Customer.java</file>
             <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/User.java</file>
             <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Time_chooser.java</file>
+<<<<<<< HEAD
+=======
 >>>>>>> 3ea85b8a2a9c16520d134b522e7f266e50dfcc2a
 =======
             <file>file:/F:/New/Maintenance-System-/src/java/SE/System_manage.java</file>
@@ -24,6 +31,7 @@
             <file>file:/F:/New/Maintenance-System-/src/java/SE/Request.java</file>
             <file>file:/F:/New/Maintenance-System-/src/java/Data_access/DB_controller.java</file>
 >>>>>>> 2b1b30b173b9e7c5d10c21fe96e9ce12195c371a
+>>>>>>> d51e86ad1738792236d30a513ebd40b2cdf56f8d
         </group>
     </open-files>
 </project-private>

@@ -436,6 +436,28 @@ public class System_manage {
     
     //Emad
     public boolean Up_complain_to_manager(Complain complain, int Branch_ID) {
+        DB_controller.Connect();
+        ResultSet result = DB_controller.Select("*", "branch", "Branch_id=" + Branch_ID);
+        int Manager_id = -1;
+        int MessageID = -1;
+        try {
+            while (result.next()) {
+                Manager_id = result.getInt("Manager_ID");
+            }
+            result = DB_controller.Select("*", "recieved", "Message_ID=" + complain.getId());
+            while (result.next()) {
+                MessageID = result.getInt("Message_ID");
+            }
+            HashMap<String, String> H = new HashMap();
+            H.put("Reciever_id", Integer.toString(Manager_id));
+            H.put("Message_ID", Integer.toString(MessageID));
+
+            DB_controller.Insert("recieved", H);
+            DB_controller.Close();
+            return true;
+        } catch (Exception E) {
+            System.out.println("Error in UP Complain To manager");
+        }
         return false;
     }
     
@@ -556,13 +578,30 @@ public class System_manage {
         U.put("Password", user.getPassword());
         U.put("Gender", user.getGander());
         U.put("Block", ""+user.getBlock());
-        user.Insert_Option_Values(user);
+        user.Insert_Option_Values(user,DB_controller.Insert("user", U));
     }
 
     
     
     //Emad
     public User Search_user_by_id(int User_id) {
+        DB_controller.Connect();
+        String S;
+        ResultSet result = DB_controller.Select("*", "user", "User_ID=" + User_id);
+        User U = new User();
+        try {
+            while (result.next()) {
+                U.setF_name(result.getString("FNAME"));
+                U.setL_name(result.getString("LNAME"));
+                U.setEmail(result.getString("Email"));
+                U.setGander(result.getString("GENDER"));
+                U.setPassword(result.getString("Password"));
+            }
+            U.setAdditional_data(U.Get_Option_Values_OF_USER(User_id));
+            return U;
+        } catch (Exception e) {
+            System.out.println("Error in Search User By ID"+e);
+        }
         return null;
     }
     
@@ -694,7 +733,7 @@ public class System_manage {
     }
     
     
-    /*
+    
     //omar
     public boolean Update_massage_state(int Old_massage_id ,int reciver_id ,int New_state)
     {
@@ -970,5 +1009,4 @@ public class System_manage {
         Data_access.DB_controller.Close();
         return null;
     }
-    */
 }
