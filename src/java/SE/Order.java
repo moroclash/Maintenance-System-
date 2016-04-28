@@ -5,6 +5,8 @@
  */
 package SE;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author moroclash
@@ -13,14 +15,32 @@ public class Order {
     private int Id;
     private int My_requist;
     private int Date;
-    private String Tecnical_description;
-    private int My_Service ;
-    private int State;
-    private int Date_requist;
 
     public void setDate(int Date) {
         this.Date = Date;
     }
+
+    public int getDate() {
+        return Date;
+    }
+
+    
+    
+    private String Tecnical_description;
+    private int My_Service ;
+    private ArrayList<Integer> My_Technical_id ;
+    private int State;
+    private int Date_requist;
+
+    public ArrayList<Integer> getMy_Technical_id() {
+        return My_Technical_id;
+    }
+
+    public void setMy_Technical_id(ArrayList<Integer> My_Technical_id) {
+        this.My_Technical_id = My_Technical_id;
+    }
+    
+
 
     public void setDate_requist(int Date_requist) {
         this.Date_requist = Date_requist;
@@ -46,10 +66,7 @@ public class Order {
         this.Tecnical_description = Tecnical_description;
     }
 
-    public int getDate() {
-        return Date;
-    }
-
+   
     public int getDate_requist() {
         return Date_requist;
     }

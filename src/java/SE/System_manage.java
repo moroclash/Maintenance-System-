@@ -7,11 +7,14 @@ package SE;
 
 import Data_access.DB_controller;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -25,6 +28,23 @@ public class System_manage {
 
     public boolean Regist_customer(Customer customer) {
         return true;
+    }
+    //sala7
+    public String Show_satate(int state)
+    {
+        DB_controller.Connect();
+        ResultSet result = DB_controller.Select("State", " state ", " State_id = " + state);
+        String res= "";
+        try {
+            while(result.next())
+            {
+              res = result.getString("State");
+            }
+            DB_controller.Close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return res;
     }
 
     //Emad
@@ -89,44 +109,289 @@ public class System_manage {
         return null;
     }
 
+   //sala7
     public Branch Search_branch(int Branch_id) {
-        return null;
+        
+        DB_controller.Connect();
+        Branch branch = new Branch();
+        ResultSet result = DB_controller.Select("*", " branch ", " Branch_id =" +Branch_id);
+        int location=-1;
+        try {
+            while(result.next())
+            {
+              branch.setId(result.getInt("Branch_id"));
+              branch.setUser_id(result.getInt("User_id"));
+              location = result.getInt("");
+            }
+            result = DB_controller.Select("Address", "address", "Address_id = " + location);
+            while(result.next())
+            {
+                branch.setLocation(result.getString("Address"));
+            }
+            result = DB_controller.Select("phone", "branch_phone", " Branch_id = " + Branch_id);
+            while (result.next())
+            {
+              branch.push(result.getString("phone"));
+            }
+        } catch (SQLException ex) {
+            DB_controller.Close();
+            return null;
+        }
+        return branch;
     }
 
     public ArrayList<Employee> Show_all_employee(String Employee_type) {
+        try
+        {
+            DB_controller.Connect();
+           
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        
+        
         return null;
     }
 
+   //sala7
     public Object Log_in(String User_Name, String Password) {
+        
+        DB_controller.Connect();
+        System_manage system = new System_manage();
+        Employee employee ;
+        Customer customer ;
+        
+        ResultSet result = DB_controller.Select(" name ", " type_user ", " Type_user_id = 4 ");
+        String name = "";
+        try {
+            while(result.next())
+            {
+              name = result.getString("name");
+            }
+        } catch (SQLException ex) {
+        }
+        result =DB_controller.Select("User_id", " user ", " Email = " + User_Name +"and"+ "Password = " + Password);
+        try {
+            while(result.next())
+            {   
+                if(name.equals("customer"))
+                {
+                  customer = (Customer) system.Search_user_by_id(result.getInt("EMP_ID"));
+                  return customer;
+                }
+                else{
+                  employee = (Employee) system.Search_user_by_id(result.getInt("EMP_ID"));
+                return employee;
+                }
+            }
+        } catch (SQLException ex) {
+        }
         return null;
     }
-
-    public ArrayList<Request> Show_my_requist() {
-        return null;
+    public ArrayList<Request> Show_my_requist(int userID) {
+        try
+        {
+          //Table request  
+          DB_controller.Connect();
+          ResultSet result=DB_controller.Select("Request_id", "request", "User_id="+userID);
+          ArrayList<Request> requests=new ArrayList<>(10);
+          while(result.next())
+          {
+              requests.add(Search_requist(result.getInt("Request_id")));
+          }
+          return  requests;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
-
+    //Mohamed RAdwan
     public boolean Delete_requist(int Requist_id) {
-        return true;
-    }
-
+        try
+        {
+            //Table request
+            DB_controller.Connect();
+            DB_controller.Delete("request", "Request_id="+Requist_id);
+            //END Table request
+            
+            //TABLE device_of_this_request
+            DB_controller.Delete("device_of_this_request", "request_id="+Requist_id);
+            //END device_of_this_request
+            
+            return true;
+            
+        }//END Try
+         catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        
+    }//END Delete_requist
+    
+    //Mohamed RAdwan
     public Request Search_requist(int Requist_id) {
-        return null;
-    }
-
+         try
+        {
+            //Table request
+            DB_controller.Connect();
+            Request request=new Request();
+            ResultSet res=DB_controller.Select("*", "request", "Request_id="+Requist_id);
+            request.setID(Requist_id);
+            request.setState_id(res.getInt("ate_id"));
+            request.setDate_id(res.getInt("Date_id"));//lw h8er el Date id to int 
+            ArrayList<Integer> Devices_ID=new  ArrayList<Integer>();
+            //END Table Reqest
+            
+            //Table device_of_this_request
+            ResultSet Devices=DB_controller.Select("Device_id", "device_of_this_request", "request_id="+Requist_id);
+            while(Devices.next())
+            {
+                Devices_ID.add(Devices.getInt("Device_id"));             
+            }
+            request.setMy_device(Devices_ID);
+            return request;
+        }//END TRy
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+       
+    }//END Search_requist
+    
+    //Mohamed RAdwan
+    public String Get_this_date(int ID){
+         try
+        {
+            DB_controller.Connect();
+            ResultSet res=DB_controller.Select("Date", "date", "Date_id="+ID);
+           return res.getString("Date");
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }//END //Mohamed RAdwan
+    
+    
     public boolean Reply_message(int Message_id, Comment comment) {
         return true;
     }
+    
+     //Mohamed RAdwan
+     public boolean Give_order(Order order) {
+        try{
+            DB_controller.Connect();
+            //Table order_fixable 
+            HashMap<String,String> Order=new HashMap<>(10); 
+            Order.put("Requist_id", String.valueOf(order.getMy_requist()));
+            Order.put("Date_start_id",String.valueOf(Get_date_iD()));
+            Order.put("Technical_description",order.getTecnical_description());
+            Order.put("Service_id",String.valueOf(order.getMy_Service()));
+            Order.put("State_id","3");//wait fix
+            Order.put("date_End_id",String.valueOf(order.getDate_requist()));
+            DB_controller.Insert("order_fixable", Order);
+            //end teabl order_fixable
 
-    public boolean Give_order(Order order) {
+            //Table device_of_this_request
+            HashMap<String,String> ordflexde=new HashMap<>(1);
+            int counter=0;
+            Request req= Search_requist(order.getMy_requist());
+            ArrayList<Integer> dev=req.getMy_device();
+            int id_request=req.getID();
+            ArrayList<Integer> ID_rder_flexible_details=new ArrayList<>();
+            for(Integer d:dev)
+            {
+              ResultSet result =  DB_controller.Select("Device_of_this_request_id", "device_of_this_request", "Device_id="+d+" request_id="+id_request);
+              ID_rder_flexible_details.add(result.getInt("Device_of_this_request_id"));
+            }
+
+            //if you want to use it in table Device_of_this_request_id to insert in
+            /*for(Integer d:dev)
+            {
+                ordflexde.put("Flexible_id",String.valueOf(id_order));
+                ordflexde.put("Device_id",String.valueOf(d));
+                DB_controller.Insert("order_flexible_details",ordflexde);
+                ID_rder_flexible_details.add(d);
+                ordflexde=new HashMap<>(1);
+            }*/
+            //END device_of_this_request
+
+            //Table order_flixer
+            ArrayList<Integer> Techincal_ID= order.getMy_Technical_id();
+            counter=0;
+            for(Integer d:ID_rder_flexible_details)
+            {
+                ordflexde.put("Technical_id",String.valueOf(Techincal_ID.get(counter)));
+                ordflexde.put("Order_id",String.valueOf(d));
+                DB_controller.Insert("order_flixer",ordflexde);
+                ordflexde=new HashMap<>(1);
+                counter ++;
+            }//end table order_flixer
+
+        }//end try
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return false;
+        }
         return true;
-    }
+    }//END Give_order
 
-    public Bill Search_bill(int Branch_id) {
+    //sala7
+    public Bill Search_bill(int Order_id) {
+        
+        DB_controller.Connect();
+        Bill bill = new Bill();
+        int Method_ID=-1;
+        ResultSet result = DB_controller.Select("*" , " bill " , " Order_id = " + Order_id );
+        try {
+            while(result.next()){
+               bill.setId(result.getInt("BILL_id"));
+               bill.setDate_id(result.getInt("Date_id"));
+               bill.setCost(result.getDouble("Cost"));
+               bill.setMy_order(result.getInt("Order_id"));
+               bill.setTime(result.getString("Time"));
+               Method_ID=result.getInt("Payment_method_id");
+            }
+               result=DB_controller.Select("Payment_method_id", "parent_methode " , "parent_methode_id = " + Method_ID);
+               while(result.next())
+               {
+                   bill.push("Payment_Method",result.getString("Methode"));
+               }
+               return bill;
+        } catch (SQLException ex) {
+            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+            DB_controller.Close();
+        }
         return null;
     }
 
+    //sala7
     public Feedback Search_feedback(int Order_id) {
-        return null;
+        Feedback feedback = new Feedback();
+        DB_controller.Connect();
+        ResultSet result = DB_controller.Select("*", "feedback", " Order_id = " + Order_id);
+        try {
+            while(result.next())
+            {
+              feedback.setId(result.getInt("Feedback_id"));
+              feedback.setMy_order(result.getInt("Order_id"));
+              feedback.setService_quality(result.getInt("System_quality"));
+              feedback.setSystem_quality(result.getInt("Service_quality"));
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+            DB_controller.Close();
+            return null;
+        }
+        DB_controller.Close();
+        return feedback;
     }
 //Emad
 
@@ -193,43 +458,108 @@ public class System_manage {
         }
         return false;
     }
-
+    //Mohamed Radwan
     public Order Search_order(int Order_id) {
-        return null;
-    }
-
-    public int getDateID() {
-        DB_controller.Connect();
-        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = new Date();
-        HashMap<String, String> Date = new HashMap<>(1);
-        Date.put("Date", date.toString());
-        DB_controller.Insert("date", Date);
-        ResultSet isDate = DB_controller.Select("Date_id", "date", "Date=" + date.toString());
-        try {
-            return isDate.getInt("Date_id");
-
-        } catch (Exception s) {
-            s.printStackTrace();
-            return -1;
+        try
+        {
+            //Table `order_fixable`
+            DB_controller.Connect();
+            ResultSet result=DB_controller.Select("*", "order_fixable", "Order_fixable_id="+Order_id);
+            Order order=new Order();
+            ArrayList<Integer> Techincal_id=new ArrayList<>();
+                order.setId(Order_id);
+                order.setMy_requist(result.getInt("Requist_id"));
+                order.setDate(result.getInt("Date_start_id"));
+                order.setDate_requist(result.getInt("date_End_id"));
+                order.setMy_Service(result.getInt("Service_id"));
+                order.setTecnical_description(result.getString("Technical_description"));
+                order.setState(result.getInt("State_id")); 
+                
+                //TABLE device_of_this_request
+                ResultSet resu= DB_controller.Select("Device_of_this_request_id", "device_of_this_request", "request_id="+order.getMy_requist());
+                while(resu.next())
+                {
+                    //TABLE  order_flixer
+                    ResultSet techin=DB_controller.Select("Technical_id", "order_flixer", "Device_of_this_request_id="+resu.getInt("Device_of_this_request_id"));
+                    while(techin.next())
+                    {
+                       Techincal_id.add(techin.getInt("Technical_id"));
+                       
+                    }
+                }
+                order.setMy_Technical_id(Techincal_id);
+                return order;
+            
+        }//END Try
+         catch(Exception e){
+            e.printStackTrace();
+            return null;
         }
-    }
+    }//END Search_order
 
+
+    //Mohamed RAdwan    
     public boolean Send_Message(General_massge message) {
-        DB_controller.Connect();
-        HashMap<String, String> Mass = new HashMap<>(1);
-
-        Mass.put("Content", message.getContent());
-        Mass.put("sender_id", String.valueOf(message.getSender_id()));
-        Mass.put("Type_id", message.getMassage_type());
-        DB_controller.Insert(null, Mass);
-        DB_controller.Insert("message", Mass);
-        DB_controller.Select(null, null, null);
-
+       
+        try
+       {
+            DB_controller.Connect();
+            HashMap<String,String> Mass=new HashMap<>(10);
+            int id=Get_date_iD();
+            String time=Get_time();
+            Mass.put("Content",message.getContent());
+            Mass.put("sender_id",String.valueOf(message.getSender_id()));
+            Mass.put("Type_id", message.getMassage_type());
+            Mass.put("Date_id", String.valueOf(id));
+            Mass.put("Time", time);
+            Mass.put("Parent_id", "0");
+            int idmass= DB_controller.Insert("message",Mass);
+            Mass=new  HashMap<String, String>(5);
+            Mass.put("Reciever_id", String.valueOf(message.getReciver()));
+            Mass.put("Message_id", String.valueOf(idmass));
+            Mass.put("State_id", "5");
+            DB_controller.Insert("recieved", Mass);
+       }//END Try
+       catch(Exception ex)
+       {
+           ex.printStackTrace();
+       }
         return true;
-    }
+    
+    }//End Send_Message
+    
+     //Mohamed RAdwan  
+    public int Get_date_iD()
+     {
+        try
+        {
+         //Table date   
+         DB_controller.Connect();
+         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+         Date date = new Date();
+         HashMap<String,String> Date=new HashMap<>(1);
+         Date.put("Date", date.toString());
+         DB_controller.Insert("date", Date);
+         ResultSet isDate=DB_controller.Select("Date_id", "date", "Date="+date.toString());
+         return isDate.getInt("Date_id");
+          //End Table date 
+        }//END Try
+         catch(Exception s){    
+             s.printStackTrace();
+             return -1;
+         }
+     }//END Get_date_iD
+    
+    //Mohamed RAdwan 
+    public String Get_time()
+    {
+         DB_controller.Connect();
+         SimpleDateFormat printFormat = new SimpleDateFormat("HH:mm:ss");
+         Date date = new Date();
+         return  date.toString(); 
+    }//END Get_time
+    
     //Emad
-
     public void Add_User(User user) {
         DB_controller.Connect();
         HashMap<String, String> U = new HashMap<String, String>();
@@ -344,13 +674,20 @@ public class System_manage {
         DB_controller.Close();
         return true;
     }
-    //Sala7
-
-    public boolean Is_fixed(Bill bill, String Technical_description, int order_id, int device_id) {
-        DB_controller.Connect();
-        DB_controller.Update("order_fixable ", " State_id = " + 2 + " Technical_description = " + Technical_description, " Order_fixable_id = " + order_id);
-        DB_controller.Update("device ", " State_id = " + 2, " Device_id = " + device_id);
-
+   //Sala7
+     public boolean Is_fixed(Bill bill , String Technical_description , int order_id , int device_id)
+    {   DB_controller.Connect();
+        DB_controller.Update("order_fixable " , " State_id = 2"+" Technical_description = " + Technical_description , " Order_fixable_id = " + order_id );
+        DB_controller.Update("device ", " State_id = 2" , " Device_id = " + device_id );
+        Bill bill2 = new Bill(); 
+        int payment = 1;
+        HashMap<String,String> U=new HashMap<String,String>();
+        U.put("BILL_id",Integer.toString(bill.getId()));
+        U.put("Date_id", Integer.toString(bill.getDate_id()));
+        U.put("Cost", Double.toString(bill.getCost()));
+        U.put("Order_id", Integer.toString(bill.getMy_order()));
+        U.put("Time", bill.getTime());
+        DB_controller.Insert("bill", U);
         DB_controller.Close();
         return true;
     }

@@ -5,6 +5,8 @@
  */
 package SE;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Mohamed Salah
@@ -13,7 +15,7 @@ class Request {
     private int ID;
     private int Date_id;
     private int State_id;
-    private int My_device;
+    private ArrayList<Integer> My_device;
 
     public void setID(int ID) {
         this.ID = ID;
@@ -23,7 +25,7 @@ class Request {
         this.State_id = State_id;
     }
 
-    public void setMy_device(int My_device) {
+    public void setMy_device(ArrayList<Integer> My_device) {
         this.My_device = My_device;
     }
 
@@ -43,7 +45,7 @@ class Request {
         return Date_id;
     }
 
-    public int getMy_device() {
+    public ArrayList<Integer> getMy_device() {
         return My_device;
     }
     
