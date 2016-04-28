@@ -5,6 +5,9 @@
  */
 package Data_access;
 
+import SE.General_massge;
+import SE.Massage;
+import SE.System_manage;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -26,16 +29,12 @@ public class DB_controller {
 
     public static void Connect() {
         try {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
-            DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
-            System.out.println("ConnectionDB Done");
-              Class.forName("com.mysql.jdbc.Driver");
-
-            DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
-            System.out.println("Done");
-        } catch (Exception x) {
-            System.out.println("Eroro LL2sf fe el Coonection");
-        }
+             Class.forName("com.mysql.jdbc.Driver").newInstance();
+             DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
+             System.out.println("Done");
+         } catch (Exception x) {
+             System.err.println(x.getMessage());
+         }
     }
 
     public static void Close() {
@@ -48,7 +47,7 @@ public class DB_controller {
     }
 
     public static ResultSet Select(String FieldName, String TableName, String Condetion) {
-        String Query="SELECT" +FieldName+ "FROM"+ TableName+ "WHERE" +Condetion;
+        String Query="SELECT " +FieldName+ " FROM "+ TableName+ " WHERE " +Condetion;
         try
         {
             PreparedStatement pre=DB_controller.prepareStatement(Query);
@@ -69,18 +68,19 @@ public class DB_controller {
             pre.execute();
             return true;
         } catch (SQLException ex) {
-            ex.getStackTrace();
+            System.err.println(ex.getMessage());
             return false;
         }
     }
 
     public static boolean Update(String TableName, String FieldName, String Condition) {
-        String Query = " UPDATE " + TableName + " set " + FieldName + " WHERE " + Condition;
+        String Query = "UPDATE " + TableName + " set " + FieldName + " WHERE " + Condition;
         try {
             PreparedStatement pre = DB_controller.prepareStatement(Query);
+            pre.executeUpdate();
             return true;
         } catch (SQLException ex) {
-            ex.getStackTrace();
+            System.err.println(ex.getMessage());
             return false;
         }
     }
@@ -119,22 +119,5 @@ public class DB_controller {
         return -1;
     }
     
-    
-    public static void main(String[] args) {
-        
-        try {
-            Connect();
-            String s = "INSERT INTO address ('Address','Parent_id') VALUES ('dasdasdas','2')";
-            //Statement ss = DB_controller.createStatement();
-            PreparedStatement ss = DB_controller.prepareStatement(s);
-            ss.executeQuery();
-//            int x = ss.executeUpdate(s, Statement.RETURN_GENERATED_KEYS);
-            //System.out.println(x);
-            Close();
-        } catch (SQLException ex) {
-            Logger.getLogger(DB_controller.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        
-    }
-    
+
 }

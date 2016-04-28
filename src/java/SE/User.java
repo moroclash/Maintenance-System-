@@ -119,7 +119,7 @@ public class User {
         return Addresses;
     }    
     
-
+/*
     //omar
     public ArrayList<General_massge> Show_all_my_rescived_massage() {
         try {
@@ -141,7 +141,7 @@ public class User {
         return null;
     }
 
-    
+  /*  
     //omar
     public ArrayList<General_massge> Show_my_massage_send() {
         try {
@@ -217,7 +217,8 @@ public class User {
             Data_access.DB_controller.Close();
             return z;
     }
-
+*/
+    
     public void setPhones(HashMap<Integer, String> Phones) {
         this.Phones = Phones;
     }

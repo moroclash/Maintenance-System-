@@ -15,7 +15,6 @@ public class MSG {
     private String Time;
     private String Content;
     private int Massage_type;
-    private int State;
 
     public void setContent(String Content) {
         this.Content = Content;
@@ -47,14 +46,6 @@ public class MSG {
 
     public int getMassage_type() {
         return Massage_type;
-    }
-
-    public void setState(int State) {
-        this.State = State;
-    }
-
-    public int getState() {
-        return State;
     }
 
     public void setTime(String Time) {

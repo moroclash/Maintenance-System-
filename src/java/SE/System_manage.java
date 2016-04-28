@@ -432,45 +432,10 @@ public class System_manage {
         return null;
     }
 
+    
+    
     //Emad
     public boolean Up_complain_to_manager(Complain complain, int Branch_ID) {
-        DB_controller.Connect();
-        ResultSet result = DB_controller.Select("*", "branch", "Branch_id=" + Branch_ID);
-        int Manager_id = -1;
-        int MessageID = -1;
-        try {
-            while (result.next()) {
-                Manager_id = result.getInt("Manager_ID");
-            }
-         result=DB_controller.Select("*", "recieved","Message_ID="+complain.getId());  
-         while(result.next())
-         {
-             MessageID=result.getInt("Message_ID");
-         }
-         HashMap <String,String>H=new HashMap();
-         H.put("Reciever_id", Integer.toString(Manager_id));
-         H.put("Message_ID", Integer.toString(MessageID));
-         
-         DB_controller.Insert("recieved",H);
-         DB_controller.Close();
-         return true;
-        }
-        catch(Exception E)
-        {
-            result = DB_controller.Select("*", "recieved", "Message_ID=" + complain.Id);
-            while (result.next()) {
-                MessageID = result.getInt("Message_ID");
-            }
-            HashMap<String, String> H = new HashMap();
-            H.put("Reciever_id", Integer.toString(Manager_id));
-            H.put("Message_ID", Integer.toString(MessageID));
-
-            DB_controller.Insert("recieved", H);
-            DB_controller.Close();
-            return true;
-        } catch (Exception E) {
-            System.out.println("Error in UP Complain To manager");
-        }
         return false;
     }
     
@@ -594,30 +559,14 @@ public class System_manage {
         user.Insert_Option_Values(user);
     }
 
+    
+    
     //Emad
     public User Search_user_by_id(int User_id) {
-        DB_controller.Connect();
-        String S;
-        ResultSet result = DB_controller.Select("*", "user", "User_ID=" + User_id);
-        User U = new User();
-        try {
-            while (result.next()) {
-                U.setF_name(result.getString("FNAME"));
-                U.setL_name(result.getString("LNAME"));
-                U.setEmail(result.getString("Email"));
-                U.setGander(result.getString("GENDER"));
-                U.setPassword(result.getString("Password"));
-            }
-            ResultSet result2 = DB_controller.Select("*", "phone", "User_ID=" + User_id);
-            while (result2.next()) {
-                U.setPhones(result2.getString("Phone"));
-            }
-            return U;
-        } catch (Exception e) {
-            System.out.println("Error in Search User By ID"+e);
-        }
         return null;
     }
+    
+    
 
     //Emad
     public User Search_user_by_name(String Name) {
@@ -744,11 +693,13 @@ public class System_manage {
         return this.Order_buffer;
     }
     
+    
+    /*
     //omar
     public boolean Update_massage_state(int Old_massage_id ,int reciver_id ,int New_state)
     {
         Data_access.DB_controller.Connect();
-        boolean b = Data_access.DB_controller.Update("recieved", "State = " + New_state , "Message_id ="+Old_massage_id+",Reciever_id="+reciver_id);
+        boolean b = Data_access.DB_controller.Update("recieved", "State_id="+New_state , "Message_id ="+Old_massage_id+" and Reciever_id="+reciver_id);
         Data_access.DB_controller.Close();
         return b;
     }
@@ -757,26 +708,32 @@ public class System_manage {
     public String get_address_from_db(int Address_id)
     {
         try {
+            Data_access.DB_controller.Connect();
             ResultSet res = Data_access.DB_controller.Select("*","address", "Address_id="+Address_id);
             if(res==null)
             {
                 return "";
             }
-            
-            if(res.getInt("Parent_id")==0)
-                return res.getString("Address");
-            else
-            {
-                int x=0;
-                while (res.next()) {                    
-                    x = res.getInt("Parent_id");
+            while (res.next()) { 
+                if(res.getInt("Parent_id")==0)
+                {
+                    String s = res.getString("Address");
+                    Data_access.DB_controller.Close();
+                    return s ;
                 }
-                return res.getString("Address")+","+get_address_from_db(x);
+                else
+                {
+                    int x = res.getInt("Parent_id");
+                    String s =res.getString("Address");
+                    Data_access.DB_controller.Close();
+                    return s+","+get_address_from_db(x);
+                }
             }
         } catch (SQLException ex) {
             Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
-            return "";
         }
+        Data_access.DB_controller.Close();
+        return "";
     }
     
     
@@ -790,18 +747,18 @@ public class System_manage {
                 HashMap<String, String> hash = new HashMap<String, String>();
                 hash.put("Address", Street);
                 hash.put("Parent_id", Integer.toString(District_id));
-                Data_access.DB_controller.Insert("address", hash);
-                ResultSet result = Data_access.DB_controller.Select("Address_id", "address", "Address="+Street);
+                int x = Data_access.DB_controller.Insert("address", hash);
                 hash.clear();
                 hash.put("Address", Num_of_home);
-                int x = 0;
-                while (result.next()) {                    
-                    x = result.getInt("Address_id");
-                }
                 hash.put("Parent_id", Integer.toString(x));
+                x=Data_access.DB_controller.Insert("address", hash);
+                hash.clear();
+                hash.put("Address_id", Integer.toString(x));
+                hash.put("User_id", Integer.toString(user_id));
+                Data_access.DB_controller.Insert("user_address", hash);
                 Data_access.DB_controller.Close();
                 return true;
-            } catch (SQLException ex) {
+            } catch (Exception ex) {
                 Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
                 return false;
             }
@@ -814,10 +771,11 @@ public class System_manage {
     public boolean Dellet_user_address(int Address_id,int user_id) {
             Data_access.DB_controller.Connect();
             boolean z = Data_access.DB_controller.Delete("address", "Address_id="+Address_id);
-            Data_access.DB_controller.Delete("user_address", "Address_id="+Address_id+",User_id="+user_id);
+            Data_access.DB_controller.Delete("user_address", "Address_id="+Address_id+" and User_id="+user_id);
             Data_access.DB_controller.Close();
             return z ;
     }
+    
     
     //omar
     public boolean Update_address(int Old_num_of_home_id,String new_Street ,String new_num_of_home) {
@@ -831,7 +789,7 @@ public class System_manage {
                 while (res.next()) {                    
                     x = res.getInt("Parent_id"); 
                 }
-                boolean z = Data_access.DB_controller.Update("address", "Address="+new_Street, "Address_id="+x);
+                boolean z = Data_access.DB_controller.Update("address", "Address='"+new_Street+"'", "Address_id="+x);
                 Data_access.DB_controller.Close();
                 return z;
             } catch (SQLException ex) {
@@ -843,42 +801,56 @@ public class System_manage {
     
     
     //omar
-    public Massage Search_Massage(int Massage_id)
+    public Object Search_Massage(int Massage_id)
     {
         try {
             Data_access.DB_controller.Connect();
             ResultSet res = Data_access.DB_controller.Select("*", "message", "Message_id="+Massage_id);
             int type=0;
-            Massage c = new Massage();
             while (res.next()) {
                 type = res.getInt("Type_id");
-                    c.setContent(res.getString("Content"));
-                    ResultSet res2 = Data_access.DB_controller.Select("Date","date", "Date_id="+res.getInt("Date_id"));
-                    while (res2.next()) {                        
-                        c.setDate(res2.getString("Date"));
-                    }
-                    c.setId(Massage_id);
-                    c.setMassage_type(type);
-                    res2 = Data_access.DB_controller.Select("Reciever_id","recieved", "Message_id="+Massage_id);
-                    while (res2.next()) {                        
-                        c.setReciver(res2.getInt("Reciever_id"));
-                        c.setState(res2.getInt("State_id"));
-                    }
-                    c.setTime(res.getString("Time"));
-                    if(type == 1)
+                if(type == 1)
                     {
-                        Complain m = (Complain) c;
-                        res2 = Data_access.DB_controller.Select("Order_id","complain’s_order", "Message_id="+Massage_id);
+                        Complain c = new Complain();
+                        c.setContent(res.getString("Content"));
+                        ResultSet res2 = Data_access.DB_controller.Select("Date","date", "Date_id="+res.getInt("Date_id"));
                         while (res2.next()) {                        
-                        m.setOrder_id(res2.getInt("Order_id"));
+                            c.setDate(res2.getString("Date"));
                         }
+                        c.setId(Massage_id);
+                        c.setMassage_type(type);
+                        res2 = Data_access.DB_controller.Select("*","recieved", "Message_id="+Massage_id);
+                        while (res2.next()) {                        
+                            c.setReciver(res2.getInt("Reciever_id"));
+                            c.setState(res2.getInt("State_id"));
+                        }
+                        c.setTime(res.getString("Time"));
+                        res2 = Data_access.DB_controller.Select("Order_id","complains_order", "Message_id="+Massage_id);
+                        while (res2.next()) {                        
+                            c.setOrder_id(res2.getInt("Order_id"));
+                        }
+                        c.setMy_Commint(get_massage_commintes(Massage_id));
                         Data_access.DB_controller.Close();
                         return c;
                     }
                     else
                     {
-                        General_massge m = (General_massge) c;
-                        m.setSender_id(res.getInt("sender_id"));
+                        General_massge c = new General_massge();
+                        c.setContent(res.getString("Content"));
+                        ResultSet res2 = Data_access.DB_controller.Select("Date","date", "Date_id="+res.getInt("Date_id"));
+                        while (res2.next()) {                        
+                            c.setDate(res2.getString("Date"));
+                        }
+                        c.setId(Massage_id);
+                        c.setMassage_type(type);
+                        res2 = Data_access.DB_controller.Select("*","recieved", "Message_id="+Massage_id);
+                        while (res2.next()) {                        
+                            c.setReciver(res2.getInt("Reciever_id"));
+                            c.setState(res2.getInt("State_id"));
+                        }
+                        c.setTime(res.getString("Time"));
+                        c.setSender_id(res.getInt("sender_id"));
+                        c.setMy_Commint(get_massage_commintes(Massage_id));
                         return c;
                     }
             }
@@ -887,6 +859,41 @@ public class System_manage {
         }
         return null;
     }
+    
+    
+    
+    
+    
+    //omar
+    public ArrayList<Comment> get_massage_commintes (int Massage_id)
+    {
+        try {
+            ArrayList<Comment> commints = new ArrayList<>();
+            Data_access.DB_controller.Connect();
+            ResultSet res = Data_access.DB_controller.Select("*", "message", "Parent_id="+Massage_id);
+            while (res.next()) {
+                Comment m = new Comment();
+                m.setContent(res.getString("Content"));
+                ResultSet res2 = Data_access.DB_controller.Select("Date","date", "Date_id="+res.getInt("Date_id"));
+                   while (res2.next()) {                        
+                   m.setDate(res2.getString("Date"));
+                   }
+                m.setId(res.getInt("Message_id"));
+                m.setMassage_type(res.getInt("Type_id"));
+                m.setSender_id(res.getInt("sender_id"));
+                m.setTime(res.getString("Time"));
+                commints.add(m);
+            }
+            Data_access.DB_controller.Close();
+            return commints;
+        } catch (SQLException ex) {
+            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
+    
+    
     
     
     
@@ -929,14 +936,14 @@ public class System_manage {
     //omar 
     public boolean Delete_user_phone(int phone_id) {
         Data_access.DB_controller.Connect();
-        boolean z = Data_access.DB_controller.Delete("phone", "phone="+phone_id);
+        boolean z = Data_access.DB_controller.Delete("phone", "phone_id="+phone_id);
         Data_access.DB_controller.Close();
         return z;
     }
     
     
     //omar
-    public boolean Delete_user_phone(int Old_phone_id,String New_phone) {
+    public boolean Update_user_phone(int Old_phone_id,String New_phone) {
         if(!Validations.Is_digit(New_phone))
             return false;
         Data_access.DB_controller.Connect();
@@ -963,21 +970,5 @@ public class System_manage {
         Data_access.DB_controller.Close();
         return null;
     }
-    
-    
-    
-    //omar
-    public boolean Add_new_additional_info(int User_option_id, int user_id, String value) {
-        return false;
-    }
-    
-    //omar
-    public boolean Delete_additional_info(int User_option_id, int user_id) {
-        return false;
-    }
-
-    //omar
-    public boolean Update_additional_info(int User_option_id, int user_id, String New_value) {
-        return false;
-    }
+    */
 }

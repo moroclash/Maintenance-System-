@@ -16,7 +16,20 @@ public class Massage extends MSG{
 
     private ArrayList<Comment> My_Commint;
     private int Reciver;
+    private int State;
 
+    public void setState(int State) {
+        this.State = State;
+    }
+
+    public int getState() {
+        return State;
+    }
+
+    public void setMy_Commint(ArrayList<Comment> My_Commint) {
+        this.My_Commint = My_Commint;
+    }
+    
     public void setReciver(int Reciver) {
         this.Reciver = Reciver;
     }

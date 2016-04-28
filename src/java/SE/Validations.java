@@ -76,17 +76,12 @@ public  class Validations {
    
    public static boolean Is_alpha(String Word)
    {
-       int len=Word.length();
-       while (len!=0)
-       {
-            char s=Word.charAt(len); 
-            boolean tr=  Character.isDigit(s);
-                if(tr==true)
-                   return false;
-          len --;
-       }
-       return true;
+       pattern = pattern.compile("^[a-zA-Z]*$");
+       matcher = pattern.matcher(Word);
+       return matcher.matches();
    }
+   
+   
    
    public static boolean Is_email(String Word)
    {    //anything@3digit at least .com  
@@ -124,7 +119,7 @@ public  class Validations {
    //omar
    public static boolean Is_alphanumaric (String string)
    {
-       pattern = pattern.compile("[0-9a-zA-Z]");
+       pattern = pattern.compile("^[a-zA-Z0-9]*$");
        matcher = pattern.matcher(string);
        return matcher.matches();
    }
