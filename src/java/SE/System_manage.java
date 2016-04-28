@@ -136,6 +136,7 @@ public class System_manage {
         try
         {
             //Table request
+            DB_controller.Connect();
             DB_controller.Delete("request", "Request_id="+Requist_id);
             //END Table request
             
@@ -336,10 +337,44 @@ public class System_manage {
         }
         return false;
     }
-
+    //Mohamed Radwan
     public Order Search_order(int Order_id) {
-        return null;
-    }
+        try
+        {
+            //Table `order_fixable`
+            DB_controller.Connect();
+            ResultSet result=DB_controller.Select("*", "order_fixable", "Order_fixable_id="+Order_id);
+            Order order=new Order();
+            ArrayList<Integer> Techincal_id=new ArrayList<>();
+                order.setId(Order_id);
+                order.setMy_requist(result.getInt("Requist_id"));
+                order.setDate(result.getInt("Date_start_id"));
+                order.setDate_requist(result.getInt("date_End_id"));
+                order.setMy_Service(result.getInt("Service_id"));
+                order.setTecnical_description(result.getString("Technical_description"));
+                order.setState(result.getInt("State_id")); 
+                
+                //TABLE device_of_this_request
+                ResultSet resu= DB_controller.Select("Device_of_this_request_id", "device_of_this_request", "request_id="+order.getMy_requist());
+                while(resu.next())
+                {
+                    //TABLE  order_flixer
+                    ResultSet techin=DB_controller.Select("Technical_id", "order_flixer", "Device_of_this_request_id="+resu.getInt("Device_of_this_request_id"));
+                    while(techin.next())
+                    {
+                       Techincal_id.add(techin.getInt("Technical_id"));
+                       
+                    }
+                }
+                order.setMy_Technical_id(Techincal_id);
+                return order;
+            
+        }//END Try
+         catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+    }//END Search_order
 
 
     //Mohamed RAdwan    
