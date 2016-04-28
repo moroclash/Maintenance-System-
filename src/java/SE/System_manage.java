@@ -94,6 +94,17 @@ public class System_manage {
     }
 
     public ArrayList<Employee> Show_all_employee(String Employee_type) {
+        try
+        {
+            DB_controller.Connect();
+           
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+        
+        
         return null;
     }
 
@@ -101,65 +112,157 @@ public class System_manage {
         return null;
     }
 
-    public ArrayList<Request> Show_my_requist() {
-        return null;
+    public ArrayList<Request> Show_my_requist(int userID) {
+        try
+        {
+          //Table request  
+          DB_controller.Connect();
+          ResultSet result=DB_controller.Select("Request_id", "request", "User_id="+userID);
+          ArrayList<Request> requests=new ArrayList<>(10);
+          while(result.next())
+          {
+              requests.add(Search_requist(result.getInt("Request_id")));
+          }
+          return  requests;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
     }
-
+    //Mohamed RAdwan
     public boolean Delete_requist(int Requist_id) {
-        return true;
-    }
-
+        try
+        {
+            //Table request
+            DB_controller.Delete("request", "Request_id="+Requist_id);
+            //END Table request
+            
+            //TABLE device_of_this_request
+            DB_controller.Delete("device_of_this_request", "request_id="+Requist_id);
+            //END device_of_this_request
+            
+            return true;
+            
+        }//END Try
+         catch(Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        
+    }//END Delete_requist
+    
+    //Mohamed RAdwan
     public Request Search_requist(int Requist_id) {
-        return null;
-    }
-
+         try
+        {
+            //Table request
+            DB_controller.Connect();
+            Request request=new Request();
+            ResultSet res=DB_controller.Select("*", "request", "Request_id="+Requist_id);
+            request.setID(Requist_id);
+            request.setState_id(res.getInt("ate_id"));
+            request.setDate_id(res.getInt("Date_id"));//lw h8er el Date id to int 
+            ArrayList<Integer> Devices_ID=new  ArrayList<Integer>();
+            //END Table Reqest
+            
+            //Table device_of_this_request
+            ResultSet Devices=DB_controller.Select("Device_id", "device_of_this_request", "request_id="+Requist_id);
+            while(Devices.next())
+            {
+                Devices_ID.add(Devices.getInt("Device_id"));             
+            }
+            request.setMy_device(Devices_ID);
+            return request;
+        }//END TRy
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+       
+    }//END Search_requist
+    
+    //Mohamed RAdwan
+    public String Get_this_date(int ID){
+         try
+        {
+            DB_controller.Connect();
+            ResultSet res=DB_controller.Select("Date", "date", "Date_id="+ID);
+           return res.getString("Date");
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }//END //Mohamed RAdwan
+    
+    
     public boolean Reply_message(int Message_id, Comment comment) {
         return true;
     }
-
+    
+     //Mohamed RAdwan
      public boolean Give_order(Order order) {
-        DB_controller.Connect();
-        //Table order_fixable 
-        HashMap<String,String> Order=new HashMap<>(10); 
-        Order.put("Requist_id", String.valueOf(order.getMy_requist()));
-        Order.put("Date_start_id",String.valueOf(Get_date_iD()));
-        Order.put("Technical_description",order.getTecnical_description());
-        Order.put("Service_id",String.valueOf(order.getMy_Service()));
-        Order.put("State_id","3");//wait fix
-        Order.put("date_End_id",String.valueOf(order.getDate_requist()));
-        DB_controller.Insert("order_fixable", Order);
-        //end teabl order_fixable
-        
-        //Table order_flexible_details
-        HashMap<String,String> ordflexde=new HashMap<>(1);
-        Request req= Search_requist(order.getMy_requist());
-        ArrayList<Integer> dev=req.getMy_device();
-        int id_order=0; 
-        ArrayList<Integer> ID_rder_flexible_details=new ArrayList<>();
-        for(Integer d:dev)
+        try{
+            DB_controller.Connect();
+            //Table order_fixable 
+            HashMap<String,String> Order=new HashMap<>(10); 
+            Order.put("Requist_id", String.valueOf(order.getMy_requist()));
+            Order.put("Date_start_id",String.valueOf(Get_date_iD()));
+            Order.put("Technical_description",order.getTecnical_description());
+            Order.put("Service_id",String.valueOf(order.getMy_Service()));
+            Order.put("State_id","3");//wait fix
+            Order.put("date_End_id",String.valueOf(order.getDate_requist()));
+            DB_controller.Insert("order_fixable", Order);
+            //end teabl order_fixable
+
+            //Table device_of_this_request
+            HashMap<String,String> ordflexde=new HashMap<>(1);
+            int counter=0;
+            Request req= Search_requist(order.getMy_requist());
+            ArrayList<Integer> dev=req.getMy_device();
+            int id_request=req.getID();
+            ArrayList<Integer> ID_rder_flexible_details=new ArrayList<>();
+            for(Integer d:dev)
+            {
+              ResultSet result =  DB_controller.Select("Device_of_this_request_id", "device_of_this_request", "Device_id="+d+" request_id="+id_request);
+              ID_rder_flexible_details.add(result.getInt("Device_of_this_request_id"));
+            }
+
+            //if you want to use it in table Device_of_this_request_id to insert in
+            /*for(Integer d:dev)
+            {
+                ordflexde.put("Flexible_id",String.valueOf(id_order));
+                ordflexde.put("Device_id",String.valueOf(d));
+                DB_controller.Insert("order_flexible_details",ordflexde);
+                ID_rder_flexible_details.add(d);
+                ordflexde=new HashMap<>(1);
+            }*/
+            //END device_of_this_request
+
+            //Table order_flixer
+            ArrayList<Integer> Techincal_ID= order.getMy_Technical_id();
+            counter=0;
+            for(Integer d:ID_rder_flexible_details)
+            {
+                ordflexde.put("Technical_id",String.valueOf(Techincal_ID.get(counter)));
+                ordflexde.put("Order_id",String.valueOf(d));
+                DB_controller.Insert("order_flixer",ordflexde);
+                ordflexde=new HashMap<>(1);
+                counter ++;
+            }//end table order_flixer
+
+        }//end try
+        catch(Exception e)
         {
-            ordflexde.put("Flexible_id",String.valueOf(id_order));
-            ordflexde.put("Device_id",String.valueOf(d));
-            DB_controller.Insert("order_flexible_details",ordflexde);
-            ID_rder_flexible_details.add(d);
-            ordflexde=new HashMap<>(1);
+            e.printStackTrace();
+            return false;
         }
-        //END
-        
-        //Table order_flixer
-        ArrayList<Integer> Techincal_ID= order.getMy_Technical_id();
-        int counter=0;
-        for(Integer d:ID_rder_flexible_details)
-        {
-            ordflexde.put("Technical_id",String.valueOf(Techincal_ID.get(counter)));
-            ordflexde.put("Order_id",String.valueOf(d));
-            DB_controller.Insert("order_flixer",ordflexde);
-            ordflexde=new HashMap<>(1);
-            counter ++;
-        }
-        
         return true;
-    }
+    }//END Give_order
 
     public Bill Search_bill(int Branch_id) {
         return null;
@@ -239,7 +342,7 @@ public class System_manage {
     }
 
 
-
+    //Mohamed RAdwan    
     public boolean Send_Message(General_massge message) {
        
         try
@@ -254,24 +357,27 @@ public class System_manage {
             Mass.put("Date_id", String.valueOf(id));
             Mass.put("Time", time);
             Mass.put("Parent_id", "0");
-            DB_controller.Insert("message",Mass);
-            ResultSet s=  DB_controller.Select("Message_id", "message", "sender_id="+message.getSender_id()+" Date_id="+String.valueOf(id)+" Time="+time);
-            int idmass=s.getInt("Message_id");
+            int idmass= DB_controller.Insert("message",Mass);
             Mass=new  HashMap<String, String>(5);
             Mass.put("Reciever_id", String.valueOf(message.getReciver()));
             Mass.put("Message_id", String.valueOf(idmass));
             Mass.put("State_id", "5");
             DB_controller.Insert("recieved", Mass);
-       }
+       }//END Try
        catch(Exception ex)
        {
            ex.printStackTrace();
        }
         return true;
     
-    }
-     public int Get_date_iD()
-    {
+    }//End Send_Message
+    
+     //Mohamed RAdwan  
+    public int Get_date_iD()
+     {
+        try
+        {
+         //Table date   
          DB_controller.Connect();
          DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
          Date date = new Date();
@@ -279,26 +385,25 @@ public class System_manage {
          Date.put("Date", date.toString());
          DB_controller.Insert("date", Date);
          ResultSet isDate=DB_controller.Select("Date_id", "date", "Date="+date.toString());
-         try
-         {
-             return isDate.getInt("Date_id");
-              
-         }
+         return isDate.getInt("Date_id");
+          //End Table date 
+        }//END Try
          catch(Exception s){    
              s.printStackTrace();
              return -1;
          }
-    }
+     }//END Get_date_iD
+    
+    //Mohamed RAdwan 
     public String Get_time()
     {
          DB_controller.Connect();
          SimpleDateFormat printFormat = new SimpleDateFormat("HH:mm:ss");
          Date date = new Date();
          return  date.toString(); 
-    }
+    }//END Get_time
     
     //Emad
-
     public boolean Add_User(User user) {
         DB_controller.Connect();
         HashMap<String, String> U = new HashMap<String, String>();
