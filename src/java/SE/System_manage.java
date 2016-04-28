@@ -239,8 +239,10 @@ public class System_manage {
         U.put("Password", user.getPassword());
         U.put("Gender", user.getGander());
         U.put("Block", ""+user.getBlock());
-        boolean check = DB_controller.Insert("USER", U);
-        return check;
+        int check = DB_controller.Insert("USER", U);
+        if(check==-1)
+            return false;
+        return true;
     }
 
     //Emad

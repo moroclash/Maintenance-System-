@@ -154,9 +154,11 @@ public class User {
         HashMap<String,String> H=new HashMap<String,String>();
         H.put("Name", Name);
         H.put("parent_id",Integer.toString(Parent_id));
-        boolean Check=DB_controller.Insert("type_user", H);
+        int Check=DB_controller.Insert("type_user", H);
         DB_controller.Close();
-        return Check;
+        if(Check==-1)
+            return false;
+        return true;
     }
     //Emad
     public String Search_Option(int Option_ID)
@@ -183,8 +185,10 @@ public class User {
         HashMap<String,String> H=new HashMap<String,String>();
         H.put("Name",Name);
         H.put("Type_id", Integer.toString(Type_ID));
-        boolean check=DB_controller.Insert("user_option", H);
-        return check;
+        int check=DB_controller.Insert("user_option", H);
+        if(check==-1)
+            return false;
+        return true;
     }
     //Emad
     public void Add_User_Option (int user_type_id,int []Options_id)

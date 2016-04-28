@@ -10,6 +10,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -80,9 +81,10 @@ public class DB_controller {
     }
 
     //Emad
-        public static boolean Insert(String TableName, HashMap<String, String> values) {
+    public static int Insert(String TableName, HashMap<String, String> values) {
         String key = "";
         String value = "";
+        ResultSet rs=null;
         for (Map.Entry<String, String> entry : values.entrySet())
         {
             key +=entry.getKey() + ",";
@@ -100,14 +102,15 @@ public class DB_controller {
         Values = "(" + Values + ")";
         String Query = "INSERT INTO " + TableName + " " + Attributes + " VALUES " + Values + " ";
         try {
-            System.out.println(Query);
-            PreparedStatement pre = DB_controller.prepareStatement(Query);
-            pre.execute();
-            return true;
+            PreparedStatement pre = DB_controller.prepareStatement(Query,Statement.RETURN_GENERATED_KEYS);
+            pre.executeUpdate();
+            rs=pre.getGeneratedKeys();
+            rs.next();
+            return rs.getInt(1);                    
         } catch (SQLException ex)
         {
             System.out.println("Error in Insert Function"+ex);
-            return false;
         }
+        return -1;
     }
 }
