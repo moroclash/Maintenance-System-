@@ -49,9 +49,11 @@ public class Customer extends User{
       H.put("User_ID",Integer.toString(User_ID));
       H.put("Device_ID",Integer.toString(Device.getId()));
       H.put("State_ID","1");      
-      boolean check=DB_controller.Insert("Request", H);
+      int check=DB_controller.Insert("Request", H);
       DB_controller.Close();
-      return check;
+      if(check==-1)
+          return false;
+      return true;
     }
     
     
@@ -95,9 +97,11 @@ public class Customer extends User{
         HashMap<String,String> H=new HashMap<String,String>();
         H.put("Message_ID",Integer.toString(complain.Id));
         H.put("Order_ID",Integer.toString(Order_id));
-        boolean check=DB_controller.Insert("Complain’s_order", H);
+        int check=DB_controller.Insert("Complain’s_order", H);
         DB_controller.Close();
-        return check;
+        if(check==-1)
+            return false;
+        return true;
     }
     
     //Emad
@@ -109,9 +113,11 @@ public class Customer extends User{
         H.put("Feedback_id",Integer.toString(feedback.getId()));
         H.put("System_quality",Integer.toString(feedback.getSystem_quality()));
         H.put("Service_quality",Integer.toString(feedback.getService_quality()));
-        boolean check=DB_controller.Insert("FEEDBACK", H);
+        int check=DB_controller.Insert("FEEDBACK", H);
         DB_controller.Close();
-        return check;
+        if(check==-1)
+            return false;
+        return true;
     }
     
 }
