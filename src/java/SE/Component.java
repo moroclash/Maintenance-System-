@@ -13,8 +13,10 @@ class Component implements Decoration{
     Bill bill;
 
     @Override
-    public void Draw() {
-        
+    public void Get_Cost() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+
+
     
 }

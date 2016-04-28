@@ -17,6 +17,7 @@ public class BranchReport extends Report{
     
     public BranchReport(Branch b) {
         this.branch = b;
+        
     }
 
     public void setBranch(Branch branch) {

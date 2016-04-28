@@ -59,8 +59,10 @@ public class Bill implements Decoration{
         return My_order;
     }
 
+
     @Override
-    public void Draw() {
+    public void Get_Cost() {
+    
     }
 
 }

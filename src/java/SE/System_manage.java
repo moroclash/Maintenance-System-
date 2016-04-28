@@ -37,12 +37,19 @@ public class System_manage {
         return system_manage;
     }
 
-    public Systemreport Get_System_Report() {
+    
+    
+    public Systemreport Get_System_Report()
+    {
         return null;
     }
-
-    public BranchReport Get_Branch_Report(Branch branch) {
-        return null;
+    
+    
+    
+    public BranchReport Get_Branch_Report(Branch branch)
+    {
+        BranchReport b = new BranchReport(branch);
+        return b;
     }
 
     //sala7
@@ -51,13 +58,16 @@ public class System_manage {
         Db.Connect();
         Branch branch = new Branch();
         ResultSet result = Db.Select(" * ", " branch ", " Branch_id = " + Branch_id);
-        int location = -1;
+
+        int location=-1;
+        Service_Management sv =Service_Management.Get_Serive_Management();
         try {
-            while (result.next()) {
-                branch.setId(result.getInt("Branch_id"));
-                branch.setMnager_id(result.getInt("User_id"));
-                branch.setPhones(branch.getPhones_branch(Branch_id));
-                branch.setAddress_id(result.getInt("Address_id"));
+            while(result.next())
+            {
+              branch.setId(result.getInt("Branch_id"));
+              branch.setMnager_id(result.getInt("User_id"));
+              branch.setPhones(sv.get_branch_phones(Branch_id));
+              branch.setAddress_id(result.getInt("Address_id"));
             }
         } catch (SQLException ex) {
             Db.Close();
@@ -262,10 +272,12 @@ public class System_manage {
             }catch (Exception e) {
            System.out.println("Error in Search User By Name"+e);
        }
-            return null;
-    }
-
-    //Emad
+       return null;
+   }
+    
+    
+    
+    //Emad  
     public boolean Delete_user(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -338,6 +350,8 @@ public class System_manage {
         return strDate;
     }//END Get_time
 
+    
+    
     //Emad
     //pre Path Type_OPTION_ID(text,int,....),and Name OF Type
     //post Add to Table user_option 
@@ -375,8 +389,14 @@ public class System_manage {
         return Db.Insert("type_user", H);
     }
 
+    
+    
+    
+    
+    
     //Emad
-    public String Search_User_OptionByID(int Option_ID) {
+    public String Search_User_OptionByID(int Option_ID)
+    {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
         ResultSet result = Db.Select("*", "user_option", "User_Option_ID=" + Option_ID);
