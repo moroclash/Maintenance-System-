@@ -11,10 +11,21 @@ package SE;
  */
 public class Feedback {
     private int Id;
+    private int Branch_id;
     private int My_order;
     private int System_quality;
     private int Service_quality;
 
+    public void setBranch_id(int Branch_id) {
+        this.Branch_id = Branch_id;
+    }
+
+    public int getBranch_id() {
+        return Branch_id;
+    }
+
+    
+    
     public void setId(int Id) {
         this.Id = Id;
     }

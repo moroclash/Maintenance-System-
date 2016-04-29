@@ -177,7 +177,7 @@ public class System_manage {
         return feedback;
     }
 
-    //Emad
+    //Emad D
     public void Add_User(User user) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -200,7 +200,7 @@ public class System_manage {
         }
     }
 
-    //Emad
+    //Emad D
     public User Search_user_by_id(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Service_Management s = Service_Management.Get_Serive_Management();
@@ -233,8 +233,8 @@ public class System_manage {
        }
             return null;
         }
+    
         //Emad
-        //like
     public User Search_user_by_name(String Name) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Service_Management s = Service_Management.Get_Serive_Management();
@@ -274,7 +274,7 @@ public class System_manage {
     
     
     
-    //Emad  
+    //Emad   D
     public boolean Delete_user(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -285,7 +285,7 @@ public class System_manage {
         return check;
     }
 
-    //Emad
+    //Emad D
     public boolean Block_user(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -294,7 +294,7 @@ public class System_manage {
         return check;
     }
 
-    //Emad
+    //Emad D
     public boolean Unblock_user(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -349,7 +349,7 @@ public class System_manage {
 
     
     
-    //Emad
+    //Emad D
     //pre Path Type_OPTION_ID(text,int,....),and Name OF Type
     //post Add to Table user_option 
     public int add_option(int Type_ID, String Name) {
@@ -402,7 +402,7 @@ public class System_manage {
         return false;
     }
 
-    //Emad
+    //Emad D
     //pre Path the name of new user and the parent id 
     //post add to table type user
     private int add_new_actor(String Name, int Parent_id) {
@@ -419,7 +419,7 @@ public class System_manage {
     
     
     
-    //Emad
+    //Emad D
     public String Search_User_OptionByID(int Option_ID)
     {
         DB_controller Db = DB_controller.Get_DB_controller();
@@ -434,8 +434,7 @@ public class System_manage {
         }
         return null;
     }
-
-    //Emad
+    //Emad  D
     public int Search_User_OptionByName(String Option_Name) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -450,7 +449,7 @@ public class System_manage {
         return -1;
     }
 
-    //Emad
+    //Emad  D
     //pre Path Type_OPTION_ID(text,int,....),and Name OF Type
     //post Add to Table user_option 
     public int add_user_option(int Type_ID, String Name) {
@@ -462,7 +461,7 @@ public class System_manage {
         return Db.Insert("user_option", H);
     }
 
-    //Emad
+    //Emad  D
     public int Add_to_actor_Option(int user_type_id, int Option_ID) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -474,7 +473,7 @@ public class System_manage {
         return i;
     }
 
-    //Emad
+    //Emad  D
     public ArrayList<Integer> All_Options_Available(int Type_ID) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -491,7 +490,7 @@ public class System_manage {
         return A;
     }
 
-    //Emad
+    //Emad  D
     public void Insert_Option_Values(User U, int User_ID) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -505,7 +504,7 @@ public class System_manage {
         Db.Close();
     }
 
-    //Emad
+    //Emad  D
     public HashMap<Integer, String> Get_Option_Values_OF_USER(int User_id) {
         HashMap<Integer, String> H = new HashMap<Integer, String>();
         DB_controller Db = DB_controller.Get_DB_controller();
@@ -520,7 +519,8 @@ public class System_manage {
         }
         return H;
     }
-
+    
+    //Emad D
     public String Get_Option_Value(int User_ID) {
         DB_controller DB = DB_controller.Get_DB_controller();
         DB.Connect();
@@ -535,7 +535,7 @@ public class System_manage {
         return null;
     }
 
-    //Emad
+    //Emad  D
     public ArrayList<String> Get_Options_OF_TYPE(int Type_ID) {
         ArrayList<String> A = new ArrayList<String>();
         DB_controller Db = DB_controller.Get_DB_controller();

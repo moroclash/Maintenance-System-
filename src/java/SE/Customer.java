@@ -35,9 +35,56 @@ public class Customer extends User {
     public void Add_Subscribe(int bransh_id) {
 
     }
-
+    //Emad
     public ArrayList<Request> Show_My_requist() {
-        return null;
+        ArrayList<Request> R=new ArrayList<Request>();
+        DB_controller DB=DB_controller.Get_DB_controller();
+        ResultSet result=DB.Select("*","request","State_id=1");
+        ResultSet result2=null;
+        int ID=-1;
+        try
+        {
+            while(result.next())
+            {
+                Request Req=new Request();
+                ArrayList<Integer>A=new ArrayList<Integer>();
+                ID=result.getInt("User_id");
+                Req.setID(ID);
+                Req.setAddress_ID(result.getInt("Address_ID"));
+                Req.setDate_id(result.getInt("Date_id"));
+                Req.setState_id(result.getInt("State_id"));
+                result2=DB.Select("Device_id‏","device_of_this_request","Request_id‏="+ID);
+                while(result2.next())
+                {
+                    A.add(result2.getInt("Device_id‏"));
+                }
+                Req.setDevice_id(A);
+                R.add(Req);
+            }
+         result=DB.Select("*","request","State_ID <> 1");
+            while(result.next())
+            {
+                Request Req=new Request();
+                ArrayList<Integer>A=new ArrayList<Integer>();
+                ID=result.getInt("User_id");
+                Req.setID(ID);
+                Req.setAddress_ID(result.getInt("Address_ID"));
+                Req.setDate_id(result.getInt("Date_id"));
+                Req.setState_id(result.getInt("State_id"));
+                result2=DB.Select("Device_id‏","device_of_this_request","Request_id‏="+ID);
+                while(result2.next())
+                {
+                    A.add(result2.getInt("Device_id‏"));
+                }
+                Req.setDevice_id(A);
+                R.add(Req);
+            }
+        }
+        catch(Exception Ex)
+        {
+            System.out.println("Error");
+        }
+        return R;
     }
 
     public ArrayList<Order> show_my_order() {
@@ -217,6 +264,7 @@ public class Customer extends User {
         H.put("Feedback_id", Integer.toString(feedback.getId()));
         H.put("System_quality", Integer.toString(feedback.getSystem_quality()));
         H.put("Service_quality", Integer.toString(feedback.getService_quality()));
+        H.put("Branch_ID",Integer.toString(feedback.getBranch_id()));
         int check = Db.Insert("FEEDBACK", H);
         Db.Close();
         return check != -1;

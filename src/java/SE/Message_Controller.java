@@ -46,26 +46,48 @@ public class Message_Controller {
     
     
 
-      //Emad
+      //Emad  D
     public ArrayList<Complain> Show_complains(int State) {
                    DB_controller DB = DB_controller.Get_DB_controller();
 
         DB.Connect();
         ResultSet result = DB.Select("*", "Message_type", "Name='Complain'");
         ArrayList<Complain> C = new ArrayList<Complain>();
-        int ID = 0;
+        int ID = -1;
+        int CID=-1;
         try {
             while (result.next()) {
                 ID = result.getInt("Message_type_id");
             }
-            result = DB.Select("*", "recieved", "Message_id=" + ID + " and State_id=" + State);
+            result = DB.Select("*", "message", "Type_ID="+ID);
             while (result.next()) {
-                
                 Complain complain = new Complain();
-                complain.setId(ID);
-                complain.setReciver(result.getInt("Reciever_id"));
-                complain.setState(State);
+                CID=result.getInt("Message_id");
+                complain.setId(CID);
+                complain.setMassage_type_id(ID);
+                complain.setContent(result.getString("Content"));
+                complain.setDate_id(result.getInt("Date_ID"));
+                complain.setTime(result.getString("Time"));
                 C.add(complain);
+            }
+            for(int i=0;i<C.size();i++)
+            {
+            result=DB.Select("*","recieved","Message_id="+C.get(i));
+            int state;
+            while(result.next())
+            {
+                state=result.getInt("State_id");
+                if(state==State)
+                {
+                    C.get(i).setReciver(result.getInt("Reciever_id"));
+                    C.get(i).setState(state);
+                    C.get(i).setMy_Commint(get_massage_commintes(C.get(i).getDate_id()));
+                }
+                else
+                {
+                    C.remove(i);
+                }
+            }
             }
             return C;
         } catch (Exception E) {
@@ -107,7 +129,7 @@ public class Message_Controller {
     }//End Send_Message
     
     
-    //Emad
+    //Emad D
     public boolean Up_complain_to_manager(Complain complain, int Branch_ID) {
          DB_controller DB = DB_controller.Get_DB_controller();
         DB.Connect();

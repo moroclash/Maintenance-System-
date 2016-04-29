@@ -163,17 +163,25 @@ public abstract class User {
         return F_name;
     }
 
-    //Sala7
+    //Emad 
     public boolean Update_user() {
         System_manage m = System_manage.Get_System_manage();
         DB_controller DB = DB_controller.Get_DB_controller();
         DB.Connect();
         
-            Employee emp = new Employee();
-            DB.Update(" user ", " Fname =" + emp.getF_name() + " Lname = " + emp.getL_name() + " Password = " + emp.getPassword()
-                    + " Email = " + emp.getEmail() + " gender = " + emp.getGander(), " User_id = " + ID);
-            
-        
+            DB.Update(" user ", " Fname ="+"'" + this.getF_name() + "'"+" ,Lname = "+"'" + this.getL_name() + "'"+" ,Password = "+"'" + this.getPassword()
+                   +"'" + " ,Email = "+"'" + this.getEmail() +"'"+ " ,gender = " + this.getGander()+"", " User_id = " + ID);
+            HashMap <Integer,String> H=new HashMap<Integer,String>();
+            H=this.getAdditional_data();
+            for(Map.Entry<Integer,String>entry:H.entrySet())
+            {
+                DB.Update("user_selected_option_values","User_option_id="+entry.getKey()+ " ,value="+entry.getValue(),"User_ID="+this.getID());
+            }
+            H=this.getPhones();
+            for(Map.Entry<Integer,String>entry:H.entrySet())
+            {
+                DB.Update("phone","Phone="+"'"+entry.getValue()+"'","User_ID="+this.getID());
+            }
         DB.Close();
         return true;
     }

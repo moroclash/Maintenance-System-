@@ -62,7 +62,7 @@ public class Branch {
     
     
     
-     //Emad T
+     //Emad D
    public double Show_salaris()
    {
        DB_controller DB=DB_controller.Get_DB_controller();
@@ -83,7 +83,7 @@ public class Branch {
            {
                Branch_ID=result.getInt("User_Option_ID");
            }           
-           result=DB.Select("*", "user_selected_option", "User_Option_ID="+Branch_ID);
+           result=DB.Select("*", "user_option", "User_Option_ID="+Branch_ID);
            while(result.next())
            {
                EmployeesSalaries.add(result.getInt("User_Type_ID"));
@@ -108,8 +108,8 @@ public class Branch {
    //Emad T
     public double Get_quality() {
         DB_controller.Get_DB_controller().Connect();
-        int NumberOfRows = 0;
-        int Summtion = 0;
+        double NumberOfRows = 0;
+        double Summtion = 0;
         double Persatage = 0;
         try {
             ResultSet result = DB_controller.Get_DB_controller().Select("*", "Feedback", "Branch_ID=" + Id);
