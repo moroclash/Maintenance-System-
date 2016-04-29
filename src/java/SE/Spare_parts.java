@@ -17,7 +17,17 @@ import java.util.ArrayList;
 public class Spare_parts extends Component{
     private int Spare_part_id;
     private Double mony;
+    private String name;
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    
     public void setMony(Double mony) {
         this.mony = mony;
     }

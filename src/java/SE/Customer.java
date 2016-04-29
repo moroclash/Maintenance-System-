@@ -10,8 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  *
@@ -31,9 +30,24 @@ public class Customer extends User {
     public ArrayList<Notify> Get_notify() {
         return null;
     }
-
-    public void Add_Subscribe(int bransh_id) {
-
+    //sala7
+    public boolean Add_Subscribe(int bransh_id) {
+        User u = null;
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+       
+        HashMap<String, String> A = new HashMap<>();
+        A.put("User_id", Integer.toString(this.getID()));
+        A.put("Branch_id", Integer.toString(bransh_id));
+        try{
+           Db.Insert("Subscriber", A);
+        }catch(Exception ex)
+        {
+            ex.printStackTrace();
+            return false;
+        }
+        
+        return true;
     }
     //Emad
     public ArrayList<Request> Show_My_requist() {
@@ -87,9 +101,33 @@ public class Customer extends User {
         return R;
     }
 
+    
+    
+   //omar
     public ArrayList<Order> show_my_order() {
+        try {
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Service_Management sr = Service_Management.Get_Serive_Management();
+            ArrayList<Order> or = new ArrayList<>();
+            Db.Connect();
+            ResultSet res = Db.Select("Request_id","request", "User_id="+getID()+" and not State_id=5");
+            int req = 0 ;
+            while (res.next()) {
+                req = res.getInt("Request_id");
+                ResultSet res2 = Db.Select("Order_fixable_id", "order_fixable", "Requist_id="+req);
+                while(res2.next())
+                {
+                    or.add(sr.Search_order(res2.getInt("Order_fixable_id")));
+                }
+            }
+            return or;
+        } catch (SQLException ex) {
+           
+        }
         return null;
     }
+    
+    
 //Emad
     public boolean forget_My_Password(String email, int Sequirty_question_id, String Answer) {
         DB_controller DB = DB_controller.Get_DB_controller();
@@ -276,15 +314,17 @@ public class Customer extends User {
 
         DB_controller DB = DB_controller.Get_DB_controller();
         DB.Connect();
-        ResultSet result = null;
+        ResultSet result ;
         System_manage s = System_manage.Get_System_manage();
-        Customer customer = new Customer();
+        Customer customer ;
         int id = -1;
         result = DB.Select("User_id ", " user ", " Email =  '" + User_Name + "'" + " and " + "Password = '" + Password + "'");
+        
         int customer_id = -1;
         try {
             while (result.next()) {
-                customer_id = result.getInt("User_id");
+              customer_id = result.getInt("User_id");
+               
             }
             customer = (Customer) s.Search_user_by_id(customer_id);
             setF_name(customer.getF_name());
@@ -302,8 +342,10 @@ public class Customer extends User {
 
         } catch (SQLException ex) {
             ex.printStackTrace();
-            DB.Close();
+          
+            return false;
         }
+      
         return true;
     }
 

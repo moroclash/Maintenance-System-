@@ -163,31 +163,7 @@ public abstract class User {
         return F_name;
     }
 
-    //Emad 
-    public boolean Update_user() {
-        System_manage m = System_manage.Get_System_manage();
-        DB_controller DB = DB_controller.Get_DB_controller();
-        DB.Connect();
-        
-            DB.Update(" user ", " Fname ="+"'" + this.getF_name() + "'"+" ,Lname = "+"'" + this.getL_name() + "'"+" ,Password = "+"'" + this.getPassword()
-                   +"'" + " ,Email = "+"'" + this.getEmail() +"'"+ " ,gender = " + this.getGander()+"", " User_id = " + ID);
-            HashMap <Integer,String> H=new HashMap<Integer,String>();
-            H=this.getAdditional_data();
-            for(Map.Entry<Integer,String>entry:H.entrySet())
-            {
-                DB.Update("user_selected_option_values","User_option_id="+entry.getKey()+ " ,value="+entry.getValue(),"User_ID="+this.getID());
-            }
-            H=this.getPhones();
-            for(Map.Entry<Integer,String>entry:H.entrySet())
-            {
-                DB.Update("phone","Phone="+"'"+entry.getValue()+"'","User_ID="+this.getID());
-            }
-        DB.Close();
-        return true;
-    }
-    
-    
-    
+ 
     //omar 0_0
     public ArrayList<General_massge> Show_all_my_rescived_massage() {
         try {
@@ -237,6 +213,7 @@ public abstract class User {
     
     
     //omar 0_0
+
     // num = 1 if you need to save in DB and inbox
     // num = any numper to add in inbux
     public void Add_massage(General_massge New_massage ,int num) {
@@ -245,6 +222,8 @@ public abstract class User {
             Message_Controller Ct = Message_Controller.Get_Message_Controller();
             Ct.Send_Message(New_massage);
         }
+       
+       
         Inbox.add(New_massage);
     }
     
@@ -275,12 +254,6 @@ public abstract class User {
         return Sv.Update_User_Phone(Old_phone_id, New_phone);
     }*/
 
-    // Requist        Done
-    //Load Requist    
-    //Show_My_Order   Done 
-    //Search_Device   Done
-    //Complain        Done
-    //Select Time btb3t Noti
 
 
     

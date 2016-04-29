@@ -35,61 +35,85 @@ public class Service_Management {
     }
 
     //sala7
-    private ArrayList<Integer> Get_Technical(int order_id) {
-        ArrayList<Integer> tech = null;
-        DB_controller DB = DB_controller.Get_DB_controller();
-        DB.Close();
-        ResultSet result = null;
 
-        result = DB.Select(" Technical_id ", " device_of_this_request ", " Order_fixable_id = " + order_id);
-        try {
-            while (result.next()) {
-                tech.add(result.getInt("Technical_id"));
+    public ArrayList<Integer> Get_Technical (int order_id)
+    {
+       ArrayList<Integer> tech = new ArrayList<>();
+       DB_controller DB=DB_controller.Get_DB_controller();
+       DB.Connect();
+     
+       int request_id =-1; 
+       int device_request  = -1;
+       int Technical_id = -1;
+       try {
+           ResultSet result ;
+           result = DB.Select(" Requist_id ", " order_fixable ", " Order_fixable_id = " + order_id);
+            while(result.next())
+            {
+               request_id = result.getInt("Requist_id");
+             
             }
-            DB.Close();
-            return tech;
-        } catch (SQLException ex) {
+           ResultSet result1 ;
+           result1 = DB.Select("Device_of_this_request_id", "device_of_this_request", "Request_id = " + request_id);
+           while(result1.next())
+           {
+             device_request = result1.getInt("Device_of_this_request_id");
+            
+           
+           ResultSet result2 ;
+           result2 = DB.Select("Technical_id", "Order_fixer", "Device_of_this_request = " + device_request);
+           while(result2.next())
+           {
+              Technical_id = result2.getInt("Technical_id");
+              
+              tech.add(Technical_id);
+           }
+           }
+           return tech;
+        }
+        catch (SQLException ex) {
             ex.printStackTrace();
-            DB.Close();
+           
             return null;
         }
     }
 
-    //Sala7
-    public void Return_order(int Order_id, String Technical_description) {
+    
 
-        DB_controller DB = DB_controller.Get_DB_controller();
-        DB.Update("order_fixable ", " State_id = 3 ," + "Technical_description = '" + Technical_description + "'", " Order_fixable_id = " + Order_id);
-
-        DB.Close();
-    }
-
-    //sala7
-    public Order Search_order(int Order_id) {
-        DB_controller DB = DB_controller.Get_DB_controller();
-        DB.Close();
-        ResultSet result = null;
-        Order order = new Order();
-        result = DB.Select(" * ", " order_fixable ", " Order_fixable_id = " + Order_id);
+ 
+    
+     //sala7
+      public Order Search_order(int Order_id)
+      {
+         DB_controller DB=DB_controller.Get_DB_controller();
+         DB.Connect();
+         ResultSet result ;
+         Order order = new Order();
+         result = DB.Select(" * ", " order_fixable ", " Order_fixable_id = " + Order_id);
         try {
-            while (result.next()) {
-                order.setId(result.getInt("Order_fixable_id"));
-                order.setMy_requist_id(result.getInt("Requist_id"));
-                order.setDate_start_id(result.getInt("Date_start_id"));
-                order.setTecnical_description(result.getString("Technical_description"));
-                order.setDate_end_id(result.getInt("recept_Date_id"));
-                order.setMy_service_id(result.getInt("Service_id"));
-                order.setDate_start_id(result.getInt("State_id"));
-                Get_Technical(Order_id);
+            while(result.next())
+            {
+              order.setId(result.getInt("Order_fixable_id"));
+              order.setMy_requist_id(result.getInt("Requist_id"));
+              order.setDate_start_id(result.getInt("Date_start_id"));
+              order.setTecnical_description(result.getString("Technical_description"));
+              order.setDate_end_id(result.getInt("recept_Date_id"));
+              order.setMy_service_id(result.getInt("Service_id"));
+              order.setDate_start_id(result.getInt("State_id"));
+              ArrayList <Integer> container = Get_Technical(Order_id);
+              order.setMy_Technical_id(container);
             }
+           
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+           DB.Close();
+            return null;
+        }
+
             DB.Close();
             return order;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            DB.Close();
-            return null;
-        }
-    }
+      }
+    
 
     //Emad 
     public void Add_Request(Request request) {
@@ -128,6 +152,32 @@ public class Service_Management {
         DB.Insert("complains_order", H);
     }
 
+    
+
+    //sala7
+     public ArrayList<String> get_branch_phones( int branch_id ) {
+         
+         ArrayList <String> phone = new ArrayList <String>();
+         DB_controller DB = DB_controller.Get_DB_controller();
+         DB.Connect();
+         
+         ResultSet result = null;
+         result = DB.Select(" phone ", " branch_phone ", " Branch_id = " + branch_id);
+         String Phone = "";
+         try {
+            while(result.next())
+            {
+               phone.add(result.getString("phone"));
+            }
+            return phone;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            DB.Close();
+        }
+        DB.Close();
+        return null;
+     }
+
     //omar 0_0
     public Complain Show_Complain(int Coplain_num_in_Bufer, int Reciver_id) {
         Complain com = this.Complain_buffer.get(Coplain_num_in_Bufer);
@@ -155,13 +205,19 @@ public class Service_Management {
                 A.add(result.getInt("Message_ID"));
             }
             result = DB.Select("*", "recieved", "1");
-            while (result.next()) {
-                A.remove(result.getInt("Message_ID"));
+            int i=0;
+            while (result.next())
+            {
+                if(A.get(i)==result.getInt("Message_ID"))
+                    A.remove(i);
+                i++;
             }
             int ID;
-            for (int i = 0; i < A.size(); i++) {
+            for ( i = 0; i < A.size(); i++)
+            {
                 result = DB.Select("*", "message", "Message_ID=" + A.get(i));
-                while (result.next()) {
+                while (result.next())
+                {
                     Complain C = new Complain();
                     ID = result.getInt("Message_ID");
                     C.setId(ID);
@@ -171,8 +227,9 @@ public class Service_Management {
                     C.setTime(result.getString("Time"));
                     C.setMy_Commint(MC.get_massage_commintes(result.getInt("Message_ID")));
                     result = DB.Select("*", "recieved", "Message_ID=" + ID);
-                    while (result.next()) {
-                        C.setState(result.getInt("State"));
+                    while (result.next())
+                    {
+                        C.setState(result.getInt("State_id"));
                         C.setReciver(result.getInt("Reciever_ID"));
                     }
                     Complain_buffer.add(C);
@@ -181,7 +238,6 @@ public class Service_Management {
         } catch (SQLException ex) {
             System.out.println(ex);
         }
-        DB.Close();
     }
 
     //Emad
@@ -212,7 +268,6 @@ public class Service_Management {
         } catch (Exception E) {
             System.out.println("Error in load Request");
         }
-        DB.Close();
     }
 
     //Emad
@@ -283,85 +338,105 @@ public class Service_Management {
         }
         return c;
     }
+ 
+   //Emad
+   public Time_chooser Get_Three_Date(Request request)
+   {
+       ArrayList<String> Dates=new ArrayList<String>();
+       String Date = "";
+       String FDATE = "";
+       int DayPlus=0;
+       int OptionID=-1;
+       int NumberOfEmployees=0;
+       int Branch_ID=-1; 
+       int NumberOfOrdersAtDay = 0;
+       System_manage S = System_manage.Get_System_manage();
+       int Date_ID = S.Get_date_iD();
+       DB_controller DB = DB_controller.Get_DB_controller();
+       DB.Connect();
+       try 
+       {
+           Branch_ID=this.Get_near_branch(request.getAddress_ID());
+           OptionID=S.Search_User_OptionByName("Branch_ID");
+           ResultSet result=DB.Select("*", "user_selected_option_values","User_option_id="+OptionID);
+           while(result.next())
+           {
+               NumberOfEmployees++;
+           }            
+        result = DB.Select("*", "Date", "Date_ID=" + Date_ID);                
+          while (result.next())
+          {
+               Date = result.getString("Date");
+           }            
+           while(Dates.size()<3)
+           {
+                  FDATE = "";
+           int FID = Character.getNumericValue(Date.charAt(Date.length()-1)) + Character.getNumericValue(Date.length()-2);
+               FID++;
+               for (int i = 0; i < Date.length()-1; i++)
+               {
+                   FDATE += Date.charAt(i);
+               }
+               FDATE += FID+DayPlus;                
 
-    //Emad
-    public Time_chooser Get_Three_Date(Request request, Time_chooser Chose) {
-        ArrayList<String> Dates = new ArrayList<String>();
-        String Date = "";
-        String FDATE = "";
-        int DayPlus = 0;
-        int OptionID = -1;
-        int NumberOfEmployees = 0;
-        int Branch_ID = -1;
-        int NumberOfOrdersAtDay = 0;
-        System_manage S = System_manage.Get_System_manage();
-        int Date_ID = S.Get_date_iD();
-        DB_controller DB = DB_controller.Get_DB_controller();
-        DB.Connect();
-        try {
-            Branch_ID = this.Get_near_branch(request.getAddress_ID());
-            OptionID = S.Search_User_OptionByName("Branch_ID");
-            ResultSet result = DB.Select("*", "user_selected_option_values", "User_option_id=" + OptionID);
-            while (result.next()) {
-                NumberOfEmployees++;
-            }
-            result = DB.Select("*", "Date", "Date_ID=" + Date_ID);
-            while (result.next()) {
-                Date = result.getString("Date");
-            }
-            while (Dates.size() < 3) {
-                FDATE = "";
-                int FID = Character.getNumericValue(Date.charAt(Date.length() - 1)) + Character.getNumericValue(Date.length() - 2);
-                FID++;
-                for (int i = 0; i < Date.length() - 1; i++) {
-                    FDATE += Date.charAt(i);
-                }
-                FDATE += FID + DayPlus;
-
-                result = DB.Select("*", "time_chooser", "times=" + FDATE);
-                while (result.next()) {
-                    FID = result.getInt("Times");
-                }
-                result = DB.Select("*", "time_choosed", "Time_chooser_id=" + FID + " and Branch_ID=" + Branch_ID);
-                while (result.next()) {
-                    NumberOfOrdersAtDay++;
-                }
-                if (NumberOfEmployees * 5 > NumberOfOrdersAtDay) {
-                    Dates.add(FDATE);
-                }
-                DayPlus++;
-            }
-
-        } catch (Exception E) {
-            System.out.println("");
-        }
-        Chose.setTime(Dates);
-        DB.Close();
-        return Chose;
-    }
-
-    //omar 0_0
-    private int Employee_order_numper(ArrayList<Integer> orders, int Employee_id) {
-        int num = 0;
-        try {
+            result = DB.Select("*", "time_chooser", "times=" + FDATE);
+           while (result.next())
+           {
+               FID = result.getInt("Time_Chooser_ID");
+           }
+           result = DB.Select("*", "time_choosed", "Time_chooser_id=" + FID +" and Branch_ID="+Branch_ID);
+           while (result.next()) 
+           {
+               NumberOfOrdersAtDay++;
+           }
+           if(NumberOfEmployees*5>NumberOfOrdersAtDay)
+           {
+               Dates.add(FDATE);
+           }
+           DayPlus++;
+           }
+           
+       } 
+       catch (Exception E) 
+       {
+           System.out.println("");
+       }
+       Time_chooser Chose = new Time_chooser();
+       Chose.setTime(Dates);
+       DB.Close();
+       return Chose;
+   }
+   
+   
+   
+  //omar 0_0
+  public int Employee_order_numper(ArrayList<Integer> Device_of_this_requests,int Employee_id)
+  {
+      int num = 0;
+      try {
             DB_controller Db = DB_controller.Get_DB_controller();
             Db.Connect();
-            ResultSet res;
-            int id = 0;
-            for (int x : orders) {
-                res = Db.Select("Technical_id", "device_of_this_request", "Order_fexable_id=" + x);
-                while (res.next()) {
-                    id = res.getInt("Technical_id");
-                    if (Employee_id == id) {
+            ResultSet res ;
+            int id = 0 ;
+            for(int x : Device_of_this_requests)
+            {
+                res = Db.Select("*", "Order_fixer", "Device_of_this_request_id = "+x);
+                while(res.next())
+                {
+                    id = res.getInt("Technical_id‏");
+                    if(Employee_id == id)
                         num++;
                     }
                 }
-            }
-        } catch (SQLException ex) {
+              return num;
+        }
+  catch (SQLException ex)
+  {
             Logger.getLogger(Service_Management.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return num;
-    }
+  }
+
+
 
     //omar
     public HashMap<Employee, Integer> Show_empty_technical(String Date, int Branch_id) {
@@ -377,9 +452,11 @@ public class Service_Management {
                 ResultSet res2 = Db.Select("Request_id", "time_chooser", "Time_chooser_id=" + x + " and Times=" + Date);
                 while (res2.next()) {
                     request_id = res2.getInt("Request_id");
-                    ResultSet res3 = Db.Select("Order_fixable_id", "order_fixable", "Requist_id=" + request_id);
-                    while (res3.next()) {
-                        aa.add(res3.getInt("Order_fixable_id"));
+
+                    ResultSet res3 = Db.Select("Device_of_this_request_id", "device_of_this_request", "Request_id="+request_id);
+                    while(res3.next())
+                    {
+                        aa.add(res3.getInt("Device_of_this_request_id"));
                     }
                 }
             }
@@ -435,15 +512,41 @@ public class Service_Management {
         return null;
     }
 
-    boolean Accept_Request(int Request_id) {
+
+    
+    
+    
+    
+    //omar
+    public boolean Accept_Request(int Request_id) {
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        Request req = this.Request_buffer.get(Request_id);
+        this.Request_buffer.remove(Request_id);
+        Db.Update("request", "State_id=1", "Request_id="+req.getID());
+        Time_chooser times = Get_Three_Date(req);
+        HashMap<String,String> H = new HashMap<>();
+        for(String date : times.getTime())
+        {
+            H.clear();
+            H.put("Request_id", Integer.toString(Request_id));
+            H.put("Times", date);
+            Db.Insert("time_chooser", H);
+        }
         return true;
     }
 
+    
+        
+    
+    
     public Bill_inf Add_Componenet(ArrayList<Component> Component, Bill bill, String Technical_description) {
         return null;
     }
 
-    //Emad    D
+
+    
+    //Emad
     public ArrayList<Order> Show_My_Order(int Employee_id) {
         ArrayList<Order> or = new ArrayList<Order>();
         DB_controller DB = DB_controller.Get_DB_controller();
@@ -525,15 +628,20 @@ public class Service_Management {
             DB_controller DB = DB_controller.Get_DB_controller();
             DB.Connect();
             Request request = new Request();
-            ResultSet res = DB.Select("*", "request", "Request_id=" + Requist_id);
-            request.setID(Requist_id);
-            request.setState_id(res.getInt("ate_id"));
+            ResultSet res = DB.Select("*", "request", "Request_id=" + Requist_id);   
+            while(res.next())
+            {request.setID(Requist_id);          
+            request.setState_id(res.getInt("State_id"));
             request.setDate_id(res.getInt("Date_id"));//lw h8er el Date id to int 
-            ArrayList<Integer> Devices_ID = new ArrayList<Integer>();
+             System.err.println("1");
+            }
             //END Table Reqest
-
+            
             //Table device_of_this_request
-            ResultSet Devices = DB.Select("Device_id", "device_of_this_request", "request_id=" + Requist_id);
+             ArrayList<Integer> Devices_ID = new ArrayList<Integer>();
+            
+            System.err.println("2");
+            ResultSet Devices = DB.Select("Device_id", "device_of_this_request", "Request_id=" + Requist_id);
             while (Devices.next()) {
                 Devices_ID.add(Devices.getInt("Device_id"));
             }
@@ -554,11 +662,11 @@ public class Service_Management {
             //Table order_fixable 
             HashMap<String, String> Order = new HashMap<>(10);
             Order.put("Requist_id", String.valueOf(order.getMy_requist_id()));
-            Order.put("Date_start_id", String.valueOf(order.getDate_start_id()));
+            Order.put("Date_start_id", String.valueOf(System_manage.Get_System_manage().Get_date_iD()));
             Order.put("Technical_description", order.getTecnical_description());
             Order.put("Service_id", String.valueOf(order.getMy_service_id()));
             Order.put("State_id", "3");//wait fix
-            Order.put("date_End_id", String.valueOf(order.getMy_requist_id()));
+            Order.put("	recept_Date_id", String.valueOf(order.getMy_requist_id()));
             DB.Insert("order_fixable", Order);
             //end teabl order_fixable
 
@@ -567,11 +675,15 @@ public class Service_Management {
             int counter = 0;
             Request req = Search_requist(order.getMy_requist_id());
             ArrayList<Integer> dev = req.getDevice_id();
+            System.err.println(dev);
             int id_request = req.getID();
+            System.err.println(id_request);
             ArrayList<Integer> ID_rder_flexible_details = new ArrayList<>();
             for (Integer d : dev) {
-                ResultSet result = DB.Select("Device_of_this_request_id", "device_of_this_request", "Device_id=" + d + " request_id=" + id_request);
+                ResultSet result = DB.Select("Device_of_this_request_id", "device_of_this_request", "Device_id=" + d + " and  Request_id=" + id_request);
+                result.first();
                 ID_rder_flexible_details.add(result.getInt("Device_of_this_request_id"));
+                result=null;
             }
 
             //if you want to use it in table Device_of_this_request_id to insert in
@@ -589,7 +701,7 @@ public class Service_Management {
             counter = 0;
             for (Integer d : ID_rder_flexible_details) {
                 ordflexde.put("Technical_id", String.valueOf(Techincal_ID.get(counter)));
-                ordflexde.put("Order_id", String.valueOf(d));
+                ordflexde.put("Device_of_this_request_id", String.valueOf(d));
                 DB_controller.Get_DB_controller().Insert("order_flixer", ordflexde);
                 ordflexde = new HashMap<>(1);
                 counter++;
@@ -748,14 +860,14 @@ public class Service_Management {
                 x = res.getInt("Address_id");
                 m.put(x, this.get_address_from_db(x));
             }
-            DB_controller.Get_DB_controller().Close();
+        //    DB_controller.Get_DB_controller().Close();
             return m;
 
         } catch (SQLException ex) {
             Logger.getLogger(User.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
-        Db.Close();
+     //   Db.Close();
         return null;
     }
 
@@ -802,14 +914,13 @@ public class Service_Management {
             while (res.next()) {
                 m.put(res.getInt("Phone_id"), res.getString("phone"));
             }
-            DB_controller.Get_DB_controller().Close();
+
             return m;
 
         } catch (SQLException ex) {
-            Logger.getLogger(System_manage.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            
         }
-        DB_controller.Get_DB_controller().Close();
+
         return null;
     }
 

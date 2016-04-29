@@ -5,9 +5,6 @@
  */
 package SE;
 import com.sun.mail.smtp.SMTPTransport;
-import java.security.Security;
-import java.util.Date;
-import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -46,7 +43,7 @@ public class Message_Controller {
     
     
 
-      //Emad  D
+      //Emad  Done
     public ArrayList<Complain> Show_complains(int State) {
                    DB_controller DB = DB_controller.Get_DB_controller();
 
@@ -72,7 +69,7 @@ public class Message_Controller {
             }
             for(int i=0;i<C.size();i++)
             {
-            result=DB.Select("*","recieved","Message_id="+C.get(i));
+            result=DB.Select("*","recieved","Message_id="+C.get(i).getId());
             int state;
             while(result.next())
             {
@@ -114,7 +111,13 @@ public class Message_Controller {
             Mass.put("Time", time);
             Mass.put("Parent_id", "0");
             int idmass= DB.Insert("message",Mass);
+
+            Mass=new  HashMap<>(5);
+
+         
+                    System.err.println(idmass);
             Mass=new  HashMap<String, String>(5);
+
             Mass.put("Reciever_id", String.valueOf(message.getReciver()));
             Mass.put("Message_id", String.valueOf(idmass));
             Mass.put("State_id", "5");
@@ -129,7 +132,7 @@ public class Message_Controller {
     }//End Send_Message
     
     
-    //Emad D
+    //Emad Done
     public boolean Up_complain_to_manager(Complain complain, int Branch_ID) {
          DB_controller DB = DB_controller.Get_DB_controller();
         DB.Connect();
@@ -175,7 +178,7 @@ public class Message_Controller {
             DB_controller DB = DB_controller.Get_DB_controller();
             DB.Connect();
             ResultSet res = DB.Select("*", "message", "Message_id="+Massage_id);
-            int type=0;
+            int type;
             while (res.next()) {
                 type = res.getInt("Type_id");
                 if(type == 1)
