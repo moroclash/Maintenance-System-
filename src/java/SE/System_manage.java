@@ -577,6 +577,7 @@ public class System_manage {
     public HashMap<Integer, String> Get_Option_Values_OF_USER(String TableName,String Condition) {
         HashMap<Integer, String> H = new HashMap<Integer, String>();
         DB_controller DB=DB_controller.Get_DB_controller();
+        DB.Connect();
         ResultSet result = DB.Select("*",TableName,Condition);
         try {
             String Column=null;
@@ -594,6 +595,7 @@ public class System_manage {
             }
             while (result.next())
             {
+                System.out.println("HERE");
                 H.put((result.getInt(Column)), result.getString("Value"));
             }                
             }

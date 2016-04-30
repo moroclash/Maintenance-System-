@@ -110,7 +110,9 @@ C.setID(19);
 /*DB_controller DB=DB_controller.Get_DB_controller();
 DB.Connect();
                 ResultSet result2=DB.Select("*","device_of_this_request","Request_id=1");*/
-System.out.println(C.forget_My_Password("mohamedelnagm211@gmail.com",1,"football"));
+System_manage S=System_manage.Get_System_manage();
+S.Get_Option_Values_OF_USER("user_selected_option_values","User_id=1");
+
         }
  }
 
