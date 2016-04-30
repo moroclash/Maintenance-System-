@@ -595,7 +595,6 @@ public class System_manage {
             }
             while (result.next())
             {
-                System.out.println("HERE");
                 H.put((result.getInt(Column)), result.getString("Value"));
             }                
             }

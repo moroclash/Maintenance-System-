@@ -356,12 +356,14 @@ public class Service_Management {
        try 
        {
            Branch_ID=this.Get_near_branch(request.getAddress_ID());
+           System.out.println(Branch_ID);
+           Branch_ID=11;
            OptionID=S.Search_User_OptionByName("Branch_ID");
-           ResultSet result=DB.Select("*", "user_selected_option_values","User_option_id="+OptionID);
+           ResultSet result=DB.Select("*", "user_selected_option_values","User_selected_option_id="+OptionID +" and value="+Branch_ID);
            while(result.next())
            {
-               NumberOfEmployees++;
-           }            
+               NumberOfEmployees++; //Number Of Employees in Branch
+           }
         result = DB.Select("*", "Date", "Date_ID=" + Date_ID);                
           while (result.next())
           {
@@ -376,23 +378,24 @@ public class Service_Management {
                {
                    FDATE += Date.charAt(i);
                }
-               FDATE += FID+DayPlus;                
-
-            result = DB.Select("*", "time_chooser", "times=" + FDATE);
+               FDATE += FID+DayPlus;      //Fututre Date increment one day every loop
+            result = DB.Select("*", "time_chooser", "times=" +"'"+ FDATE+"'");
            while (result.next())
            {
-               FID = result.getInt("Time_Chooser_ID");
+               FID = result.getInt("Time_Chooser_ID");  //bshof al yom dh kan mota7 lkam wa7ed !!!  4
            }
            result = DB.Select("*", "time_choosed", "Time_chooser_id=" + FID +" and Branch_ID="+Branch_ID);
            while (result.next()) 
            {
-               NumberOfOrdersAtDay++;
+               System.out.println("GGG");
+               NumberOfOrdersAtDay++;  //kam wa7ed e5tar al yom dh ????
            }
            if(NumberOfEmployees*5>NumberOfOrdersAtDay)
            {
                Dates.add(FDATE);
            }
            DayPlus++;
+           NumberOfOrdersAtDay=0;
            }
            
        } 

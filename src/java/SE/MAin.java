@@ -106,13 +106,16 @@ public class MAin {
 //           System.out.println(em.getF_name());
 //       as}
 Customer C=new Customer();
-C.setID(19);
 /*DB_controller DB=DB_controller.Get_DB_controller();
 DB.Connect();
                 ResultSet result2=DB.Select("*","device_of_this_request","Request_id=1");*/
 System_manage S=System_manage.Get_System_manage();
-S.Get_Option_Values_OF_USER("user_selected_option_values","User_id=1");
-
+Service_Management Ser=Service_Management.Get_Serive_Management();
+Request request =new Request() ;
+request.setAddress_ID(16);
+Time_chooser A=new Time_chooser();
+A=Ser.Get_Three_Date(request);
+System.out.println(A.getTime().size());
         }
  }
 
