@@ -45,11 +45,8 @@ public class DB_controller {
               if(DB_controller == null || DB_controller.isClosed())
               {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
-<<<<<<< HEAD
-                DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/DP_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
-=======
-                DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/maintenance?zeroDateTimeBehavior=convertToNull", "root", "");
->>>>>>> 3b83be50971658e5f2ed0e0926f16457c5a713ad
+
+                DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/db_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
                 System.out.println("Done");
               }
          } catch (Exception x) {

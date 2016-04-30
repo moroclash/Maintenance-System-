@@ -25,7 +25,7 @@ public class MAin {
     public static void main(String[] args) {
 
 
-           String username = "mohamed@yahoo.com";
+          /* String username = "mohamed@yahoo.com";
            String pass = "123456789";
            int order_id = 2;
            int System_quality ;
@@ -46,7 +46,7 @@ public class MAin {
            
           feedback = s.Search_feedback(order_id);
           
-          
+          */
           //System.out.println(feedback.getSystem_quality());
           
 //          bill_inf = s.Search_bill(1);
@@ -104,9 +104,13 @@ public class MAin {
 //           System.out.println("error");
 //       }else{
 //           System.out.println(em.getF_name());
-//       }
-
-       
+//       as}
+Customer C=new Customer();
+C.setID(19);
+/*DB_controller DB=DB_controller.Get_DB_controller();
+DB.Connect();
+                ResultSet result2=DB.Select("*","device_of_this_request","Request_id=1");*/
+System.out.println(C.forget_My_Password("mohamedelnagm211@gmail.com",1,"football"));
         }
  }
 

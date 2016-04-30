@@ -145,7 +145,7 @@ public class System_manage {
                 employee.setBlock(result.getInt("Account_block"));
                 employee.setAddresses(serv.Get_User_Phone(Employee_type));
                 employee.setPhones(serv.Get_User_Phone(Employee_type));
-                switch (Employee_type) {
+              /*  switch (Employee_type) {
                     case 1:
                         employee.setAdditional_data(Get_Option_Values_OF_USER(Employee_type));
                         break;
@@ -160,7 +160,7 @@ public class System_manage {
                         break;
                     default:
                         break;
-                }
+                }*/
                 em.add(employee);
             }
 
@@ -273,7 +273,7 @@ public class System_manage {
 
 
     //Emad Done
-    public User Search_user_by_id(int User_id) {
+    public Object Search_user_by_id(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Service_Management s = Service_Management.Get_Serive_Management();
         Db.Connect();
@@ -296,7 +296,7 @@ public class System_manage {
                 U.setPassword(result.getString("Password"));
                 U.setType_id(Type_ID);                
             }
-           U.setAdditional_data(Get_Option_Values_OF_USER(User_id));
+           U.setAdditional_data(Get_Option_Values_OF_USER("user_selected_option_values","User_id-"+User_id));;
            U.setPhones(s.Get_User_Phone(User_id));
            U.setAddresses(s.Get_User_Address(User_id));
                 return U;
@@ -335,7 +335,7 @@ public class System_manage {
                 
             }
 
-           U.setAdditional_data(Get_Option_Values_OF_USER(id));
+           U.setAdditional_data(Get_Option_Values_OF_USER("user_selected_option_values","User_id-"+id));
            U.setPhones(s.Get_User_Phone(id));
            U.setAddresses(s.Get_User_Address(id));
                 return U;
@@ -574,17 +574,32 @@ public class System_manage {
     }
 
     //Emad  Done
-    public HashMap<Integer, String> Get_Option_Values_OF_USER(int User_id) {
+    public HashMap<Integer, String> Get_Option_Values_OF_USER(String TableName,String Condition) {
         HashMap<Integer, String> H = new HashMap<Integer, String>();
-        DB_controller Db = DB_controller.Get_DB_controller();
-        Db.Connect();
-        ResultSet result = Db.Select("*", "user_selected_option_values", "User_ID=" + User_id);
+        DB_controller DB=DB_controller.Get_DB_controller();
+        ResultSet result = DB.Select("*",TableName,Condition);
         try {
-            while (result.next()) {
-                H.put((result.getInt("User_selected_option_id")), result.getString("Value"));
+            String Column=null;
+            if(TableName.equals("user_selected_option_values"))
+            {
+                Column="User_selected_option_id";
             }
-        } catch (Exception E) {
-            System.out.println("Error in GET OPTION VALUES");
+            else if(TableName.equals("selected_device_option_values"))
+            {
+                Column="Model_id";
+            }
+            else
+            {
+                Column="Log_on_select_id";
+            }
+            while (result.next())
+            {
+                H.put((result.getInt(Column)), result.getString("Value"));
+            }                
+            }
+        catch (Exception E)
+        {
+            System.out.println("Error in GET OPTION VALUES+ " + E);
         }
         return H;
     }

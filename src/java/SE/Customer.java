@@ -10,6 +10,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.mail.MessagingException;
 
 
 /**
@@ -23,8 +26,58 @@ public class Customer extends User {
     ArrayList<Integer> subscribe_branshes;
     ArrayList<Notify> My_notify;
 
-    public void Add_notify() {
+    
+    //Emad
+    public void Load_Notify()
+    {
 
+        this.My_notify=new ArrayList<Notify>();
+        ArrayList<Integer>A=new ArrayList<Integer>();
+        DB_controller DB=DB_controller.Get_DB_controller();
+        DB.Connect();
+        System_manage S=System_manage.Get_System_manage();
+        ResultSet result=DB.Select("*","recieved","Reciever_id=2");
+        try 
+        {
+            while(result.next())
+            {
+                A.add(result.getInt("Message_id"));
+            }
+            for(int i=0;i<A.size();i++)
+            {
+            result=DB.Select("*","message","Message_id="+A.get(i)+" and Type_id=4");
+            while(result.next())
+            {
+                Notify N=new Notify();
+                N.setId(A.get(i));
+                N.setContent(result.getString("Content"));
+                N.setDate_id(result.getInt("Date_id"));
+                N.setMassage_type_id(4);
+                N.setState(result.getInt("State_id"));
+                N.setMassage_type_id(result.getInt("Type_id"));
+                N.setTime(Integer.toString(result.getInt("Time")));
+                N.setBranch_id(result.getInt("sender_id"));
+                this.My_notify.add(N);                
+            }
+            }
+        } 
+        catch (SQLException ex)
+        
+        {
+            System.out.println("E"+ex);
+        }
+    }
+    
+    //Emad
+    public void Add_notify(Notify N)
+    {
+        DB_controller DB=DB_controller.Get_DB_controller();
+        HashMap <String,String> H=new HashMap<String,String>();
+        H.put("Reciever_id",Integer.toString(this.getID()));
+        H.put("Message_id",Integer.toString(N.getId()));
+        H.put("State_id","4");
+        DB.Insert("recieved",H);
+        this.My_notify.add(N);
     }
 
     public ArrayList<Notify> Get_notify() {
@@ -49,15 +102,16 @@ public class Customer extends User {
         
         return true;
     }
-    //Emad
+    //Emad Done
     public ArrayList<Request> Show_My_requist() {
         ArrayList<Request> R=new ArrayList<Request>();
         DB_controller DB=DB_controller.Get_DB_controller();
-        ResultSet result=DB.Select("*","request","State_id=1");
+        DB.Connect();
         ResultSet result2=null;
         int ID=-1;
         try
         {
+        ResultSet result=DB.Select("*","request","User_id="+this.getID());            
             while(result.next())
             {
                 Request Req=new Request();
@@ -67,36 +121,18 @@ public class Customer extends User {
                 Req.setAddress_ID(result.getInt("Address_ID"));
                 Req.setDate_id(result.getInt("Date_id"));
                 Req.setState_id(result.getInt("State_id"));
-                result2=DB.Select("Device_id‏","device_of_this_request","Request_id‏="+ID);
+                result2=DB.Select("*","device_of_this_request","Request_id=1");
                 while(result2.next())
                 {
-                    A.add(result2.getInt("Device_id‏"));
+                    A.add(result2.getInt("Device_id"));
                 }
                 Req.setDevice_id(A);
                 R.add(Req);
             }
-         result=DB.Select("*","request","State_ID <> 1");
-            while(result.next())
-            {
-                Request Req=new Request();
-                ArrayList<Integer>A=new ArrayList<Integer>();
-                ID=result.getInt("User_id");
-                Req.setID(ID);
-                Req.setAddress_ID(result.getInt("Address_ID"));
-                Req.setDate_id(result.getInt("Date_id"));
-                Req.setState_id(result.getInt("State_id"));
-                result2=DB.Select("Device_id‏","device_of_this_request","Request_id‏="+ID);
-                while(result2.next())
-                {
-                    A.add(result2.getInt("Device_id‏"));
-                }
-                Req.setDevice_id(A);
-                R.add(Req);
             }
-        }
         catch(Exception Ex)
         {
-            System.out.println("Error");
+            System.out.println("Error"+Ex);
         }
         return R;
     }
@@ -129,8 +165,10 @@ public class Customer extends User {
     
     
 //Emad
-    public boolean forget_My_Password(String email, int Sequirty_question_id, String Answer) {
+    public boolean forget_My_Password(String email, int Sequirty_question_id, String Answer) //asmy@gmail.com 
+    {
         DB_controller DB = DB_controller.Get_DB_controller();
+        DB.Connect();
         int User_ID = -1;
         int Option_Seq_ID1=-1;
         int Option_Seq_ID2=-1;        
@@ -138,37 +176,44 @@ public class Customer extends User {
         String B="";
         String Q="";
         String N="";
+        String RealPassword="";
         
-        ResultSet result = DB.Select("User_ID", "User", "Email=" + email);
+        ResultSet result = DB.Select("*", "User", "Email=" +"'"+ email+"'");
         try {
             while (result.next())
             {
-                User_ID = result.getInt("User_ID");
+                User_ID = result.getInt("User_ID"); 
+                RealPassword=result.getString("Password");
+                System.out.println(User_ID);
             }
             result =DB.Select("*", "security_question", "Security_question_id="+Sequirty_question_id);
             while(result.next())
             {
-                Q=result.getString("Question");//al so2al
+                Q=result.getString("Question"); //al Content bta3et el so2al al howa e5taro mn al interface 
+                System.out.println(Q);
             }
-            result=DB.Select("User_Option_ID", "user_option", "Name='Sequrity_Question'");
+            result=DB.Select("*", "user_option", "Name='Sequrity_Question_id'");
             while(result.next())
             {
-                Option_Seq_ID1=result.getInt("User_Option_ID");
+                Option_Seq_ID1=result.getInt("User_option_id"); // User_Option_ID
+                System.out.println(Option_Seq_ID1);
             }
-            result=DB.Select("User_Option_ID", "user_option", "Name='Answer'");
+            result=DB.Select("*", "user_option", "Name='Answer_question'");
             while(result.next())
             {
                 Option_Seq_ID2=result.getInt("User_Option_ID");
+                System.out.println(Option_Seq_ID2);                
             }            
-            result=DB.Select("Value","user_selected_option_values","User_ID="+User_ID +" and User_option_id=" +Option_Seq_ID1);
+            
+            result=DB.Select("Value","user_selected_option_values","User_ID="+User_ID +" and User_selected_option_id=" +Option_Seq_ID1);
             while(result.next())
             {
-                A=result.getString("Value");
+                A=result.getString("Value");  //al so2al al howa msglo f3ln
             }
-            result=DB.Select("Value","user_selected_option_values","User_ID="+User_ID +" and User_option_id=" +Option_Seq_ID2);
+            result=DB.Select("Value","user_selected_option_values","User_ID="+User_ID +" and User_selected_option_id=" +Option_Seq_ID2);
             while(result.next())
             {
-                B=result.getString("Value");
+                B=result.getString("Value"); //al egaba al howa msglha f3ln
             }            
         } 
         catch (SQLException ex) 
@@ -179,7 +224,15 @@ public class Customer extends User {
         if(A.equals(Q)&&B.equals(Answer))
         {
             Message_Controller M=Message_Controller.Get_Message_Controller();
-            return true;            
+            try{
+                M.Send_Email(this.getID(),"Remember Password","Dear Clinet: Here You Are Your Pasword Which you Forgot "+ "'"+RealPassword+"'");
+                return true;
+            }
+            catch(Exception E)
+            {
+                System.out.println("Error in Forgot Password Fuction "+E);
+                return false;
+            }
         }
         return false;
     }

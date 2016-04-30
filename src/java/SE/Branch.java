@@ -280,7 +280,7 @@ public class Branch {
                 Employee Em=new Employee();
                 USer_ID=result.getInt("User_ID");
                 Em.setID(USer_ID);
-                Em.setAdditional_data(S.Get_Option_Values_OF_USER(USer_ID));
+                Em.setAdditional_data(S.Get_Option_Values_OF_USER("user_selected_option_values","User_id="+USer_ID));
                 Gender_ID=result.getInt("Gender");
                 Em.setF_name(result.getString("Fname"));
                 Em.SetMyBranchID(getId());
@@ -314,6 +314,7 @@ public class Branch {
 
    public void SetNotfy_message(String notfy) {
         this.notfy_message = notfy;
+        notify();
    }
 
    public String GetNotfy_message() {
@@ -324,15 +325,64 @@ public class Branch {
    {
        
    }
-   
+   //Emad
    public void Desubcribe( int user_id)
    {
-       
+       DB_controller DB=DB_controller.Get_DB_controller();
+       DB.Connect();
+       DB.Delete("subscribe","User_id="+user_id);
    }
    
+   //Emad
+   public void Load_Subscribe()
+   {
+       this.Subscriber=new ArrayList<Integer>();
+       DB_controller DB=DB_controller.Get_DB_controller();
+       DB.Connect();
+       ResultSet result=DB.Select("*","subscribe","1");
+        try 
+        {
+            while(result.next())
+            {
+                this.Subscriber.add(result.getInt("Subscribe_id"));
+            }
+        } 
+        catch (SQLException ex)
+        {
+            Logger.getLogger(Branch.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
+   
+   //Emad
    public void Notify()
    {
-       
+       int DateId;
+      Notify N=new Notify();       
+       String Time="";
+      DB_controller DB=DB_controller.Get_DB_controller();
+      System_manage S=System_manage.Get_System_manage();
+      HashMap <String,String> H=new HashMap<String,String>();
+      H.put("Sender_ID",Integer.toString(Id));
+      Time=S.Get_time();
+      H.put("Time",Time);
+      DateId=S.Get_date_iD();
+      H.put("Date_id",Integer.toString(DateId));
+      H.put("Content",this.GetNotfy_message());
+      H.put("Type_id","4");
+      H.put("Parent_id","0");
+      DB.Insert("message", H);
+      N.setBranch_id(this.Id);
+      N.setContent(this.notfy_message);
+      N.setDate_id(DateId);
+      N.setMassage_type_id(4);
+      N.setState(5);
+      N.setTime(Time);
+      for(int i=0;i<this.Subscriber.size();i++)
+      {
+          Object C=S.Search_user_by_id(this.Subscriber.get(Id));
+          Customer Cus=(Customer) C;
+          Cus.Add_notify(N);
+      }
    }
    
    
