@@ -85,21 +85,10 @@ public class Customer extends User {
     }
     //sala7
     public boolean Add_Subscribe(int bransh_id) {
-        User u = null;
-        DB_controller Db = DB_controller.Get_DB_controller();
-        Db.Connect();
-       
-        HashMap<String, String> A = new HashMap<>();
-        A.put("User_id", Integer.toString(this.getID()));
-        A.put("Branch_id", Integer.toString(bransh_id));
-        try{
-           Db.Insert("Subscriber", A);
-        }catch(Exception ex)
-        {
-            ex.printStackTrace();
-            return false;
-        }
         
+        System_manage sy = System_manage.Get_System_manage();
+        Branch b = sy.Search_branch(bransh_id);
+        b.Subcribe(getID());
         return true;
     }
     //Emad Done

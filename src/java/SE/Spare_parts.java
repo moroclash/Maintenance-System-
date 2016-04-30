@@ -8,42 +8,50 @@ package SE;
 import Data_access.DB_controller;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
  * @author mohamedsalah
  */
 public class Spare_parts extends Component{
-    private int Spare_part_id;
+    private String  Name;
     private Double mony;
-    private String name;
+    HashMap<String,Double> s;
 
-    public void setName(String name) {
-        this.name = name;
+    Spare_parts() {
+
     }
-
-    public String getName() {
-        return name;
+    Spare_parts(Bill bill) {
+       this.bill= bill;
     }
-
-    
+    @Override
+    public double Get_Cost() {    
+    return super.Get_Cost()+mony;
+    }
     public void setMony(Double mony) {
         this.mony = mony;
     }
 
-    public void setSpare_part_id(int Spare_part_id) {
-        this.Spare_part_id = Spare_part_id;
+    public void setName(String Spare_part) {
+        this.Name= Spare_part;
     }
 
     public Double getMony() {
         return mony;
     }
 
-    public int getSpare_part_id() {
-        return Spare_part_id;
+    public String getName() {
+        return Name;
     }
 
+    @Override
+    public String toString() {
+        return this.bill.toString()+Name+"             "+mony+"\n";
+        
+    }
+    
+    
   
     
 }

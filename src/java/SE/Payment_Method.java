@@ -17,6 +17,15 @@ public class Payment_Method extends Component{
     
     private HashMap <Integer , String > Payment_method_option;
     private int method_id;
+
+    Payment_Method(Bill bill) {
+
+       this.bill=bill;
+    }
+
+    Payment_Method() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     //sala7
     public HashMap <Integer,String> Get_payment_type_in_bill(int bill_id)
@@ -73,6 +82,15 @@ public class Payment_Method extends Component{
 
     public HashMap<Integer, String> getPayment_method_option() {
         return Payment_method_option;
+    }
+
+    @Override
+    public String toString() {
+        for(int i=0;i<Payment_method_option.size();i++)
+        {
+            
+        }
+        return this.bill.toString()+"\n";
     }
 
     
