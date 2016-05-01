@@ -18,12 +18,12 @@ public class Customer extends User{
     private int Sequrity_question_id;
     private String Sequrity_question_answer;
     ArrayList<Integer> subscribe_branshes;    
-    ArrayList<notify> My_notify;
+    ArrayList<Notify> My_notify;
     
     public void Add_notify(){
         
     }
-    public ArrayList<notify> Get_notify(){
+    public ArrayList<Notify> Get_notify(){
         return null;
     }
     
@@ -71,17 +71,19 @@ public class Customer extends User{
     //Emad
     public boolean Make_request (Device Device,int User_ID)
     {
-      DB_controller.Connect();
+      DB_controller Db = DB_controller.Get_DB_controller();
+      Db.Connect();
       HashMap <String,String> H=new HashMap();
       H.put("User_ID",Integer.toString(User_ID));
       H.put("Device_ID",Integer.toString(Device.getId()));
       H.put("State_ID","1");      
-      int check=DB_controller.Insert("Request", H);
-      DB_controller.Close();
+      int check=Db.Insert("Request", H);
+      Db.Close();
       if(check==-1)
           return false;
       return true;
     }
+    
     
     
     public boolean Select_time (Time_chooser My_chooser)
@@ -90,20 +92,23 @@ public class Customer extends User{
         return true;
     }
     
+    
+    
     //Emad
     public String Trace_my_device (int Device_id)
     {
-        int State_ID=-100;
-        String State=null;
-       DB_controller.Connect();
-       ResultSet result=DB_controller.Select("*", "DEVICE","DEVICE_ID="+Device_id);
+       int State_ID=-100;
+       String State=null;
+       DB_controller Db = DB_controller.Get_DB_controller();
+       Db.Connect();
+       ResultSet result=Db.Select("*", "DEVICE","DEVICE_ID="+Device_id);
        try
        {
            while(result.next())
            {
                State_ID=result.getInt("State_id");
            }
-        result=DB_controller.Select("*", "STATE","STATE_ID="+State_ID);
+        result=Db.Select("*", "STATE","STATE_ID="+State_ID);
         while(result.next())
         {
             State=result.getString("State");
@@ -117,15 +122,18 @@ public class Customer extends User{
        return null;
     }
     
+    
+    
     //Emad
     public boolean Make_complain (Complain complain , int Order_id)
     {
-        DB_controller.Connect();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
         HashMap<String,String> H=new HashMap<String,String>();
         H.put("Message_ID",Integer.toString(complain.getId()));
         H.put("Order_ID",Integer.toString(Order_id));
-        int check=DB_controller.Insert("Complain’s_order", H);
-        DB_controller.Close();
+        int check=Db.Insert("Complain’s_order", H);
+        Db.Close();
         if(check==-1)
             return false;
         return true;
@@ -134,14 +142,15 @@ public class Customer extends User{
     //Emad
     public boolean Make_feedback (Feedback feedback , int Order_id)
     {
-        DB_controller.Connect();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
         HashMap<String,String> H=new HashMap<String,String>();
         H.put("Order_id",Integer.toString(Order_id));
         H.put("Feedback_id",Integer.toString(feedback.getId()));
         H.put("System_quality",Integer.toString(feedback.getSystem_quality()));
         H.put("Service_quality",Integer.toString(feedback.getService_quality()));
-        int check=DB_controller.Insert("FEEDBACK", H);
-        DB_controller.Close();
+        int check=Db.Insert("FEEDBACK", H);
+        Db.Close();
         if(check==-1)
             return false;
         return true;

@@ -33,15 +33,16 @@ public class Message_Controller {
 
       //Emad
     public ArrayList<Complain> Show_complains(int State) {
-        DB_controller.Connect();
-        ResultSet result = DB_controller.Select("*", "Message_type", "Name='Complain'");
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        ResultSet result = Db.Select("*", "Message_type", "Name='Complain'");
         ArrayList<Complain> C = new ArrayList<Complain>();
         int ID = 0;
         try {
             while (result.next()) {
                 ID = result.getInt("Message_type_id");
             }
-            result = DB_controller.Select("*", "recieved", "Message_id=" + ID + " and State_id=" + State);
+            result = Db.Select("*", "recieved", "Message_id=" + ID + " and State_id=" + State);
             while (result.next()) {
                 
                 Complain complain = new Complain();
@@ -56,6 +57,8 @@ public class Message_Controller {
         }
         return null;
     }
+    
+    
      //Mohamed RAdwan    
     public boolean Send_Message(General_massge message) {
        
@@ -118,9 +121,10 @@ public class Message_Controller {
     //omar
     public boolean Update_massage_state(int Old_massage_id ,int reciver_id ,int New_state)
     {
-        Data_access.DB_controller.Connect();
-        boolean b = Data_access.DB_controller.Update("recieved", "State_id="+New_state , "Message_id ="+Old_massage_id+" and Reciever_id="+reciver_id);
-        Data_access.DB_controller.Close();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        boolean b = Db.Update("recieved", "State_id="+New_state , "Message_id ="+Old_massage_id+" and Reciever_id="+reciver_id);
+        Db.Close();
         return b;
     }
     //omar

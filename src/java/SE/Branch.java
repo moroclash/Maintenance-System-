@@ -9,10 +9,21 @@ import java.util.HashMap;
 public class Branch {
     private int Id;
     private String Location;
+    private int Manager_id;
     private ArrayList<String> phones;
     private ArrayList <Integer> Subscriber;
     private String notfy_message;
 
+    public void setMnager_id(int Mnager_id) {
+        this.Manager_id = Mnager_id;
+    }
+
+    public int getMnager_id() {
+        return Manager_id;
+    }
+
+    
+    
     public  void push (String value)
     {
        this.phones.add(value); 

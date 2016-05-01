@@ -59,30 +59,30 @@ public class System_manage {
     
     //sala7
     public Branch Search_branch(int Branch_id) {
-        
-        DB_controller.Connect();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
         Branch branch = new Branch();
-        ResultSet result = DB_controller.Select("*", " branch ", " Branch_id =" +Branch_id);
+        ResultSet result = Db.Select("*", " branch ", " Branch_id =" +Branch_id);
         int location=-1;
         try {
             while(result.next())
             {
               branch.setId(result.getInt("Branch_id"));
-              branch.setUser_id(result.getInt("User_id"));
+              branch.setMnager_id(result.getInt("User_id"));
               location = result.getInt("");
             }
-            result = DB_controller.Select("Address", "address", "Address_id = " + location);
+            result = Db.Select("Address", "address", "Address_id = " + location);
             while(result.next())
             {
                 branch.setLocation(result.getString("Address"));
             }
-            result = DB_controller.Select("phone", "branch_phone", " Branch_id = " + Branch_id);
+            result = Db.Select("phone", "branch_phone", " Branch_id = " + Branch_id);
             while (result.next())
             {
               branch.push(result.getString("phone"));
             }
         } catch (SQLException ex) {
-            DB_controller.Close();
+            Db.Close();
             return null;
         }
         return branch;
@@ -95,7 +95,8 @@ public class System_manage {
     public ArrayList<Employee> Show_all_employee(String Employee_type) {
         try
         {
-            DB_controller.Connect();
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
            
         }
         catch(Exception e)
@@ -114,12 +115,12 @@ public class System_manage {
     
     
     //sala7
-    public Bill_info Search_bill(int Order_id) {
-        
-        DB_controller.Connect();
+    public Bill_inf Search_bill(int Order_id) {
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
         Bill bill = new Bill();
         int Method_ID=-1;
-        ResultSet result = DB_controller.Select("*" , " bill " , " Order_id = " + Order_id );
+        ResultSet result = Db.Select("*" , " bill " , " Order_id = " + Order_id );
         try {
             while(result.next()){
                bill.setId(result.getInt("BILL_id"));
@@ -129,7 +130,7 @@ public class System_manage {
                bill.setTime(result.getString("Time"));
                Method_ID=result.getInt("Payment_method_id");
             }
-               result=DB_controller.Select("Payment_method_id", "parent_methode " , "parent_methode_id = " + Method_ID);
+               result=Db.Select("Payment_method_id", "parent_methode " , "parent_methode_id = " + Method_ID);
                while(result.next())
                {
                    bill.push("Payment_Method",result.getString("Methode"));
@@ -148,8 +149,9 @@ public class System_manage {
     //sala7
     public Feedback Search_feedback(int Order_id) {
         Feedback feedback = new Feedback();
-        DB_controller.Connect();
-        ResultSet result = DB_controller.Select("*", "feedback", " Order_id = " + Order_id);
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        ResultSet result = Db.Select("*", "feedback", " Order_id = " + Order_id);
         try {
             while(result.next())
             {
@@ -160,10 +162,10 @@ public class System_manage {
             }
         } catch (SQLException ex) {
             Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
-            DB_controller.Close();
+            Db.Close();
             return null;
         }
-        DB_controller.Close();
+        Db.Close();
         return feedback;
     }
     
@@ -171,7 +173,8 @@ public class System_manage {
     
      //Emad
     public void Add_User(User user) {
-        DB_controller.Connect();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
         HashMap<String, String> U = new HashMap<String, String>();
         U.put("Fname", user.getF_name());
         U.put("Lname", user.getL_name());
@@ -179,16 +182,17 @@ public class System_manage {
         U.put("Password", user.getPassword());
         U.put("Gender", user.getGander());
         U.put("Block", ""+user.getBlock());
-        Insert_Option_Values(user,DB_controller.Insert("user", U));
+        Insert_Option_Values(user,Db.Insert("user", U));
     }
     
     
     
     //Emad
     public User Search_user_by_id(int User_id) {
-        DB_controller.Connect();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
         String S;
-        ResultSet result = DB_controller.Select("*", "user", "User_ID=" + User_id);
+        ResultSet result = Db.Select("*", "user", "User_ID=" + User_id);
         User U = new User();
         try {
             while (result.next()) {
@@ -216,17 +220,19 @@ public class System_manage {
     
     //Emad
     public boolean Delete_user(int User_id) {
-        DB_controller.Connect();
-        boolean check = DB_controller.Delete("user", "User_ID=" + User_id);
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        boolean check = Db.Delete("user", "User_ID=" + User_id);
         return check;
     }
     
     
     //Emad
     public boolean Block_user(int User_id) {
-        DB_controller.Connect();
-        boolean check = DB_controller.Update("user", "Block=1", "User_ID=" + User_id);
-        DB_controller.Close();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        boolean check = Db.Update("user", "Block=1", "User_ID=" + User_id);
+        Db.Close();
         return check;
     }
     
@@ -234,9 +240,10 @@ public class System_manage {
   
     //Emad
     public boolean Unblock_user(int User_id) {
-        DB_controller.Connect();
-        boolean check = DB_controller.Update("user", "Block=0", "User_ID=" + User_id);
-        DB_controller.Close();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        boolean check = Db.Update("user", "Block=0", "User_ID=" + User_id);
+        Db.Close();
         return check;
     }
     
@@ -247,14 +254,15 @@ public class System_manage {
      {
         try
         {
+         DB_controller Db = DB_controller.Get_DB_controller();
          //Table date   
-         DB_controller.Connect();
+         Db.Connect();
          DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
          Date date = new Date();
          HashMap<String,String> Date=new HashMap<>(1);
          Date.put("Date", date.toString());
-         DB_controller.Insert("date", Date);
-         ResultSet isDate=DB_controller.Select("Date_id", "date", "Date="+date.toString());
+         Db.Insert("date", Date);
+         ResultSet isDate=Db.Select("Date_id", "date", "Date="+date.toString());
          return isDate.getInt("Date_id");
           //End Table date 
         }//END Try
@@ -270,8 +278,9 @@ public class System_manage {
     public String Get_this_date(int ID){
          try
         {
-            DB_controller.Connect();
-            ResultSet res=DB_controller.Select("Date", "date", "Date_id="+ID);
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            ResultSet res=Db.Select("Date", "date", "Date_id="+ID);
            return res.getString("Date");
         }
         catch(Exception e)
@@ -285,7 +294,8 @@ public class System_manage {
     //Mohamed RAdwan 
     public String Get_time()
     {
-         DB_controller.Connect();
+         DB_controller Db = DB_controller.Get_DB_controller();
+         Db.Connect();
          SimpleDateFormat printFormat = new SimpleDateFormat("HH:mm:ss");
          Date date = new Date();
          return  date.toString(); 
@@ -320,11 +330,12 @@ public class System_manage {
     //post add to table type user
     private int add_new_actor (String Name,int Parent_id)
     {
-        DB_controller.Connect();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
         HashMap<String,String> H=new HashMap<String,String>();
         H.put("Name", Name);
         H.put("parent_id",Integer.toString(Parent_id));
-        return DB_controller.Insert("type_user", H);
+        return Db.Insert("type_user", H);
     }
     
     
@@ -334,8 +345,9 @@ public class System_manage {
         //Emad
     public String Search_User_OptionByID(int Option_ID)
     {
-        DB_controller.Connect();
-        ResultSet result=DB_controller.Select("*","user_option","User_Option_ID="+Option_ID);
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        ResultSet result=Db.Select("*","user_option","User_Option_ID="+Option_ID);
         try
         {
             while(result.next())
@@ -356,8 +368,9 @@ public class System_manage {
     //Emad
     public int Search_User_OptionByName(String Option_Name)
     {
-        DB_controller.Connect();
-        ResultSet result=DB_controller.Select("*","user_option","Name='"+Option_Name+"'");
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        ResultSet result=Db.Select("*","user_option","Name='"+Option_Name+"'");
         try
         {
             while(result.next())
@@ -381,11 +394,12 @@ public class System_manage {
     //post Add to Table user_option 
     public int add_user_option (int Type_ID,String Name)
     {
-        DB_controller.Connect();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
         HashMap<String,String> H=new HashMap<String,String>();
         H.put("Name",Name);
         H.put("Type_id", Integer.toString(Type_ID));
-        return DB_controller.Insert("user_option", H);
+        return Db.Insert("user_option", H);
     }
     
     
@@ -395,12 +409,13 @@ public class System_manage {
       //Emad
     public int Add_to_actor_Option (int user_type_id,int Option_ID)
     {
-        DB_controller.Connect();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
             HashMap<String,String> H=new HashMap<String,String>();
             H.put("User_Type_ID",Integer.toString(user_type_id));
             H.put("user_option_id",Integer.toString(Option_ID));
-            int i=DB_controller.Insert("User_Selected_Option", H);
-        DB_controller.Close();
+            int i=Db.Insert("User_Selected_Option", H);
+        Db.Close();
         return i;
     }
     
@@ -409,9 +424,10 @@ public class System_manage {
     //Emad
     public ArrayList<Integer> All_Options_Available(int Type_ID)
     {
-        DB_controller.Connect();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
         ArrayList<Integer> A=new ArrayList<Integer>();
-        ResultSet result=DB_controller.Select("*", "user_selected_option","user_type_id="+Type_ID);
+        ResultSet result = Db.Select("*", "user_selected_option","user_type_id="+Type_ID);
         try
         {
             while(result.next())
@@ -423,7 +439,7 @@ public class System_manage {
         {
             System.out.println("Error in All Option Available");
         }
-        DB_controller.Close();
+        Db.Close();
         return A;
     }
     
@@ -431,16 +447,17 @@ public class System_manage {
     //Emad
     public void Insert_Option_Values(User U,int User_ID)
     {
-        DB_controller.Connect();
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
         for(Map.Entry<Integer,String> entry:U.getAdditional_data().entrySet())
         {
             HashMap<String,String> H=new HashMap<String,String> ();
             H.put("User_ID",Integer.toString(User_ID));
             H.put("User_option_id",Integer.toString(entry.getKey()));
             H.put("value",entry.getValue());
-            DB_controller.Insert("user_selected_option_values",H);
+            Db.Insert("user_selected_option_values",H);
         }
-        DB_controller.Close();
+        Db.Close();
     } 
     
     
@@ -451,8 +468,9 @@ public class System_manage {
     public HashMap <Integer,String> Get_Option_Values_OF_USER(int  User_id)
     {
         HashMap <Integer,String> H=new HashMap<Integer,String> ();
-        DB_controller.Connect();
-        ResultSet result=DB_controller.Select("*","user_selected_option_values","User_ID="+User_id);
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        ResultSet result = Db.Select("*","user_selected_option_values","User_ID="+User_id);
         try
         {
             while(result.next())
@@ -473,8 +491,9 @@ public class System_manage {
     public ArrayList<String> Get_Options_OF_TYPE(int  Type_ID)
     {
         ArrayList<String> A=new ArrayList<String>();
-        DB_controller.Connect();
-        ResultSet result=DB_controller.Select("*","user_option","Type_ID="+Type_ID);
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        ResultSet result=Db.Select("*","user_option","Type_ID="+Type_ID);
         try
         {
             while(result.next())
