@@ -198,31 +198,52 @@ public class User {
     }
   
    
+    //omar 0_0
+    public Massage Show_this_massage(int Massage_id)
+    {
+        Massage m = getInbox().get(Massage_id);
+        getInbox().remove(Massage_id);
+        Message_Controller mc = Message_Controller.Get_Message_Controller();
+        mc.Update_massage_state(m.getDate_id(), m.getReciver(), 4);
+        return m;
+    }
+    
     
    
     
     
-    //omar
+    //omar 0_0
     public void Add_massage(General_massge New_massage) {
+        Message_Controller Ct = Message_Controller.Get_Message_Controller();
+        Ct.Send_Message(New_massage);
+        Inbox.add(New_massage);
+    }
+    
+    
+
+    
+    
+   
+    //omar 0_0
+    public void Add_new_phone(String New_phone) {
+        Service_Management Sv = Service_Management.Get_Serive_Management();
+        int x = Sv.Add_New_Phone_To_User(New_phone, getID());
+        this.Phones.put(x, New_phone);
         
     }
     
-    
-
-    
-    
-   
-
-    public void Add_new_phone(String New_phone) {
-
-    }
-
+    //omar 0_0
     public boolean Delete_phone(int phone_id) {
-        return false;
+        this.Phones.remove(phone_id);
+        Service_Management Sv =Service_Management.Get_Serive_Management();
+        return Sv.Delete_User_Phone(phone_id);
     }
 
+    //omar 0_0
     public boolean Update_phone(int Old_phone_id, String New_phone) {
-        return false;
+        this.Phones.replace(Old_phone_id, New_phone);
+        Service_Management Sv = Service_Management.Get_Serive_Management();
+        return Sv.Update_User_Phone(Old_phone_id, New_phone);
     }
 
     
@@ -233,60 +254,30 @@ public class User {
     //////////////////////////////////////////////////////
     
    
-    
-    public ArrayList <Massage> Load_inbox()
+    //omar 0_0
+    public void Load_inbox()
     {
-        return null;
+        try {
+            Data_access.DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            ArrayList<Massage> m = new ArrayList<>();
+            Message_Controller MC = Message_Controller.Get_Message_Controller();
+            ResultSet res = Db.Select("Message_id", "recieved", "Reciever_id="+ getID() + " and State_id=5");
+            int x = 0;
+            while (res.next()) {
+                x = res.getInt("Message_id");
+                m.add((Massage) MC.Search_Massage(x));
+            }
+            Db.Close();
+            this.Inbox = m;
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
-    public boolean Log_in()
-    {
-        return true;
-    }
     
-     //sala7
-    public Object Log_in(String User_Name, String Password) {
-        Validations E = Validations.Get_Validations();
-        if(E.Is_email(User_Name) && E.Is_passord(Password))
-        {
-                            DB_controller DB = DB_controller.Get_DB_controller();
-
-            DB.Connect();
-            System_manage system = System_manage.Get_System_manage();
-            Employee employee ;
-            Customer customer ;
-            
-            ResultSet result = DB.Select(" name ", " type_user ", " Type_user_id = 5 ");
-            String name = "";
-            try {
-                while(result.next())
-                {
-                    name = result.getString("name");
-                }
-            } catch (SQLException ex) {
-            }
-            result =DB.Select("User_id", " user ", " Email =  '" + User_Name + "'" + " and " + "Password = '" + Password +"'");
-            try {
-                while(result.next())
-                {
-                    if(name.equals("customer"))
-                    {
-                        customer = (Customer) system.Search_user_by_id(result.getInt("User_id"));
-                        return customer;
-                    }
-                    else{
-                        employee = (Employee) system.Search_user_by_id(result.getInt("User_id"));
-                        return employee;
-                    }
-                }
-            } catch (SQLException ex) {
-            }
-        }
-        else{
-            System.err.println("username and password is incorrect");
-        }
-        return null;
-    }
+    
+    
     
     //omar 0_0
     public boolean DeleteMassge_that_send(int Massage_id) {

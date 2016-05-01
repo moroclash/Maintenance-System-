@@ -180,7 +180,7 @@ public class Service_Management {
     
     
     
-     //Emad
+    //Emad
     //pre Path Type_OPTION_ID(text,int,....),and Name OF Type
     //post Add to Table user_option 
     public int add_option (int Type_ID,String Name)
@@ -473,23 +473,23 @@ public class Service_Management {
     
     
     //omar 0_0
-    boolean Add_New_Phone_To_User(String New_phone,int User_id)
+    public int Add_New_Phone_To_User(String New_phone,int User_id)
     {
         Validations v = Validations.Get_Validations();
         if(!v.Is_digit(New_phone))
-            return false;
+            return 0;
         DB_controller.Get_DB_controller().Connect();
         HashMap<String,String> m = new HashMap<>();
         m.put("User_id", Integer.toString(User_id));
         m.put("Phone",New_phone);
-        DB_controller.Get_DB_controller().Insert("phone", m);
+        int x = DB_controller.Get_DB_controller().Insert("phone", m);
         DB_controller.Get_DB_controller().Close();
-        return true;    
+        return x;    
     }
     
     
     //omar 0_0
-    boolean Delete_User_Phone(int Phone_id)
+    public boolean Delete_User_Phone(int Phone_id)
     {
         DB_controller.Get_DB_controller().Connect();
         boolean z = DB_controller.Get_DB_controller().Delete("phone", "phone_id="+Phone_id);
@@ -498,7 +498,7 @@ public class Service_Management {
     }
     
     //omar 0_0
-    boolean Update_User_Phone(int Old_phone_id,String New_phone)
+    public boolean Update_User_Phone(int Old_phone_id,String New_phone)
     {
         if(!Validations.Get_Validations().Is_digit(New_phone))
             return false;
@@ -508,7 +508,7 @@ public class Service_Management {
         return z;
     }
     //omar 0_0
-    HashMap<Integer,String> Get_User_Phone(int User_id)
+    public HashMap<Integer,String> Get_User_Phone(int User_id)
     {
         try {
             HashMap<Integer,String> m = new HashMap<>();
