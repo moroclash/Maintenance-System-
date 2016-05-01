@@ -71,7 +71,7 @@ public class Service_Management {
     {
         return true;
     }
-    Bill_Information Add_Componenet(ArrayList<Component> Component,Bill bill,String Technical_description)
+    Bill_inf Add_Componenet(ArrayList<Component> Component,Bill bill,String Technical_description)
     {
         return null;
     }
