@@ -241,7 +241,10 @@ public class Message_Controller {
         DB_controller DB = DB_controller.Get_DB_controller();
             DB.Connect();
             ResultSet res = DB.Select("Email", "user", "User_id="+User_id);
-           String recipientEmail = res.getString("Email");
+            String recipientEmail=null;
+            while (res.next()) {
+                 recipientEmail = res.getString("Email");
+            }
         Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
         final String SSL_FACTORY = "javax.net.ssl.SSLSocketFactory";
         // Get a Properties object
