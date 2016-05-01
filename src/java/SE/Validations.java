@@ -75,15 +75,9 @@ public  class Validations {
 	}
    public  boolean Is_digit(String Word)
    {
-      try{
-          Integer.parseInt(Word);
-          return true;
-      }catch(Exception e){
-          return false;
-      }
-              
-       
-       
+      pattern = pattern.compile("^[0-9]*$");
+      matcher = pattern.matcher(Word);
+      return matcher.matches();
    }
    
    public  boolean Is_alpha(String Word)

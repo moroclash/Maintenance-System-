@@ -8,7 +8,10 @@ package SE;
 import Data_access.DB_controller;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -16,6 +19,15 @@ import java.util.Date;
  */
 public class MAin {
     public static void main(String[] args) {
-        
+            User s = new User();
+            s.setID(1);
+            ArrayList<General_massge> gg = s.Show_my_massage(5);
+            for(General_massge g : gg)
+            {
+                System.out.println(g.getContent() +"   " + g.getSender_id()+"   "+g.getDate_id());
+            }
+            
+        }
     }
-}
+
+

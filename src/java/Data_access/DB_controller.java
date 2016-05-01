@@ -75,7 +75,7 @@ public class DB_controller {
         }
         catch(Exception e)
         {
-            System.out.println("Error in select");
+            System.out.println(e.getMessage());
         }
         return null;
     }
@@ -137,6 +137,4 @@ public class DB_controller {
         }
         return -1;
     }
-    
-
 }

@@ -39,11 +39,13 @@ public class User {
     }
 
     
+    
     public void push(int Key,String Value)
    {
     this.Phones.put(Key, Value);
    }
    
+    
     public void setBlock(boolean Block) {
         this.Block = Block;
     }
@@ -67,6 +69,7 @@ public class User {
     public int getID() {
         return ID;
     }
+    
 //omar
     public boolean setEmail(String Email) {
         Validations e = Validations.Get_Validations();
@@ -75,6 +78,7 @@ public class User {
         this.Email = Email;
         return true;
     }
+    
  public void setPhones(HashMap<Integer, String> Phones) {
         this.Phones = Phones;
     }
@@ -169,7 +173,8 @@ public class User {
     }
     
     
-    //omar
+    
+    //omar 0_0
     public ArrayList<General_massge> Show_all_my_rescived_massage() {
         try {
             DB_controller DB = DB_controller.Get_DB_controller();
@@ -455,7 +460,7 @@ public class User {
         return null;
     }
     
-    //omar
+    //omar 0_0
     public boolean DeleteMassge_that_send(int Massage_id) {
             boolean z = false;
         try {
@@ -476,14 +481,14 @@ public class User {
         return z;
     }
    
-     //omar
+     //omar 0_0
     public ArrayList<General_massge> Show_my_massage_send() {
         try {
                             DB_controller DB = DB_controller.Get_DB_controller();
 
             ArrayList<General_massge> m = new ArrayList<>();
             DB.Connect();
-            ResultSet res = DB.Select("Message_id", "message", "sender_id="+getID());
+            ResultSet res = DB.Select("Message_id", "message", "sender_id="+getID() + " and Type_id = 2");
             int x=0;
             Message_Controller Ct = Message_Controller.Get_Message_Controller();
             while(res.next())
@@ -500,7 +505,7 @@ public class User {
         return null;
     }
      
-    //omar
+    //omar 0_0
     public boolean Delete_Massge_that_resived(int Massage_id) {
             DB_controller DB = DB_controller.Get_DB_controller();
             DB.Connect();
@@ -509,12 +514,14 @@ public class User {
             DB.Close();
             return z;
     }
-     //omar
+    
+    //omar 0_0
     public ArrayList<General_massge> Show_my_massage(int State_id) {
         try {
              DB_controller DB = DB_controller.Get_DB_controller();
+             DB.Connect();
             ArrayList<General_massge> m = new ArrayList<>();
-            ResultSet res = DB.Select("Message_id", "recieved", "Reciever_id="+getID()+",State_id="+State_id);
+            ResultSet res = DB.Select("Message_id", "recieved", "Reciever_id="+getID()+" and State_id="+State_id);
             int x=0;
             Message_Controller Ct = Message_Controller.Get_Message_Controller();
             while(res.next())

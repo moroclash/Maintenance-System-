@@ -123,7 +123,7 @@ public class Message_Controller {
     }
     
     
-    //omar
+    //omar 0_0
     public boolean Update_massage_state(int Old_massage_id ,int reciver_id ,int New_state)
     { 
         DB_controller DB = DB_controller.Get_DB_controller();
@@ -132,11 +132,12 @@ public class Message_Controller {
         DB.Close();
         return b;
     }
-    //omar
+    
+    //omar 0_0
     public Object Search_Massage(int Massage_id)
     {
         try {
-                    DB_controller DB = DB_controller.Get_DB_controller();
+            DB_controller DB = DB_controller.Get_DB_controller();
             DB.Connect();
             ResultSet res = DB.Select("*", "message", "Message_id="+Massage_id);
             int type=0;
@@ -163,7 +164,6 @@ public class Message_Controller {
                             c.setMy_order_id(res2.getInt("Order_id"));
                         }
                         c.setMy_Commint(get_massage_commintes(Massage_id));
-                        DB.Close();
                         return c;
                     }
                     else
@@ -193,7 +193,7 @@ public class Message_Controller {
         return null;
     }
     
-     //omar
+     //omar 0_0
     public ArrayList<Comment> get_massage_commintes (int Massage_id)
     {
         try {
@@ -214,7 +214,6 @@ public class Message_Controller {
                 m.setTime(res.getString("Time"));
                 commints.add(m);
             }
-            DB.Close();
             return commints;
         } catch (SQLException ex) {
             Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
@@ -222,11 +221,14 @@ public class Message_Controller {
         return null;
     }
     
+    
+    
+    
     public boolean Send_Email(int User_ID){
     return false;
     }
     
-         public boolean Reply_message(int Message_id, Comment comment) {
+    public boolean Reply_message(int Message_id, Comment comment) {
         return true;
     }
     

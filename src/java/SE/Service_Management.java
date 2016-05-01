@@ -79,6 +79,7 @@ public class Service_Management {
     {
         return null;
     }
+    
     //Emad
     public ArrayList<Order> Show_all_order(int state) {
         DB_controller DB=DB_controller.Get_DB_controller();
@@ -241,10 +242,12 @@ public class Service_Management {
         DB.Update("order_fixable ", " State_id = " + 3 + " Technical_description = " + Technical_description, " Order_fixable_id = " + Order_id);
         DB.Close();
     }
-    //omar
+    
+    //omar 0_0
     public String get_address_from_db(int Address_id)
     {
             DB_controller DB=DB_controller.Get_DB_controller();        
+            DB.Connect();
         try {
             ResultSet res = DB.Select("*","address", "Address_id="+Address_id);
             if(res==null)
@@ -255,24 +258,22 @@ public class Service_Management {
                 if(res.getInt("Parent_id")==0)
                 {
                     String s = res.getString("Address");
-                    DB.Close();
                     return s ;
                 }
                 else
                 {
                     int x = res.getInt("Parent_id");
                     String s =res.getString("Address");
-                    DB.Close();
                     return s+","+get_address_from_db(x);
                 }
             }
         } catch (SQLException ex) {
             Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        DB.Close();
         return "";
     }
-//omar
+    
+//omar 0_0
    public boolean Add_new_address_to_user(int District_id,String Street, String Num_of_home,int user_id){
        if(Validations.Get_Validations().Is_alphanumaric(Street)&&Validations.Get_Validations().Is_alphanumaric(Num_of_home))
        { 
@@ -299,7 +300,7 @@ public class Service_Management {
        }
        return false;
    }
-//omar
+//omar 0_0
    public boolean Delete_user_address(int Address_id,int user_id) {
            DB_controller.Get_DB_controller().Connect();
            boolean z = DB_controller.Get_DB_controller().Delete("address", "Address_id="+Address_id);
@@ -307,7 +308,9 @@ public class Service_Management {
            DB_controller.Get_DB_controller().Close();
            return z ;
    }
-      public boolean Update_address(int Old_num_of_home_id,String new_Street ,String new_num_of_home) {
+   
+  //omar  0_0
+  public boolean Update_address(int Old_num_of_home_id,String new_Street ,String new_num_of_home) {
        if(Validations.Get_Validations().Is_alpha(new_Street)&&Validations.Get_Validations().Is_alphanumaric(new_num_of_home))
        { 
            try {
@@ -327,13 +330,16 @@ public class Service_Management {
        }
        return false;
    }
-    //omar
-    HashMap<Integer,String>Get_User_Address(int User_id)
+  
+  
+    //omar  0_0
+    public HashMap<Integer,String> Get_User_Address(int User_id)
     {
+        DB_controller Db = DB_controller.Get_DB_controller();
         try {
             HashMap<Integer,String> m = new HashMap<>();
-            DB_controller.Get_DB_controller().Connect();
-            ResultSet res = Data_access.DB_controller.Get_DB_controller().Select("Address_id", "user_address", "User_id="+User_id);
+            Db.Connect();
+            ResultSet res = Db.Select("Address_id", "user_address", "User_id="+User_id);
             int x=0;
             while(res.next())
             {
@@ -345,12 +351,17 @@ public class Service_Management {
         } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
-        DB_controller.Get_DB_controller().Close();
-        return null;    }
-    //omar
+        Db.Close();
+        return null;   
+    }
+    
+    
+    
+    //omar 0_0
     boolean Add_New_Phone_To_User(String New_phone,int User_id)
     {
-        if(!Validations.Get_Validations().Is_digit(New_phone))
+        Validations v = Validations.Get_Validations();
+        if(!v.Is_digit(New_phone))
             return false;
         DB_controller.Get_DB_controller().Connect();
         HashMap<String,String> m = new HashMap<>();
@@ -358,8 +369,11 @@ public class Service_Management {
         m.put("Phone",New_phone);
         DB_controller.Get_DB_controller().Insert("phone", m);
         DB_controller.Get_DB_controller().Close();
-        return true;    }
-    //omar
+        return true;    
+    }
+    
+    
+    //omar 0_0
     boolean Delete_User_Phone(int Phone_id)
     {
         DB_controller.Get_DB_controller().Connect();
@@ -367,7 +381,8 @@ public class Service_Management {
         DB_controller.Get_DB_controller().Close();
         return z;
     }
-    //omar
+    
+    //omar 0_0
     boolean Update_User_Phone(int Old_phone_id,String New_phone)
     {
         if(!Validations.Get_Validations().Is_digit(New_phone))
@@ -377,7 +392,7 @@ public class Service_Management {
         DB_controller.Get_DB_controller().Close();
         return z;
     }
-    //omar
+    //omar 0_0
     HashMap<Integer,String> Get_User_Phone(int User_id)
     {
         try {
@@ -396,6 +411,7 @@ public class Service_Management {
         DB_controller.Get_DB_controller().Close();
         return null;
     }
+    
 //sala7
    public String Show_satate(int state)
    {
