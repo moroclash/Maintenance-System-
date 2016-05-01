@@ -6,6 +6,7 @@
 package SE;
 
 import Data_access.DB_controller;
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -133,12 +134,12 @@ public class System_manage {
                result=Db.Select("Payment_method_id", "parent_methode " , "parent_methode_id = " + Method_ID);
                while(result.next())
                {
-                   bill.push("Payment_Method",result.getString("Methode"));
+                //   bill.push("Payment_Method",result.getString("Methode"));
                }
-               return bill;
+               //return bill;
         } catch (SQLException ex) {
             Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
-            DB_controller.Close();
+            Db.Close();
         }
         return null;
     }

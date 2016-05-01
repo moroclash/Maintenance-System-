@@ -18,17 +18,20 @@ import java.util.logging.Logger;
  * @author moahmed A.Radwan
  */
 public class Message_Controller {
-    public  Message_Controller message_control=null;
-    public static boolean is_object=false;
+    private static  Message_Controller message_control=null;
     private Message_Controller()
-    {
-        
+    {    
     }
     
-    public void MAke_object_from_Message_controller(){
-        if(is_object==false)
-            message_control=new Message_Controller();
+    
+    public static Message_Controller Get_Message_Controller()
+    {
+        if(message_control==null)
+            message_control = new Message_Controller();
+        return message_control;
     }
+    
+    
     
 
       //Emad

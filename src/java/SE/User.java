@@ -177,10 +177,11 @@ public class User {
             DB.Connect();
             ResultSet res = DB.Select("Message_id", "recieved", "Reciever_id="+getID());
             int x=0;
+            Message_Controller Ct = Message_Controller.Get_Message_Controller();
             while(res.next())
             {
                 x = res.getInt("Message_id");
-                General_massge ms =  (General_massge)  Message_Controller.Search_Massage(x);  
+                General_massge ms =  (General_massge)  Ct.Search_Massage(x);  
                 m.add(ms);
             }
             DB.Close();
@@ -198,7 +199,7 @@ public class User {
     
     //omar
     public void Add_massage(General_massge New_massage) {
-        new System_manage().Send_Message(New_massage);
+        
     }
     
     
@@ -466,7 +467,8 @@ public class User {
             while (res2.next()) {
                x = res2.getInt("Reciever_id");
             }
-            z =  System_manage.Get_System_manage().Update_massage_state(Massage_id, x, 6);
+            Message_Controller Ct = Message_Controller.Get_Message_Controller();
+            z =  Ct.Update_massage_state(Massage_id, x, 6);
             DB.Close();
             } catch (SQLException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
@@ -483,10 +485,11 @@ public class User {
             DB.Connect();
             ResultSet res = DB.Select("Message_id", "message", "sender_id="+getID());
             int x=0;
+            Message_Controller Ct = Message_Controller.Get_Message_Controller();
             while(res.next())
             {
                 x = res.getInt("Message_id");
-                General_massge ms =(General_massge)  System_manage.Get_System_manage().Search_Massage(x);
+                General_massge ms =(General_massge)  Ct.Search_Massage(x);
                 m.add(ms);
             }
             DB.Close();
@@ -499,25 +502,25 @@ public class User {
      
     //omar
     public boolean Delete_Massge_that_resived(int Massage_id) {
-                        DB_controller DB = DB_controller.Get_DB_controller();
-
-           DB.Connect();
-            boolean z =  System_manage.Get_System_manage().Update_massage_state(Massage_id, getID(), 7);
+            DB_controller DB = DB_controller.Get_DB_controller();
+            DB.Connect();
+            Message_Controller Ct = Message_Controller.Get_Message_Controller();
+            boolean z =  Ct.Update_massage_state(Massage_id, getID(), 7);
             DB.Close();
             return z;
     }
      //omar
     public ArrayList<General_massge> Show_my_massage(int State_id) {
         try {
-                            DB_controller DB = DB_controller.Get_DB_controller();
-
+             DB_controller DB = DB_controller.Get_DB_controller();
             ArrayList<General_massge> m = new ArrayList<>();
             ResultSet res = DB.Select("Message_id", "recieved", "Reciever_id="+getID()+",State_id="+State_id);
             int x=0;
+            Message_Controller Ct = Message_Controller.Get_Message_Controller();
             while(res.next())
             {
                 x = res.getInt("Message_id");
-                General_massge ms =(General_massge)System_manage.Get_System_manage().Search_Massage(x);
+                General_massge ms =(General_massge)Ct.Search_Massage(x);
                 m.add(ms);
             }
             return m;
