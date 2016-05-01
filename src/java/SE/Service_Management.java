@@ -34,6 +34,8 @@ public class Service_Management {
         return null;
     }
 
+    
+    
     //Emad 
     public void Add_Request(Request request) {
         DB_controller DB = DB_controller.Get_DB_controller();
@@ -132,77 +134,150 @@ public class Service_Management {
         return null;
     }
     
-    //Emad
-    Time_chooser Get_Three_Date(Request request,Time_chooser Chose)
+    
+    
+    
+    
+    
+    
+    
+    
+       
+    
+    //omar 0_0
+    private int address_helper(int num ,String TableName , int address_id)
     {
-        ArrayList<String> Dates=new ArrayList<String>();
-        String Date = "";
-        String FDATE = "";
-        int DayPlus=0;
-        int OptionID=-1;
-        int NumberOfEmployees=0;
-        int Branch_ID=-1; 
-        int NumberOfOrdersAtDay = 0;
-        System_manage S = System_manage.Get_System_manage();
-        int Date_ID = S.Get_date_iD();
-        DB_controller DB = DB_controller.Get_DB_controller();
-        DB.Connect();
-        try 
-        {
-           ResultSet result=DB.Select("*", "Branch","Address_ID="+request.getAddress_ID());
+        try {
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            ResultSet res = Db.Select("*", TableName , "Address_id="+address_id);
+            while(res.next())
             {
-                while(result.next())
+               if(num == 0)
+                    return res.getInt("Address_id");
+               return address_helper(num-1, TableName, res.getInt("Parent_id"));   
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+    //omar 0_0
+    private int Get_n_b(int x ,int Requiest_address_id)
+    {
+        try {
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            int cuntry = address_helper(x, "address", Requiest_address_id);
+            ResultSet res = Db.Select("*", "branch", "1");
+            int branch_cuntry = 0 ;
+            while(res.next())
+            {
+                branch_cuntry = address_helper(x, "address", res.getInt("Address_id"));
+                if(cuntry == branch_cuntry)
                 {
-                Branch_ID=result.getInt("Branch_ID");
+                    return res.getInt("Branch_id");
                 }
             }
-            OptionID=S.Search_User_OptionByName("Branch_ID");
-            result=DB.Select("*", "user_selected_option_values","User_option_id="+OptionID);
-            while(result.next())
-            {
-                NumberOfEmployees++;
-            }            
-         result = DB.Select("*", "Date", "Date_ID=" + Date_ID);                
+        } catch (SQLException ex) {
+            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+    
+    
+    //omar 0_0
+    public int Get_near_branch(int Requiest_address_id)
+    {
+        int x = 2;
+        int c = Get_n_b(x, Requiest_address_id);
+        if(c==0)
+        {
+            c = Get_n_b(x+1, Requiest_address_id);
+        }
+        return c;
+    }
+    
+   
+    
+   //Emad
+   Time_chooser Get_Three_Date(Request request,Time_chooser Chose)
+   {
+       ArrayList<String> Dates=new ArrayList<String>();
+       String Date = "";
+       String FDATE = "";
+       int DayPlus=0;
+       int OptionID=-1;
+       int NumberOfEmployees=0;
+       int Branch_ID=-1; 
+       int NumberOfOrdersAtDay = 0;
+       System_manage S = System_manage.Get_System_manage();
+       int Date_ID = S.Get_date_iD();
+       DB_controller DB = DB_controller.Get_DB_controller();
+       DB.Connect();
+       try 
+       {
+          ResultSet result=DB.Select("*", "Branch","Address_ID="+request.getAddress_ID());
+           {
+               while(result.next())
+               {
+               Branch_ID=result.getInt("Branch_ID");
+               }
+           }
+           OptionID=S.Search_User_OptionByName("Branch_ID");
+           result=DB.Select("*", "user_selected_option_values","User_option_id="+OptionID);
+           while(result.next())
+           {
+               NumberOfEmployees++;
+           }            
+        result = DB.Select("*", "Date", "Date_ID=" + Date_ID);                
+          while (result.next())
+          {
+               Date = result.getString("Date");
+           }            
+           while(Dates.size()<3)
+           {
+                  FDATE = "";
+           int FID = Character.getNumericValue(Date.charAt(Date.length()-1)) + Character.getNumericValue(Date.length()-2);
+               FID++;
+               for (int i = 0; i < Date.length()-1; i++)
+               {
+                   FDATE += Date.charAt(i);
+               }
+               FDATE += FID+DayPlus;                
+
+            result = DB.Select("*", "time_chooser", "times=" + FDATE);
            while (result.next())
            {
-                Date = result.getString("Date");
-            }            
-            while(Dates.size()<3)
-            {
-                   FDATE = "";
-            int FID = Character.getNumericValue(Date.charAt(Date.length()-1)) + Character.getNumericValue(Date.length()-2);
-                FID++;
-                for (int i = 0; i < Date.length()-1; i++)
-                {
-                    FDATE += Date.charAt(i);
-                }
-                FDATE += FID+DayPlus;                
-
-             result = DB.Select("*", "time_chooser", "times=" + FDATE);
-            while (result.next())
-            {
-                FID = result.getInt("Time_Chooser_ID");
-            }
-            result = DB.Select("*", "time_choosed", "Time_chooser_id=" + FID +" and Branch_ID="+Branch_ID);
-            while (result.next()) 
-            {
-                NumberOfOrdersAtDay++;
-            }
-            if(NumberOfEmployees*5>NumberOfOrdersAtDay)
-            {
-                Dates.add(FDATE);
-            }
-            DayPlus++;
-            }
-        } 
-        catch (Exception E) 
-        {
-            System.out.println("");
-        }
-        Chose.setTime(Dates);
-        DB.Close();
-        return Chose;
-    }
+               FID = result.getInt("Time_Chooser_ID");
+           }
+           result = DB.Select("*", "time_choosed", "Time_chooser_id=" + FID +" and Branch_ID="+Branch_ID);
+           while (result.next()) 
+           {
+               NumberOfOrdersAtDay++;
+           }
+           if(NumberOfEmployees*5>NumberOfOrdersAtDay)
+           {
+               Dates.add(FDATE);
+           }
+           DayPlus++;
+           }
+       } 
+       catch (Exception E) 
+       {
+           System.out.println("");
+       }
+       Chose.setTime(Dates);
+       DB.Close();
+       return Chose;
+   }
+   
+   
+   
+   
+   
 
     ArrayList<Employee> Show_empty_technical(String Date) {
         return null;
