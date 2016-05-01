@@ -228,7 +228,25 @@ public class Message_Controller {
     return false;
     }
     
+    // ayman
     public boolean Reply_message(int Message_id, Comment comment) {
+        DB_controller DB = DB_controller.Get_DB_controller();
+        DB.Connect();
+        System_manage dwt = System_manage.Get_System_manage();
+        int dateid =  dwt.Get_date_iD();
+        String time   =  dwt.Get_time();
+        Comment com = new Comment();
+        HashMap<String,String> reply=new HashMap<>(10);
+        reply.put("Content",com.getContent());
+        reply.put("sender_id",String.valueOf(com.getSender_id()));
+        reply.put("Type_id", Integer.toString(com.getMassage_type_id()));
+        reply.put("Date_id", String.valueOf(dateid));
+        reply.put("Time", time);
+        reply.put("Parent_id", String.valueOf(Message_id));
+        DB.Insert("message",reply);
+        System.out.println("frist insert");
+        
+        
         return true;
     }
     
