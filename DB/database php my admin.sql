@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.2
+-- version 4.5.1
 -- http://www.phpmyadmin.net
 --
--- Host: localhost
--- Generation Time: Apr 28, 2016 at 08:26 PM
--- Server version: 10.1.10-MariaDB
--- PHP Version: 5.5.33
+-- Host: 127.0.0.1
+-- Generation Time: May 01, 2016 at 05:03 AM
+-- Server version: 10.1.8-MariaDB
+-- PHP Version: 5.6.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `DB_phase2`
+-- Database: `maintenance`
 --
 
 -- --------------------------------------------------------
@@ -192,6 +192,18 @@ INSERT INTO `description` (`Description_id`, `Device_id`, `Description`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `details_bill`
+--
+
+CREATE TABLE `details_bill` (
+  `Details_bill_id` int(11) NOT NULL,
+  `Spare_parts_id` int(11) NOT NULL,
+  `Bill_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `device`
 --
 
@@ -280,16 +292,17 @@ CREATE TABLE `feedback` (
   `Feedback_id` int(11) NOT NULL,
   `Order_id` int(11) NOT NULL,
   `System_quality` int(11) NOT NULL,
-  `Service_quality` int(11) NOT NULL
+  `Service_quality` int(11) NOT NULL,
+  `Branch_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `feedback`
 --
 
-INSERT INTO `feedback` (`Feedback_id`, `Order_id`, `System_quality`, `Service_quality`) VALUES
-(1, 1, 5, 3),
-(2, 2, 7, 4);
+INSERT INTO `feedback` (`Feedback_id`, `Order_id`, `System_quality`, `Service_quality`, `Branch_id`) VALUES
+(1, 1, 5, 3, 0),
+(2, 2, 7, 4, 0);
 
 -- --------------------------------------------------------
 
@@ -333,17 +346,6 @@ INSERT INTO `links` (`Links_id`, `Function_name`, `Physical_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `log_on_content`
---
-
-CREATE TABLE `log_on_content` (
-  `Log_on_content_id` int(11) NOT NULL,
-  `name` int(50) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
 -- Table structure for table `log_on_option`
 --
 
@@ -361,7 +363,7 @@ CREATE TABLE `log_on_option` (
 
 CREATE TABLE `log_on_select_option` (
   `Log_on_select_option_id` int(11) NOT NULL,
-  `Log_on_content_id` int(11) NOT NULL,
+  `Links_id` int(11) NOT NULL,
   `Log_on_option_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -465,6 +467,18 @@ INSERT INTO `model` (`Model_id`, `Name`, `Comp_device_id`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `offer_bill`
+--
+
+CREATE TABLE `offer_bill` (
+  `Offer_bill_id` int(11) NOT NULL,
+  `Offer` int(11) NOT NULL,
+  `Bill_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `order_fixable`
 --
 
@@ -485,26 +499,6 @@ CREATE TABLE `order_fixable` (
 INSERT INTO `order_fixable` (`Order_fixable_id`, `Requist_id`, `Date_start_id`, `Technical_description`, `Service_id`, `State_id`, `recept_Date_id`) VALUES
 (1, 1, 1, 1, 1, 1, 1),
 (2, 2, 2, 2, 2, 2, 2);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `Order_fixer`
---
-
-CREATE TABLE `Order_fixer` (
-  `Order_flixer_id` int(11) NOT NULL,
-  `Device_of_this_request_id` int(11) NOT NULL,
-  `Technical_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `Order_fixer`
---
-
-INSERT INTO `Order_fixer` (`Order_flixer_id`, `Device_of_this_request_id`, `Technical_id`) VALUES
-(1, 1, 1),
-(2, 2, 2);
 
 -- --------------------------------------------------------
 
@@ -550,19 +544,19 @@ INSERT INTO `pages_selected_option` (`Pages_selected_option_id`, `Pages_option_i
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Payment_methode`
+-- Table structure for table `payment_methode`
 --
 
-CREATE TABLE `Payment_methode` (
+CREATE TABLE `payment_methode` (
   `Payment_methode_id` int(11) NOT NULL,
   `Methode` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
--- Dumping data for table `Payment_methode`
+-- Dumping data for table `payment_methode`
 --
 
-INSERT INTO `Payment_methode` (`Payment_methode_id`, `Methode`) VALUES
+INSERT INTO `payment_methode` (`Payment_methode_id`, `Methode`) VALUES
 (1, 'cash'),
 (2, 'visa'),
 (3, 'PayPal');
@@ -681,7 +675,7 @@ CREATE TABLE `request` (
   `Request_id` int(11) NOT NULL,
   `User_id` int(11) NOT NULL,
   `Date_id` int(11) NOT NULL,
-  `State_id` int(11) NOT NULL
+  `State_id` int(11) NOT NULL DEFAULT '5'
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -747,6 +741,18 @@ INSERT INTO `select_device_option` (`Select_device_option_id`, `Sevice_type_id`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `spare_parts`
+--
+
+CREATE TABLE `spare_parts` (
+  `Spare_parts_id` int(11) NOT NULL,
+  `Name` int(11) NOT NULL,
+  `Cost` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `state`
 --
 
@@ -767,15 +773,16 @@ INSERT INTO `state` (`State_id`, `State`) VALUES
 (5, 'Not_seen'),
 (6, 'Sender_delete_massage'),
 (7, 'Reciver_delete_massage'),
-(8, 'Commint');
+(8, 'Commint'),
+(9, 'Cancel');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Time_choosed`
+-- Table structure for table `time_choosed`
 --
 
-CREATE TABLE `Time_choosed` (
+CREATE TABLE `time_choosed` (
   `Time_choosed_id` int(11) NOT NULL,
   `Choosed` varchar(10) NOT NULL,
   `Time_chooser_id` int(11) NOT NULL
@@ -784,10 +791,10 @@ CREATE TABLE `Time_choosed` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `Time_chooser`
+-- Table structure for table `time_chooser`
 --
 
-CREATE TABLE `Time_chooser` (
+CREATE TABLE `time_chooser` (
   `Time_chooser_id` int(11) NOT NULL,
   `Order_fixable_id` int(11) NOT NULL,
   `Times` varchar(10) NOT NULL
@@ -910,10 +917,10 @@ INSERT INTO `user_option` (`User_option_id`, `Name`, `Type_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `User_selected_option`
+-- Table structure for table `user_selected_option`
 --
 
-CREATE TABLE `User_selected_option` (
+CREATE TABLE `user_selected_option` (
   `User_selected_option_id` int(11) NOT NULL,
   `User_type_id` int(11) NOT NULL,
   `User_option_id` int(11) NOT NULL
@@ -1005,6 +1012,12 @@ ALTER TABLE `description`
   ADD PRIMARY KEY (`Description_id`);
 
 --
+-- Indexes for table `details_bill`
+--
+ALTER TABLE `details_bill`
+  ADD PRIMARY KEY (`Details_bill_id`);
+
+--
 -- Indexes for table `device_of_this_request`
 --
 ALTER TABLE `device_of_this_request`
@@ -1039,12 +1052,6 @@ ALTER TABLE `filed_html`
 --
 ALTER TABLE `links`
   ADD PRIMARY KEY (`Links_id`);
-
---
--- Indexes for table `log_on_content`
---
-ALTER TABLE `log_on_content`
-  ADD PRIMARY KEY (`Log_on_content_id`);
 
 --
 -- Indexes for table `log_on_option`
@@ -1089,16 +1096,16 @@ ALTER TABLE `model`
   ADD PRIMARY KEY (`Model_id`);
 
 --
+-- Indexes for table `offer_bill`
+--
+ALTER TABLE `offer_bill`
+  ADD PRIMARY KEY (`Offer_bill_id`);
+
+--
 -- Indexes for table `order_fixable`
 --
 ALTER TABLE `order_fixable`
   ADD PRIMARY KEY (`Order_fixable_id`);
-
---
--- Indexes for table `Order_fixer`
---
-ALTER TABLE `Order_fixer`
-  ADD PRIMARY KEY (`Order_flixer_id`);
 
 --
 -- Indexes for table `pages_option`
@@ -1113,9 +1120,9 @@ ALTER TABLE `pages_selected_option`
   ADD PRIMARY KEY (`Pages_selected_option_id`);
 
 --
--- Indexes for table `Payment_methode`
+-- Indexes for table `payment_methode`
 --
-ALTER TABLE `Payment_methode`
+ALTER TABLE `payment_methode`
   ADD PRIMARY KEY (`Payment_methode_id`);
 
 --
@@ -1167,21 +1174,27 @@ ALTER TABLE `select_device_option`
   ADD PRIMARY KEY (`Select_device_option_id`);
 
 --
+-- Indexes for table `spare_parts`
+--
+ALTER TABLE `spare_parts`
+  ADD PRIMARY KEY (`Spare_parts_id`);
+
+--
 -- Indexes for table `state`
 --
 ALTER TABLE `state`
   ADD PRIMARY KEY (`State_id`);
 
 --
--- Indexes for table `Time_choosed`
+-- Indexes for table `time_choosed`
 --
-ALTER TABLE `Time_choosed`
+ALTER TABLE `time_choosed`
   ADD PRIMARY KEY (`Time_choosed_id`);
 
 --
--- Indexes for table `Time_chooser`
+-- Indexes for table `time_chooser`
 --
-ALTER TABLE `Time_chooser`
+ALTER TABLE `time_chooser`
   ADD PRIMARY KEY (`Time_chooser_id`);
 
 --
@@ -1221,9 +1234,9 @@ ALTER TABLE `user_option`
   ADD PRIMARY KEY (`User_option_id`);
 
 --
--- Indexes for table `User_selected_option`
+-- Indexes for table `user_selected_option`
 --
-ALTER TABLE `User_selected_option`
+ALTER TABLE `user_selected_option`
   ADD PRIMARY KEY (`User_selected_option_id`);
 
 --
@@ -1246,7 +1259,7 @@ ALTER TABLE `user_type_links`
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-  MODIFY `Address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `Address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `bill`
 --
@@ -1283,6 +1296,11 @@ ALTER TABLE `date`
 ALTER TABLE `description`
   MODIFY `Description_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
+-- AUTO_INCREMENT for table `details_bill`
+--
+ALTER TABLE `details_bill`
+  MODIFY `Details_bill_id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `device_of_this_request`
 --
 ALTER TABLE `device_of_this_request`
@@ -1312,11 +1330,6 @@ ALTER TABLE `filed_html`
 --
 ALTER TABLE `links`
   MODIFY `Links_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `log_on_content`
---
-ALTER TABLE `log_on_content`
-  MODIFY `Log_on_content_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `log_on_option`
 --
@@ -1353,15 +1366,15 @@ ALTER TABLE `message_type`
 ALTER TABLE `model`
   MODIFY `Model_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
+-- AUTO_INCREMENT for table `offer_bill`
+--
+ALTER TABLE `offer_bill`
+  MODIFY `Offer_bill_id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `order_fixable`
 --
 ALTER TABLE `order_fixable`
   MODIFY `Order_fixable_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
---
--- AUTO_INCREMENT for table `Order_fixer`
---
-ALTER TABLE `Order_fixer`
-  MODIFY `Order_flixer_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `pages_option`
 --
@@ -1373,9 +1386,9 @@ ALTER TABLE `pages_option`
 ALTER TABLE `pages_selected_option`
   MODIFY `Pages_selected_option_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
--- AUTO_INCREMENT for table `Payment_methode`
+-- AUTO_INCREMENT for table `payment_methode`
 --
-ALTER TABLE `Payment_methode`
+ALTER TABLE `payment_methode`
   MODIFY `Payment_methode_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `payment_option`
@@ -1418,19 +1431,24 @@ ALTER TABLE `selected_device_option_values`
 ALTER TABLE `select_device_option`
   MODIFY `Select_device_option_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
+-- AUTO_INCREMENT for table `spare_parts`
+--
+ALTER TABLE `spare_parts`
+  MODIFY `Spare_parts_id` int(11) NOT NULL AUTO_INCREMENT;
+--
 -- AUTO_INCREMENT for table `state`
 --
 ALTER TABLE `state`
-  MODIFY `State_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `State_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
--- AUTO_INCREMENT for table `Time_choosed`
+-- AUTO_INCREMENT for table `time_choosed`
 --
-ALTER TABLE `Time_choosed`
+ALTER TABLE `time_choosed`
   MODIFY `Time_choosed_id` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT for table `Time_chooser`
+-- AUTO_INCREMENT for table `time_chooser`
 --
-ALTER TABLE `Time_chooser`
+ALTER TABLE `time_chooser`
   MODIFY `Time_chooser_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `type`
@@ -1456,16 +1474,16 @@ ALTER TABLE `user`
 -- AUTO_INCREMENT for table `user_address`
 --
 ALTER TABLE `user_address`
-  MODIFY `User_address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `User_address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `user_option`
 --
 ALTER TABLE `user_option`
-  MODIFY `User_option_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `User_option_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
--- AUTO_INCREMENT for table `User_selected_option`
+-- AUTO_INCREMENT for table `user_selected_option`
 --
-ALTER TABLE `User_selected_option`
+ALTER TABLE `user_selected_option`
   MODIFY `User_selected_option_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `user_selected_option_values`

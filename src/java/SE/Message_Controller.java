@@ -33,16 +33,17 @@ public class Message_Controller {
 
       //Emad
     public ArrayList<Complain> Show_complains(int State) {
-        DB_controller Db = DB_controller.Get_DB_controller();
-        Db.Connect();
-        ResultSet result = Db.Select("*", "Message_type", "Name='Complain'");
+                   DB_controller DB = DB_controller.Get_DB_controller();
+
+        DB.Connect();
+        ResultSet result = DB.Select("*", "Message_type", "Name='Complain'");
         ArrayList<Complain> C = new ArrayList<Complain>();
         int ID = 0;
         try {
             while (result.next()) {
                 ID = result.getInt("Message_type_id");
             }
-            result = Db.Select("*", "recieved", "Message_id=" + ID + " and State_id=" + State);
+            result = DB.Select("*", "recieved", "Message_id=" + ID + " and State_id=" + State);
             while (result.next()) {
                 
                 Complain complain = new Complain();
@@ -57,29 +58,29 @@ public class Message_Controller {
         }
         return null;
     }
-    
-    
      //Mohamed RAdwan    
     public boolean Send_Message(General_massge message) {
        
         try
        {
-            DB_controller.Connect();
+           System_manage gt = System_manage.Get_System_manage();
+           DB_controller DB = DB_controller.Get_DB_controller();
+            DB.Connect();
             HashMap<String,String> Mass=new HashMap<>(10);
-            int id=System_manage.Get_date_iD();
-            String time=System_manage.Get_time();
+            int id=gt.Get_date_iD();
+            String time=gt.Get_time();
             Mass.put("Content",message.getContent());
             Mass.put("sender_id",String.valueOf(message.getSender_id()));
-            Mass.put("Type_id", Integer.toString(message.getMassage_type()));
+            Mass.put("Type_id", Integer.toString(message.getMassage_type_id()));
             Mass.put("Date_id", String.valueOf(id));
             Mass.put("Time", time);
             Mass.put("Parent_id", "0");
-            int idmass= DB_controller.Insert("message",Mass);
+            int idmass= DB.Insert("message",Mass);
             Mass=new  HashMap<String, String>(5);
             Mass.put("Reciever_id", String.valueOf(message.getReciver()));
             Mass.put("Message_id", String.valueOf(idmass));
             Mass.put("State_id", "5");
-            DB_controller.Insert("recieved", Mass);
+            DB.Insert("recieved", Mass);
        }//END Try
        catch(Exception ex)
        {
@@ -92,15 +93,16 @@ public class Message_Controller {
     
     //Emad
     public boolean Up_complain_to_manager(Complain complain, int Branch_ID) {
-        DB_controller.Connect();
-        ResultSet result = DB_controller.Select("*", "branch", "Branch_id=" + Branch_ID);
+         DB_controller DB = DB_controller.Get_DB_controller();
+        DB.Connect();
+        ResultSet result = DB.Select("*", "branch", "Branch_id=" + Branch_ID);
         int Manager_id = -1;
         int MessageID = -1;
         try {
             while (result.next()) {
                 Manager_id = result.getInt("Manager_ID");
             }
-            result = DB_controller.Select("*", "recieved", "Message_ID=" + complain.getId());
+            result = DB.Select("*", "recieved", "Message_ID=" + complain.getId());
             while (result.next()) {
                 MessageID = result.getInt("Message_ID");
             }
@@ -108,8 +110,8 @@ public class Message_Controller {
             H.put("Reciever_id", Integer.toString(Manager_id));
             H.put("Message_ID", Integer.toString(MessageID));
 
-            DB_controller.Insert("recieved", H);
-            DB_controller.Close();
+            DB.Insert("recieved", H);
+            DB.Close();
             return true;
         } catch (Exception E) {
             System.out.println("Error in UP Complain To manager");
@@ -120,19 +122,20 @@ public class Message_Controller {
     
     //omar
     public boolean Update_massage_state(int Old_massage_id ,int reciver_id ,int New_state)
-    {
-        DB_controller Db = DB_controller.Get_DB_controller();
-        Db.Connect();
-        boolean b = Db.Update("recieved", "State_id="+New_state , "Message_id ="+Old_massage_id+" and Reciever_id="+reciver_id);
-        Db.Close();
+    { 
+        DB_controller DB = DB_controller.Get_DB_controller();
+        DB.Connect();
+        boolean b = DB.Update("recieved", "State_id="+New_state , "Message_id ="+Old_massage_id+" and Reciever_id="+reciver_id);
+        DB.Close();
         return b;
     }
     //omar
     public Object Search_Massage(int Massage_id)
     {
         try {
-            Data_access.DB_controller.Connect();
-            ResultSet res = Data_access.DB_controller.Select("*", "message", "Message_id="+Massage_id);
+                    DB_controller DB = DB_controller.Get_DB_controller();
+            DB.Connect();
+            ResultSet res = DB.Select("*", "message", "Message_id="+Massage_id);
             int type=0;
             while (res.next()) {
                 type = res.getInt("Type_id");
@@ -140,37 +143,37 @@ public class Message_Controller {
                     {
                         Complain c = new Complain();
                         c.setContent(res.getString("Content"));
-                        ResultSet res2 = Data_access.DB_controller.Select("Date","date", "Date_id="+res.getInt("Date_id"));
+                        ResultSet res2 = DB.Select("Date","date", "Date_id="+res.getInt("Date_id"));
                         while (res2.next()) {                        
-                            c.setDate(res2.getString("Date"));
+                            c.setDate_id(res2.getString("Date"));
                         }
                         c.setId(Massage_id);
-                        c.setMassage_type(type);
-                        res2 = Data_access.DB_controller.Select("*","recieved", "Message_id="+Massage_id);
+                        c.setMassage_type_id(type);
+                        res2 = DB.Select("*","recieved", "Message_id="+Massage_id);
                         while (res2.next()) {                        
                             c.setReciver(res2.getInt("Reciever_id"));
                             c.setState(res2.getInt("State_id"));
                         }
                         c.setTime(res.getString("Time"));
-                        res2 = Data_access.DB_controller.Select("Order_id","complains_order", "Message_id="+Massage_id);
+                        res2 = DB.Select("Order_id","complains_order", "Message_id="+Massage_id);
                         while (res2.next()) {                        
-                            c.setOrder_id(res2.getInt("Order_id"));
+                            c.setMy_order_id(res2.getInt("Order_id"));
                         }
                         c.setMy_Commint(get_massage_commintes(Massage_id));
-                        Data_access.DB_controller.Close();
+                        DB.Close();
                         return c;
                     }
                     else
                     {
                         General_massge c = new General_massge();
                         c.setContent(res.getString("Content"));
-                        ResultSet res2 = Data_access.DB_controller.Select("Date","date", "Date_id="+res.getInt("Date_id"));
+                        ResultSet res2 = DB.Select("Date","date", "Date_id="+res.getInt("Date_id"));
                         while (res2.next()) {                        
-                            c.setDate(res2.getString("Date"));
+                            c.setDate_id(res2.getString("Date"));
                         }
                         c.setId(Massage_id);
-                        c.setMassage_type(type);
-                        res2 = Data_access.DB_controller.Select("*","recieved", "Message_id="+Massage_id);
+                        c.setMassage_type_id(type);
+                        res2 = DB.Select("*","recieved", "Message_id="+Massage_id);
                         while (res2.next()) {                        
                             c.setReciver(res2.getInt("Reciever_id"));
                             c.setState(res2.getInt("State_id"));
@@ -191,23 +194,24 @@ public class Message_Controller {
     public ArrayList<Comment> get_massage_commintes (int Massage_id)
     {
         try {
+                                DB_controller DB = DB_controller.Get_DB_controller();
             ArrayList<Comment> commints = new ArrayList<>();
-            Data_access.DB_controller.Connect();
-            ResultSet res = Data_access.DB_controller.Select("*", "message", "Parent_id="+Massage_id);
+            DB.Connect();
+            ResultSet res = DB.Select("*", "message", "Parent_id="+Massage_id);
             while (res.next()) {
                 Comment m = new Comment();
                 m.setContent(res.getString("Content"));
-                ResultSet res2 = Data_access.DB_controller.Select("Date","date", "Date_id="+res.getInt("Date_id"));
+                ResultSet res2 = DB.Select("Date","date", "Date_id="+res.getInt("Date_id"));
                    while (res2.next()) {                        
-                   m.setDate(res2.getString("Date"));
+                   m.setDate_id(res2.getString("Date"));
                    }
                 m.setId(res.getInt("Message_id"));
-                m.setMassage_type(res.getInt("Type_id"));
+                m.setMassage_type_id(res.getInt("Type_id"));
                 m.setSender_id(res.getInt("sender_id"));
                 m.setTime(res.getString("Time"));
                 commints.add(m);
             }
-            Data_access.DB_controller.Close();
+            DB.Close();
             return commints;
         } catch (SQLException ex) {
             Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
