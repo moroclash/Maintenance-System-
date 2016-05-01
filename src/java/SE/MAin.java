@@ -21,8 +21,8 @@ public class MAin {
     public static void main(String[] args) {
            
         System_manage s = System_manage.Get_System_manage();
-        System.out.println(s.Get_near_branch(17));
-            
+        //System.out.println(s.Get_near_branch(17));
+          System.out.println(s.Get_time());  
             
             
             

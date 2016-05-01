@@ -8,7 +8,7 @@ import java.util.HashMap;
 
 public class Branch {
     private int Id;
-    private String Location;
+    private int Address_id;
     private int Manager_id;
     private ArrayList<String> phones;
     private ArrayList <Integer> Subscriber;
@@ -42,13 +42,15 @@ public class Branch {
         this.Id = Id;
     }
 
-    public String getLocation() {
-        return Location;
+    public void setAddress_id(int Address_id) {
+        this.Address_id = Address_id;
     }
 
-    public void setLocation(String Location) {
-        this.Location = Location;
+    public int getAddress_id() {
+        return Address_id;
     }
+
+   
 
     public ArrayList<String> getPhones() {
         return phones;
