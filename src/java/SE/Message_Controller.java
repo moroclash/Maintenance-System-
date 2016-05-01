@@ -228,6 +228,8 @@ public class Message_Controller {
     return false;
     }
     
+    
+    
     // ayman
     public boolean Reply_message(int Message_id, Comment comment) {
         DB_controller DB = DB_controller.Get_DB_controller();
@@ -245,8 +247,6 @@ public class Message_Controller {
         reply.put("Parent_id", String.valueOf(Message_id));
         DB.Insert("message",reply);
         System.out.println("frist insert");
-        
-        
         return true;
     }
     
