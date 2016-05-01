@@ -138,11 +138,11 @@ public class Service_Management {
         ArrayList<String> Dates=new ArrayList<String>();
         String Date = "";
         String FDATE = "";
+        int DayPlus=0;
         int OptionID=-1;
         int NumberOfEmployees=0;
         int Branch_ID=-1; 
         int NumberOfOrdersAtDay = 0;
-        int FID;
         System_manage S = System_manage.Get_System_manage();
         int Date_ID = S.Get_date_iD();
         DB_controller DB = DB_controller.Get_DB_controller();
@@ -169,27 +169,16 @@ public class Service_Management {
             }            
             while(Dates.size()<3)
             {
-                int DayPlus=0;
-            if (Character.isDigit(Date.charAt(1)) == true)
-            {
-                FID = Character.getNumericValue(Date.charAt(0)) + Character.getNumericValue(1);
+                   FDATE = "";
+            int FID = Character.getNumericValue(Date.charAt(Date.length()-1)) + Character.getNumericValue(Date.length()-2);
                 FID++;
-                FDATE += FID+DayPlus;
-                for (int i = 2; i < Date.length(); i++)
+                for (int i = 0; i < Date.length()-1; i++)
                 {
                     FDATE += Date.charAt(i);
                 }
-            } 
-            else 
-            {
-                FID = Character.getNumericValue(Date.charAt(0));
-                FID++;
-                FDATE += FID+DayPlus;
-                for (int i = 1; i < Date.length(); i++) {
-                    FDATE += Date.charAt(i);
-                }
-            }
-            result = DB.Select("*", "time_chooser", "times=" + FDATE);
+                FDATE += FID+DayPlus;                
+
+             result = DB.Select("*", "time_chooser", "times=" + FDATE);
             while (result.next())
             {
                 FID = result.getInt("Time_Chooser_ID");
