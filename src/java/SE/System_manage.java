@@ -59,98 +59,16 @@ public class System_manage {
     
     
     
-    //omar 0_0
-    private int address_helper(int num ,String TableName , int address_id)
-    {
-        try {
-            DB_controller Db = DB_controller.Get_DB_controller();
-            Db.Connect();
-            ResultSet res = Db.Select("*", TableName , "Address_id="+address_id);
-            while(res.next())
-            {
-               if(num == 0)
-                    return res.getInt("Address_id");
-               return address_helper(num-1, TableName, res.getInt("Parent_id"));   
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return 0;
-    }
     
-    //omar 0_0
-    private int Get_n_b(int x ,int Requiest_address_id)
-    {
-        try {
-            DB_controller Db = DB_controller.Get_DB_controller();
-            Db.Connect();
-            int cuntry = address_helper(x, "address", Requiest_address_id);
-            ResultSet res = Db.Select("*", "branch", "1");
-            int branch_cuntry = 0 ;
-            while(res.next())
-            {
-                branch_cuntry = address_helper(x, "address", res.getInt("Address_id"));
-                if(cuntry == branch_cuntry)
-                {
-                    return res.getInt("Branch_id");
-                }
-            }
-        } catch (SQLException ex) {
-            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return 0;
-    }
+  
     
     
-    
-    //omar 0_0
-    public int Get_near_branch(int Requiest_address_id)
-    {
-        int x = 2;
-        int c = Get_n_b(x, Requiest_address_id);
-        if(c==0)
-        {
-            c = Get_n_b(x+1, Requiest_address_id);
-        }
-        return c;
-    }
-    
-    
-    
-    
-    
-    /*
+  
     
     //sala7
     public Branch Search_branch(int Branch_id) {
-        DB_controller Db = DB_controller.Get_DB_controller();
-        Db.Connect();
-        Branch branch = new Branch();
-        ResultSet result = Db.Select("*", " branch ", " Branch_id =" +Branch_id);
-        int location=-1;
-        try {
-            while(result.next())
-            {
-              branch.setId(result.getInt("Branch_id"));
-              branch.setMnager_id(result.getInt("User_id"));
-              location = result.getInt("");
-            }
-            result = Db.Select("Address", "address", "Address_id = " + location);
-            while(result.next())
-            {
-                branch.setLocation(result.getString("Address"));
-            }
-            result = Db.Select("phone", "branch_phone", " Branch_id = " + Branch_id);
-            while (result.next())
-            {
-              branch.push(result.getString("phone"));
-            }
-        } catch (SQLException ex) {
-            Db.Close();
-            return null;
-        }
-        return branch;
-    }*/
+       
+    }
     
     
     
