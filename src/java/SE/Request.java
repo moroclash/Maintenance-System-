@@ -15,16 +15,17 @@ class Request {
     private int ID;
     private int Date_id;
     private int State_id;
+    private int Address_ID;
     private int User_id;
     private int Address_id;
     private ArrayList<Integer> Device_id;
 
-    public void setAddress_id(int Address_id) {
-        this.Address_id = Address_id;
+    public void setAddress_ID(int Address_ID) {
+        this.Address_ID = Address_ID;
     }
 
-    public int getAddress_id() {
-        return Address_id;
+    public int getAddress_ID() {
+        return Address_ID;
     }
 
     

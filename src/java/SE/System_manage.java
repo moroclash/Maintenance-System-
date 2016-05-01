@@ -257,10 +257,16 @@ public class System_manage {
        Service_Management s=Service_Management.Get_Serive_Management();
        Db.Connect();
        String S;
-       ResultSet result = Db.Select("*", "user", "User_ID=" + User_id);
-       User U = new User();
-       try {
-           while (result.next()) {
+       int Type_ID=-1;
+       try { 
+       ResultSet result=Db.Select("Type_ID","User","User_ID="+User_id);
+       Type_ID=result.getInt("Type_ID");
+        ResultSet result2 = Db.Select("*", "user", "User_ID=" + User_id);
+        User U=null;
+        if(Type_ID==5)
+            U=new Customer();
+        else U=new Employee();
+           while (result2.next()) {
                U.setF_name(result.getString("FNAME"));
                U.setL_name(result.getString("LNAME"));
                U.setEmail(result.getString("Email"));
@@ -282,12 +288,18 @@ public class System_manage {
    public User Search_user_by_name(String Name) {
        DB_controller Db = DB_controller.Get_DB_controller();
        int id=-1;
+       int Type_ID;
        Service_Management s=Service_Management.Get_Serive_Management();
        Db.Connect();
        String S;
-       ResultSet result = Db.Select("*", "user", "FNAME=" + Name);
-       User U = new User();
+       User U = null;
        try {
+       ResultSet result=Db.Select("Type_ID","User","FNAME="+Name);
+       Type_ID=result.getInt("Type_ID");           
+       ResultSet result2 = Db.Select("*", "user", "FNAME=" + Name);  
+        if(Type_ID==5)
+            U=new Customer();
+        else U=new Employee();       
            while (result.next()) {
                id=result.getInt("User_ID");
                U.setID(id);
