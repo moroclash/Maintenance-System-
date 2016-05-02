@@ -312,7 +312,7 @@ public class Service_Management {
 
  
    //Emad
-   public Time_chooser Get_Three_Date(Request request,Time_chooser Chose)
+   public Time_chooser Get_Three_Date(Request request)
    {
        ArrayList<String> Dates=new ArrayList<String>();
        String Date = "";
@@ -373,6 +373,7 @@ public class Service_Management {
        {
            System.out.println("");
        }
+       Time_chooser Chose = new Time_chooser();
        Chose.setTime(Dates);
        DB.Close();
        return Chose;
@@ -455,10 +456,23 @@ public class Service_Management {
     }
 
     
-    boolean Accept_Request(int Request_id) {
+    
+    
+    
+    
+    public boolean Accept_Request(int Request_id) {
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        Request req = this.Request_buffer.get(Request_id);
+        this.Request_buffer.remove(Request_id);
+        Db.Update("request", "State_id=1", "Request_id="+req.getID());
+        Get_Three_Date(req);
         return true;
     }
 
+    
+    
+    
     
     public Bill_inf Add_Componenet(ArrayList<Component> Component, Bill bill, String Technical_description) {
         return null;

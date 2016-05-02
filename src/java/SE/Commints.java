@@ -15,6 +15,7 @@ public class Commints extends MSG {
     
     public void setSender_id(int Sender_id) {
         this.Sender_id = Sender_id;
+        
     }
 
     public int getSender_id() {

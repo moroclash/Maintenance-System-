@@ -29,9 +29,8 @@ public class MAin {
     
     public static void main(String[] args) {
         
-        System_manage s = System_manage.Get_System_manage();
-        Customer c = (Customer) s.Search_user_by_id(1);
-        System.out.println(c.getEmail());
+        Validations v =Validations.Get_Validations();
+        System.out.println(v.Is_passord("dasd455asd5"));
     }
 
     }
