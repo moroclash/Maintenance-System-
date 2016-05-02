@@ -110,9 +110,43 @@ public class Branch {
    {
        return 0;
    }
-   public ArrayList <Bill> Show_accounting()
-   {
-       return null;
+   //Sala7
+   public ArrayList <Bill_inf> Show_accounting()
+   {   
+       ArrayList <Bill_inf> b = null;
+       Bill bill = new Bill();
+       Bill_inf bi_inf = new Bill_inf();
+       Payment_Method pay = new Payment_Method();
+       Spare_parts s = new Spare_parts();
+       DB_controller DB = DB_controller.Get_DB_controller();
+       DB.Connect();
+       ResultSet result = null;
+       
+       result = DB.Select(" * ", " bill ", " 1 ");
+    
+       try {
+            while (result.next())
+            {
+             bill.setId(result.getInt("BILL_id"));
+             bill.setCost(result.getDouble("Cost"));
+             bill.setDate_id(result.getInt("Date_id"));
+             bill.setMy_order(result.getInt("Order_id"));
+             bill.setTime(result.getString("Time"));
+             pay.Get_payment_type_in_bill(result.getInt("BILL_id"));
+             bi_inf.Get_spare_parts(result.getInt("BILL_id"));
+             bi_inf.setMy_bill(bill);
+             bi_inf.setPayment_Method_id(pay);
+           
+             b.add(bi_inf);
+             
+            }
+            return b;
+        } catch (SQLException ex) {
+                ex.printStackTrace();
+                DB.Close();
+                return null;
+        }
+
    }
    public ArrayList <Employee> Show_employee()
    {
