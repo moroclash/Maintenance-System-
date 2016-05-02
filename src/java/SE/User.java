@@ -31,14 +31,14 @@ public abstract class User {
     private HashMap<Integer, String> Additional_data;
     private HashMap<Integer,String> Phones;
     private HashMap<Integer,String> Addresses;
-    private ArrayList <Massage> Inbox;
+    private ArrayList <Object> Inbox;
     private int Block;
 
     public void setAddresses(HashMap<Integer, String> Addresses) {
         this.Addresses = Addresses;
     }
 
-    public ArrayList<Massage> getInbox() {
+    public ArrayList<Object> getInbox() {
         return Inbox;
     }
 
@@ -205,13 +205,23 @@ public abstract class User {
   
    
     //omar 0_0
-    public Massage Show_this_massage(int Massage_id)
+    public Object Show_this_massage(int Massage_id)
     {
-        Massage m = getInbox().get(Massage_id);
-        getInbox().remove(Massage_id);
-        Message_Controller mc = Message_Controller.Get_Message_Controller();
-        mc.Update_massage_state(m.getDate_id(), m.getReciver(), 4);
-        return m;
+        Object ob = getInbox().get(Massage_id);
+        if(ob instanceof Massage)
+        {
+          Massage mm = (Massage) ob;
+          getInbox().remove(Massage_id);
+          Message_Controller mc = Message_Controller.Get_Message_Controller();
+          mc.Update_massage_state(mm.getDate_id(), mm.getReciver(), 4);
+          return mm;
+        }
+        else
+        {
+            Notify no = (Notify) ob ;
+            getInbox().remove(Massage_id);
+            return no;
+        }
     }
     
     
@@ -219,14 +229,18 @@ public abstract class User {
     
     
     //omar 0_0
-    public void Add_massage(General_massge New_massage,int num) {
-        if(num==1)
+
+    // num = 1 if you need to save in DB and inbox
+    // num = any numper to add in inbux
+    public void Add_massage(General_massge New_massage ,int num) {
+        if(num == 1)
         {
             Message_Controller Ct = Message_Controller.Get_Message_Controller();
             Ct.Send_Message(New_massage);
         }
        
-        Inbox.add((Massage)New_massage);
+       
+        Inbox.add(New_massage);
     }
     
     
@@ -256,7 +270,12 @@ public abstract class User {
         return Sv.Update_User_Phone(Old_phone_id, New_phone);
     }*/
 
-    
+    // Requist        Done
+    //Load Requist    
+    //Show_My_Order   Done 
+    //Search_Device   Done
+    //Complain        Done
+    //Select Time btb3t Noti
 
 
     
@@ -270,7 +289,7 @@ public abstract class User {
         try {
             Data_access.DB_controller Db = DB_controller.Get_DB_controller();
             Db.Connect();
-            ArrayList<Massage> m = new ArrayList<>();
+            ArrayList<Object> m = new ArrayList<>();
             Message_Controller MC = Message_Controller.Get_Message_Controller();
             ResultSet res = Db.Select("Message_id", "recieved", "Reciever_id="+ getID() + " and State_id=5");
             int x = 0;

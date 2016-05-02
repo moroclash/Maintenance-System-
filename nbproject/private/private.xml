@@ -4,19 +4,43 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
 <<<<<<< HEAD
-            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Branch.java</file>
+            <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/SE/MAin.java</file>
+            <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/SE/User.java</file>
+            <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/SE/System_manage.java</file>
+            <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/SE/Message_Controller.java</file>
+            <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/SE/BranchReport.java</file>
+            <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/SE/Service_Management.java</file>
+=======
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Notify.java</file>
             <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/System_manage.java</file>
-            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Request.java</file>
-            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Order.java</file>
-            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Service_Management.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/MSG.java</file>
             <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Time_chooser.java</file>
             <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Systemreport.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Branch.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/BranchReport.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Device.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Feedback.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Request.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Order.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Message_Controller.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Bill_inf.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Date_chooser.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Massage.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Decoration.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Commints.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Offer.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Complain.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/MAin.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Component.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Comment.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Report.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Payment_Method.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Service_Management.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Employee.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Customer.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Spare_parts.java</file>
             <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/User.java</file>
-=======
-            <file>file:/C:/Users/ME/Documents/NetBeansProjects/Maintenance-System-/src/java/SE/MAin.java</file>
-            <file>file:/C:/Users/ME/Documents/NetBeansProjects/Maintenance-System-/src/java/SE/Service_Management.java</file>
-            <file>file:/C:/Users/ME/Documents/NetBeansProjects/Maintenance-System-/src/java/SE/Message_Controller.java</file>
->>>>>>> d6e75fca286b2d774e516d449665617c279d80f5
+>>>>>>> 28f66d76b1328b13b6f2fe6a04fcde630b481b5d
         </group>
     </open-files>
 </project-private>

@@ -6,6 +6,7 @@
 package SE;
 
 import Data_access.DB_controller;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -23,7 +24,11 @@ import java.util.logging.Logger;
  * @author moahmed A.Radwan
  */
 public class MAin {
+    
+     
+    
     public static void main(String[] args) {
+
       /*  Branch br=new Branch();
         br.setId(1);
         br.setMnager_id(1);
@@ -58,7 +63,7 @@ public class MAin {
         or.setDate_end_id(2);
         Service_Management.Get_Serive_Management().Give_order(or);
         */
-        
+/*        
         //send message
        General_massge message=new General_massge();
        message.setContent("hello almklkl");
@@ -68,8 +73,12 @@ public class MAin {
        Message_Controller.Get_Message_Controller().get_massage_commintes(32);
         message.setReciver(4);
         message.setTime(System_manage.Get_System_manage().Get_time());
-        Message_Controller.Get_Message_Controller().Send_Message(message);
+        Message_Controller.Get_Message_Controller().Send_Message(message);*/
+        
         }
+
+        
+        
 
     }
 
