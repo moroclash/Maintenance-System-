@@ -59,29 +59,8 @@ public class Branch {
     public ArrayList<String> getPhones() {
         return phones;
     }
-    //sala7
-     public ArrayList<String> getPhones_branch( int branch_id ) {
-         
-         ArrayList <String> phone = null;
-         DB_controller DB = DB_controller.Get_DB_controller();
-         DB.Connect();
-         
-         ResultSet result = null;
-         result = DB.Select(" phone ", " branch_phone ", " Branch_id = " + branch_id);
-         String Phone = "";
-         try {
-            while(result.next())
-            {
-               phone.add(result.getString("phone"));
-            }
-            return phone;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            DB.Close();
-        }
-        DB.Close();
-        return null;
-     }
+    
+    
     
      //Emad T
    public double Show_salaris()
@@ -254,26 +233,32 @@ public class Branch {
         }
         return null;
    }
+   
 
-    public void SetNotfy_message(Notify notfy) {
-        
-    }
+   public void SetNotfy_message(String notfy) {
+        this.notfy_message = notfy;
+   }
 
-    public String GetNotfy_message() {
-        return "";
-    }
+   public String GetNotfy_message() {
+       return "";
+   }
+   
    public void Subcribe( int user_id)
    {
        
    }
+   
    public void Desubcribe( int user_id)
    {
        
    }
+   
    public void Notify()
    {
        
    }
+   
+   
    //Mohamed RAdwan 
    public boolean Send_Message_to_all_employee(General_massge message)
    {

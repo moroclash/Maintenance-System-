@@ -142,6 +142,32 @@ public class Service_Management {
     
     
     
+    //sala7
+     public ArrayList<String> get_branch_phones( int branch_id ) {
+         
+         ArrayList <String> phone = null;
+         DB_controller DB = DB_controller.Get_DB_controller();
+         DB.Connect();
+         
+         ResultSet result = null;
+         result = DB.Select(" phone ", " branch_phone ", " Branch_id = " + branch_id);
+         String Phone = "";
+         try {
+            while(result.next())
+            {
+               phone.add(result.getString("phone"));
+            }
+            return phone;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            DB.Close();
+        }
+        DB.Close();
+        return null;
+     }
+    
+    
+    
     
     //omar 0_0
     public Complain Show_Complain(int Coplain_num_in_Bufer,int Reciver_id)

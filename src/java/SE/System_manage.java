@@ -38,6 +38,7 @@ public class System_manage {
         return system_manage;
     }
     
+    
     public Systemreport Get_System_Report()
     {
         return null;
@@ -47,7 +48,8 @@ public class System_manage {
     
     public BranchReport Get_Branch_Report(Branch branch)
     {
-        return null;
+        BranchReport b = new BranchReport(branch);
+        return b;
     }
     
     
@@ -66,12 +68,13 @@ public class System_manage {
         Branch branch = new Branch();
         ResultSet result = Db.Select(" * ", " branch ", " Branch_id = " + Branch_id);
         int location=-1;
+        Service_Management sv =Service_Management.Get_Serive_Management();
         try {
             while(result.next())
             {
               branch.setId(result.getInt("Branch_id"));
               branch.setMnager_id(result.getInt("User_id"));
-              branch.setPhones(branch.getPhones_branch(Branch_id));
+              branch.setPhones(sv.get_branch_phones(Branch_id));
               branch.setAddress_id(result.getInt("Address_id"));
             }
          } catch (SQLException ex) {
@@ -279,7 +282,7 @@ public class System_manage {
     
     
     
-    //Emad
+    //Emad  xxxxx
     public boolean Delete_user(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -364,7 +367,7 @@ public class System_manage {
     }//END Get_time
     
     
-       //Emad
+    //Emad
     //pre Path Type_OPTION_ID(text,int,....),and Name OF Type
     //post Add to Table user_option 
     public int add_option (int Type_ID,String Name)
@@ -417,7 +420,7 @@ public class System_manage {
     
     
     
-        //Emad
+    //Emad
     public String Search_User_OptionByID(int Option_ID)
     {
         DB_controller Db = DB_controller.Get_DB_controller();

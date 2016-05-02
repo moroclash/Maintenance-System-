@@ -11,5 +11,5 @@ package SE;
  */
 public interface Decoration {
     
-    public void Draw();
+    public void Get_Cost();
 }
