@@ -20,7 +20,7 @@ public class Order {
     private int Id;
     private int My_requist_id;
     private int Date_start_id;
-    private int Tecnical_description;
+    private String Tecnical_description;
     private int My_service_id ;
     private int State;
     private int Date_end_id;
@@ -64,7 +64,7 @@ public class Order {
         this.State = State;
     }
 
-    public void setTecnical_description(int Tecnical_description) {
+    public void setTecnical_description(String Tecnical_description) {
         this.Tecnical_description = Tecnical_description;
     }
 
@@ -89,7 +89,7 @@ public class Order {
         return State;
     }
 
-    public int getTecnical_description() {
+    public String getTecnical_description() {
         return Tecnical_description;
     }
     

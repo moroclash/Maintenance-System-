@@ -219,10 +219,14 @@ public abstract class User {
     
     
     //omar 0_0
-    public void Add_massage(General_massge New_massage) {
-        Message_Controller Ct = Message_Controller.Get_Message_Controller();
-        Ct.Send_Message(New_massage);
-        Inbox.add(New_massage);
+    public void Add_massage(General_massge New_massage,int num) {
+        if(num==1)
+        {
+            Message_Controller Ct = Message_Controller.Get_Message_Controller();
+            Ct.Send_Message(New_massage);
+        }
+       
+        Inbox.add((Massage)New_massage);
     }
     
     

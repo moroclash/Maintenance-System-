@@ -91,6 +91,8 @@ public class Message_Controller {
             Mass.put("Time", time);
             Mass.put("Parent_id", "0");
             int idmass= DB.Insert("message",Mass);
+         
+                    System.err.println(idmass);
             Mass=new  HashMap<String, String>(5);
             Mass.put("Reciever_id", String.valueOf(message.getReciver()));
             Mass.put("Message_id", String.valueOf(idmass));
