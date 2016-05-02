@@ -229,6 +229,8 @@ public abstract class User {
     
     
     //omar 0_0
+    // num = 1 if you need to save in DB and inbox
+    // num = any numper to add in inbux
     public void Add_massage(General_massge New_massage ,int num) {
         if(num == 1)
         {

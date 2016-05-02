@@ -150,6 +150,7 @@ public class Branch {
         DB.Close();
         return Persatage;
    }
+   
    //Sala7
    public ArrayList <Bill_inf> Show_accounting()
    {   
@@ -209,6 +210,7 @@ public class Branch {
                 Em.setAdditional_data(S.Get_Option_Values_OF_USER(USer_ID));
                 Gender_ID=result.getInt("Gender");
                 Em.setF_name(result.getString("Fname"));
+                Em.SetMyBranchID(getId());
                 Em.setL_name(result.getString("Lname"));
                 Em.setEmail(result.getString("Email"));
                 Em.setPassword(result.getString("Password"));

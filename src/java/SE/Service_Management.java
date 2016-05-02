@@ -65,10 +65,12 @@ public class Service_Management {
     public void Return_order(int Order_id, String Technical_description) {
 
         DB_controller DB=DB_controller.Get_DB_controller();
-         DB.Update("order_fixable ", " State_id = 3 ," +  "Technical_description = '" + Technical_description + "'", " Order_fixable_id = " + Order_id);
+        DB.Update("order_fixable ", " State_id = 3 ," +  "Technical_description = '" + Technical_description + "'", " Order_fixable_id = " + Order_id);
 
         DB.Close();
     }
+    
+    
      //sala7
       public Order Search_order(int Order_id)
       {
@@ -76,7 +78,6 @@ public class Service_Management {
          DB.Close();
          ResultSet result = null;
          Order order = new Order();
-         
          result = DB.Select(" * ", " order_fixable ", " Order_fixable_id = " + Order_id);
         try {
             while(result.next())
@@ -84,7 +85,7 @@ public class Service_Management {
               order.setId(result.getInt("Order_fixable_id"));
               order.setMy_requist_id(result.getInt("Requist_id"));
               order.setDate_start_id(result.getInt("Date_start_id"));
-              order.setTecnical_description(result.getInt("Technical_description"));
+              order.setTecnical_description(result.getString("Technical_description"));
               order.setDate_end_id(result.getInt("recept_Date_id"));
               order.setMy_service_id(result.getInt("Service_id"));
               order.setDate_start_id(result.getInt("State_id"));
@@ -102,7 +103,6 @@ public class Service_Management {
 
     //Emad 
     public void Add_Request(Request request) {
-        this.Request_buffer = new ArrayList<Request>();
         DB_controller DB = DB_controller.Get_DB_controller();
         DB.Connect();
         HashMap<String, String> H = new HashMap<String, String>();
@@ -117,7 +117,7 @@ public class Service_Management {
 
     
     
-    //omar
+    //omar 
     public void Add_Complain(Complain complain) {
         DB_controller DB = DB_controller.Get_DB_controller();
         System_manage sy = System_manage.Get_System_manage();
@@ -142,29 +142,7 @@ public class Service_Management {
     
     
     
-    //sala7
-     public ArrayList<String> get_branch_phones( int branch_id ) {
-         
-         ArrayList <String> phone = null;
-         DB_controller DB = DB_controller.Get_DB_controller();
-         DB.Connect();
-         
-         ResultSet result = null;
-         result = DB.Select(" phone ", " branch_phone ", " Branch_id = " + branch_id);
-         String Phone = "";
-         try {
-            while(result.next())
-            {
-               phone.add(result.getString("phone"));
-            }
-            return phone;
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-            DB.Close();
-        }
-        DB.Close();
-        return null;
-     }
+    
     
     
     
@@ -261,7 +239,7 @@ public class Service_Management {
         DB.Close();
     }
 
-//Emad
+    //Emad
     public ArrayList<Request> Show_requists(int State) {
         DB_controller DB = DB_controller.Get_DB_controller();
         DB.Connect();
@@ -471,7 +449,7 @@ public class Service_Management {
     
 
    
-    public ArrayList<Integer> Date_Choose() {
+    public Time_chooser Date_Choose(int Request_id) {
         return null;
     }
 
@@ -481,7 +459,7 @@ public class Service_Management {
     }
 
     
-    Bill_inf Add_Componenet(ArrayList<Component> Component, Bill bill, String Technical_description) {
+    public Bill_inf Add_Componenet(ArrayList<Component> Component, Bill bill, String Technical_description) {
         return null;
     }
 
@@ -500,7 +478,7 @@ public class Service_Management {
                 O.setState(result.getInt("State_id"));
                 O.setDate_start_id(result.getInt("Date_start_id"));
                 O.setDate_end_id(result.getInt("recept_Date_id"));
-                O.setTecnical_description(result.getInt("Technical_description"));
+                O.setTecnical_description(result.getString("Technical_description"));
                 result2 = DB.Select("*", "device_of_this_request", "Device_of_this_request_id=" + ID);
                 while (result2.next()) {
                     S.add(result.getInt("Technical_ID"));
@@ -541,7 +519,7 @@ public class Service_Management {
                 order.setDate_start_id(result.getInt("Date_start_id"));
                 order.setDate_end_id(result.getInt("recept_date_id"));
                 order.setState(result.getInt("state_id"));
-                order.setTecnical_description(result.getInt("Technical_description"));
+                order.setTecnical_description(result.getString("Technical_description"));
                 order.setMy_service_id(result.getInt("Service_id"));
                 order.setMy_requist_id(result.getInt("Requist_id"));
                 O.add(order);
@@ -594,7 +572,7 @@ public class Service_Management {
             HashMap<String, String> Order = new HashMap<>(10);
             Order.put("Requist_id", String.valueOf(order.getMy_requist_id()));
             Order.put("Date_start_id", String.valueOf(order.getDate_start_id()));
-            Order.put("Technical_description", Integer.toString(order.getTecnical_description()));
+            Order.put("Technical_description", order.getTecnical_description());
             Order.put("Service_id", String.valueOf(order.getMy_service_id()));
             Order.put("State_id", "3");//wait fix
             Order.put("date_End_id", String.valueOf(order.getMy_requist_id()));
@@ -847,7 +825,7 @@ public class Service_Management {
     }
 
 ///sala7
-    public String Show_satate(int state) {
+    public String Show_state(int state) {
         DB_controller.Get_DB_controller().Connect();
         ResultSet result = DB_controller.Get_DB_controller().Select("State", " state ", " State_id = " + state);
         String res = "";

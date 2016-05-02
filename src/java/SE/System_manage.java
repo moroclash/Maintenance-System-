@@ -68,13 +68,12 @@ public class System_manage {
         Branch branch = new Branch();
         ResultSet result = Db.Select(" * ", " branch ", " Branch_id = " + Branch_id);
         int location=-1;
-        Service_Management sv =Service_Management.Get_Serive_Management();
         try {
             while(result.next())
             {
               branch.setId(result.getInt("Branch_id"));
               branch.setMnager_id(result.getInt("User_id"));
-              branch.setPhones(sv.get_branch_phones(Branch_id));
+              branch.setPhones(get_branch_phones(Branch_id));
               branch.setAddress_id(result.getInt("Address_id"));
             }
          } catch (SQLException ex) {
@@ -282,7 +281,7 @@ public class System_manage {
     
     
     
-    //Emad  xxxxx
+    //Emad  
     public boolean Delete_user(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -387,6 +386,30 @@ public class System_manage {
         return false;
     }
     
+    
+    //sala7
+     public ArrayList<String> get_branch_phones( int branch_id ) {
+         
+         ArrayList <String> phone = null;
+         DB_controller DB = DB_controller.Get_DB_controller();
+         DB.Connect();
+         
+         ResultSet result = null;
+         result = DB.Select(" phone ", " branch_phone ", " Branch_id = " + branch_id);
+         String Phone = "";
+         try {
+            while(result.next())
+            {
+               phone.add(result.getString("phone"));
+            }
+            return phone;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            DB.Close();
+        }
+        DB.Close();
+        return null;
+     }
     
     
     public boolean Delete_branch_phone(int phone_id , int Branch_id)

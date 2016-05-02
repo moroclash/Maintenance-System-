@@ -36,11 +36,11 @@ public class Customer extends User {
 
     }
 
-    public ArrayList<Request> Show_My_requist(int User_id) {
+    public ArrayList<Request> Show_My_requist() {
         return null;
     }
 
-    public ArrayList<Order> show_my_order(int User_id) {
+    public ArrayList<Order> show_my_order() {
         return null;
     }
 //Emad
@@ -253,4 +253,7 @@ public class Customer extends User {
         return true;
     }
 
+    
+    
+    
 }
