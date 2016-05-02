@@ -45,7 +45,7 @@ public class DB_controller {
               if(DB_controller == null || DB_controller.isClosed())
               {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
-                DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/maintenance?zeroDateTimeBehavior=convertToNull", "root", "");
+                DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
                 System.out.println("Done");
               }
          } catch (Exception x) {
@@ -64,7 +64,7 @@ public class DB_controller {
             System.out.println("Eror in function close DB");
         }
     }
-
+   //sala7
     public  ResultSet Select(String FieldName, String TableName, String Condetion) {
         String Query="SELECT " +FieldName+ " FROM "+ TableName+ " WHERE " +Condetion;
         try
@@ -79,7 +79,7 @@ public class DB_controller {
         }
         return null;
     }
-
+   //sala7
     public  boolean Delete(String TableName, String condition) {
         String Query = "DELETE FROM " + TableName + " WHERE " + condition;
         try {
@@ -91,7 +91,7 @@ public class DB_controller {
             return false;
         }
     }
-
+    //sala7
     public  boolean Update(String TableName, String FieldName, String Condition) {
         String Query = "UPDATE " + TableName + " set " + FieldName + " WHERE " + Condition;
         try {

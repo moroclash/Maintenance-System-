@@ -15,7 +15,11 @@ import java.util.logging.Logger;
  *
  * @author moroclash
  */
+
+  
+
 public abstract class User {
+
     
     private int ID;
     private String F_name;
@@ -28,7 +32,7 @@ public abstract class User {
     private HashMap<Integer,String> Phones;
     private HashMap<Integer,String> Addresses;
     private ArrayList <Massage> Inbox;
-    private boolean Block;
+    private int Block;
 
     public void setAddresses(HashMap<Integer, String> Addresses) {
         this.Addresses = Addresses;
@@ -44,16 +48,18 @@ public abstract class User {
    {
     this.Phones.put(Key, Value);
    }
+
+
+    public void setBlock(int Block) {
+    }
+   
+
+
+    public int getBlock() {
+        return Block;
+    }
    
     
-    public void setBlock(boolean Block) {
-        this.Block = Block;
-    }
-    
-    public boolean getBlock()
-    {
-        return this.Block;
-    }
  
     public void setID(int ID) {
         this.ID = ID;
@@ -166,7 +172,7 @@ public abstract class User {
             Employee emp = new Employee();
             DB.Update(" user ", " Fname =" + emp.getF_name() + " Lname = " + emp.getL_name() + " Password = " + emp.getPassword()
                     + " Email = " + emp.getEmail() + " gender = " + emp.getGander(), " User_id = " + ID);
-            DB.Update("  ", "  ", "  ");
+            
         
         DB.Close();
         return true;
@@ -277,7 +283,55 @@ public abstract class User {
     
     
     
+
+    public abstract boolean Log_in(String User_Name, String Password);
     
+    
+     //sala7
+    /*public Object Log_in(String User_Name, String Password) {
+        Validations E = Validations.Get_Validations();
+        if(E.Is_email(User_Name) && E.Is_passord(Password))
+        {
+            DB_controller DB = DB_controller.Get_DB_controller();
+            DB.Connect();
+            System_manage system = System_manage.Get_System_manage();
+            Employee employee ;
+            Customer customer ;
+            
+            ResultSet result = DB.Select(" name ", " type_user ", " Type_user_id = 5 ");
+            String name = "";
+            try {
+                while(result.next())
+                {
+                    name = result.getString("name");
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+            result =DB.Select("User_id", " user ", " Email =  '" + User_Name + "'" + " and " + "Password = '" + Password +"'");
+            try {
+                while(result.next())
+                {
+                    if(name.equals("customer"))
+                    {
+                        customer = (Customer) system.Search_user_by_id(result.getInt("User_id"));
+                        return customer;
+                    }
+                    else{
+                        employee = (Employee) system.Search_user_by_id(result.getInt("User_id"));
+                        return employee;
+                    }
+                }
+            } catch (SQLException ex) {
+                ex.printStackTrace();
+            }
+        }
+        else{
+            System.err.println("ll2saf el username and password is incorrect");
+        }
+        return null;
+    }*/
+
     
     //omar 0_0
     public boolean DeleteMassge_that_send(int Massage_id) {

@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.geometry.HPos;
 
 /**
  *
@@ -49,11 +50,64 @@ public class Service_Management {
         DB.Close();
     }
 
+    
+    
+    //omar
     public void Add_Complain(Complain complain) {
-
+        DB_controller DB = DB_controller.Get_DB_controller();
+        System_manage sy = System_manage.Get_System_manage();
+        this.Complain_buffer.add(complain);
+        DB.Connect();
+        Order or = Search_order(complain.getMy_order_id());
+        Request rq = Search_requist(or.getMy_requist_id());
+        HashMap<String,String> H = new HashMap<>();
+        H.put("sender_id", Integer.toString(rq.getUser_id()));
+        H.put("Date_id", Integer.toString(sy.Get_date_iD()));
+        H.put("	Time", sy.Get_time());
+        H.put("Content", complain.getContent());
+        H.put("Type_id", "1");
+        H.put("Parent_id", "0");
+        int id = DB.Insert("message", H);
+        H.clear();
+        H.put("Message_id", Integer.toString(id));
+        H.put("Order_id", Integer.toString(complain.getMy_order_id()));
+        DB.Insert("complains_order", H);
     }
+    
+    
+    
+    
+    
+    //omar 0_0
+    public Complain Show_Complain(int Coplain_num_in_Bufer,int Reciver_id)
+    {
+        Complain com = this.Complain_buffer.get(Coplain_num_in_Bufer);
+        this.Complain_buffer.remove(Coplain_num_in_Bufer);
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        HashMap<String,String> H = new HashMap<>();
+        H.put("Reciever_id", Integer.toString(Reciver_id));
+        H.put("Message_id", Integer.toString(com.getId()));
+        H.put("State_id", "4");
+        Db.Insert("recieved", H);
+        return com;
+    }
+    
+    
+    
+    
+    
+    
+    public Order Search_order(int Order_id)
+    {
+        return null;
+    
+    }
+    
+    
+    
+    
     //Emad
-
     public void Load_Complain() {
         this.Complain_buffer = new ArrayList<Complain>();
         Message_Controller MC = Message_Controller.Get_Message_Controller();
@@ -135,12 +189,7 @@ public class Service_Management {
     }
     
     
-    
-    
-    
-    
-    
-    
+
     
        
     
@@ -276,24 +325,92 @@ public class Service_Management {
    
    
    
+  //omar 0_0
+  private int Employee_order_numper(ArrayList<Integer> orders,int Employee_id)
+  {
+      int num = 0;
+      try {
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            ResultSet res ;
+            int id = 0 ;
+            for(int x : orders)
+            {
+                res = Db.Select("Technical_id", "device_of_this_request", "Order_fexable_id="+x);
+                while(res.next())
+                {
+                    id = res.getInt("Technical_id");
+                    if(Employee_id == id)
+                        num++;
+                }
+            }
+     } catch (SQLException ex) {
+        Logger.getLogger(Service_Management.class.getName()).log(Level.SEVERE, null, ex);
+     }
+     return num;
+  }
    
    
+   //omar
+   public HashMap<Employee,Integer> Show_empty_technical(String Date,int Branch_id) {
+        try {
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            ArrayList<Integer> aa = new ArrayList<>();
+            ResultSet res = Db.Select("Time_chooser_id", "time_choosed", "Branch_id="+Branch_id);
+            int x = 0;
+            int request_id = 0;
+            while(res.next())
+            {
+                x = res.getInt("Time_chooser_id");
+                ResultSet res2 =Db.Select("Request_id", "time_chooser", "Time_chooser_id="+x+" and Times="+Date);
+                while (res2.next()) {                    
+                    request_id = res2.getInt("Request_id");
+                    ResultSet res3 = Db.Select("Order_fixable_id", "order_fixable", "Requist_id="+request_id);
+                    while(res3.next())
+                    {
+                        aa.add(res3.getInt("Order_fixable_id"));
+                    }
+                }
+            }
+                System_manage sy = System_manage.Get_System_manage();
+                Branch branch = sy.Search_branch(Branch_id);
+                HashMap<Employee,Integer>  H = new HashMap<>();
+                ArrayList<Employee> semp = branch.Show_employee();
+                int xx = 0;
+                for(Employee em : semp)
+                {
+                    xx = Employee_order_numper(aa,em.getID());
+                    if(x<5)
+                    {
+                        H.put(em, x);
+                    }
+                }
+            return H;
+        } catch (SQLException ex) {
+            Logger.getLogger(Service_Management.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+    
 
-   public ArrayList<Employee> Show_empty_technical(String Date) {
+   
+    public ArrayList<Integer> Date_Choose() {
         return null;
     }
 
-    ArrayList<Integer> Date_Choose() {
-        return null;
-    }
-
+    
     boolean Accept_Request(int Request_id) {
         return true;
     }
 
+    
     Bill_inf Add_Componenet(ArrayList<Component> Component, Bill bill, String Technical_description) {
         return null;
     }
+    
+    
+    
     
     //Emad
     public ArrayList<Order> Show_My_Order(int Employee_id) {
@@ -498,8 +615,10 @@ public class Service_Management {
     //Sala7
 
     public void Return_order(int Order_id, String Technical_description) {
-        DB_controller DB = DB_controller.Get_DB_controller();
-        DB.Update("order_fixable ", " State_id = " + 3 + " Technical_description = " + Technical_description, " Order_fixable_id = " + Order_id);
+
+        DB_controller DB=DB_controller.Get_DB_controller();
+         DB.Update("order_fixable ", " State_id = 3 ," +  "Technical_description = '" + Technical_description + "'", " Order_fixable_id = " + Order_id);
+
         DB.Close();
     }
 
@@ -674,46 +793,51 @@ public class Service_Management {
         return null;
     }
 
-//sala7
-    public String Show_satate(int state) {
-        DB_controller.Get_DB_controller().Connect();
-        ResultSet result = DB_controller.Get_DB_controller().Select("State", " state ", " State_id = " + state);
-        String res = "";
-        try {
-            while (result.next()) {
-                res = result.getString("State");
-            }
-            DB_controller.Get_DB_controller().Close();
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        }
-        return res;
-    }
-    //Emad
+///sala7
+   public String Show_satate(int state)
+   {
+       DB_controller.Get_DB_controller().Connect();
+       ResultSet result = DB_controller.Get_DB_controller().Select("State", " state ", " State_id = " + state);
+       String res= "";
+       try {
+           while(result.next())
+           {
+             res = result.getString("State");
+           }
+           DB_controller.Get_DB_controller().Close();
+       } catch (SQLException ex) {
+           ex.printStackTrace();
+       }
+       return res;
+   }
+   //Emad
+ public ArrayList<Complain> Show_complains(int State) {
+       DB_controller.Get_DB_controller().Connect();
+       ResultSet result = DB_controller.Get_DB_controller().Select("*", "Message_type", "Name='Complain'");
+       ArrayList<Complain> C = new ArrayList<Complain>();
+       int ID = 0;
+       try {
+           while (result.next()) {
+               ID = result.getInt("Message_type_id");
+           }
+           result = DB_controller.Get_DB_controller().Select("*", "recieved", "Message_id=" + ID + " and State_id=" + State);
+           while (result.next()) {
+               
+               Complain complain = new Complain();
+               complain.setId(ID);
+               complain.setReciver(result.getInt("Reciever_id"));
+               complain.setState(State);
+               C.add(complain);
+           }
+           return C;
+       } catch (Exception E) {
+           System.out.println("Error in Complains");
+       }
+       return null;
+   }   
 
-    public ArrayList<Complain> Show_complains(int State) {
-        DB_controller.Get_DB_controller().Connect();
-        ResultSet result = DB_controller.Get_DB_controller().Select("*", "Message_type", "Name='Complain'");
-        ArrayList<Complain> C = new ArrayList<Complain>();
-        int ID = 0;
-        try {
-            while (result.next()) {
-                ID = result.getInt("Message_type_id");
-            }
-            result = DB_controller.Get_DB_controller().Select("*", "recieved", "Message_id=" + ID + " and State_id=" + State);
-            while (result.next()) {
 
-                Complain complain = new Complain();
-                complain.setId(ID);
-                complain.setReciver(result.getInt("Reciever_id"));
-                complain.setState(State);
-                C.add(complain);
-            }
-            return C;
-        } catch (Exception E) {
-            System.out.println("Error in Complains");
-        }
-        return null;
-    }
+
+ 
 }
 

@@ -37,12 +37,6 @@ public class System_manage {
             system_manage = new System_manage();
         return system_manage;
     }
-
-    public boolean Regist_customer(Customer customer) {
-        return true;
-    }
-    
-    
     
     public Systemreport Get_System_Report()
     {
@@ -67,41 +61,89 @@ public class System_manage {
     
     //sala7
     public Branch Search_branch(int Branch_id) {
-       
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        Branch branch = new Branch();
+        ResultSet result = Db.Select(" * ", " branch ", " Branch_id = " + Branch_id);
+        int location=-1;
+        try {
+            while(result.next())
+            {
+              branch.setId(result.getInt("Branch_id"));
+              branch.setMnager_id(result.getInt("User_id"));
+              branch.setPhones(branch.getPhones_branch(Branch_id));
+              branch.setAddress_id(result.getInt("Address_id"));
+            }
+         } catch (SQLException ex) {
+            Db.Close();
+            return null;
+        }
+        Db.Close();
+        return branch;
     }
     
-    
-    
-    
-    
+
+    //sala7
+ 
     public ArrayList<Employee> Show_all_employee(int Employee_type) {
-        try
-        {
-            DB_controller Db = DB_controller.Get_DB_controller();
-            Db.Connect();
-           
+       
+        DB_controller DB = DB_controller.Get_DB_controller();
+        ArrayList<Employee> em = null ;
+        DB.Connect();
+        Employee employee = new Employee();
+        Service_Management serv = Service_Management.Get_Serive_Management();
+        ResultSet result;
+        result = DB.Select(" * ", " user ", " Type_id = " + Employee_type);
+        try {
+            while(result.next())
+            {
+              employee.setF_name(result.getString("Fname"));
+              employee.setL_name(result.getString("Lname"));
+              employee.setEmail(result.getString("Email"));
+              employee.setPassword(result.getString("Password"));
+              employee.setType_id(result.getInt("Type_id"));
+              employee.setGander(result.getString("gender"));
+              employee.setBlock(result.getInt("Account_block"));
+              employee.setAddresses(serv.Get_User_Phone(Employee_type));
+              employee.setPhones(serv.Get_User_Phone(Employee_type));
+                switch (Employee_type) {
+                    case 1:
+                        employee.setAdditional_data(Get_Option_Values_OF_USER(Employee_type));
+                        break;
+                    case 2:
+                        employee.setAdditional_data(Get_Option_Values_OF_USER(Employee_type));
+                        break;
+                    case 3:
+                        employee.setAdditional_data(Get_Option_Values_OF_USER(Employee_type));
+                        break;
+                    case 4:
+                        employee.setAdditional_data(Get_Option_Values_OF_USER(Employee_type));
+                        break;
+                    default:
+                        break;
+                }
+              em.add(employee);
+            }
+            
+            return em;
+            
+        } catch (SQLException ex) {
+              ex.printStackTrace();
+              DB.Close();
         }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        
         
         return null;
     }
     
     
-    
-    
-    
-    
-    
     //sala7
-    public Bill_inf Search_bill(int Order_id) {
+    public Bill Search_bill(int Order_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
         Bill bill = new Bill();
-        int Method_ID=-1;
+        Payment_Method P = new Payment_Method();
+        HashMap <String,String> H=new HashMap<String,String> ();
+        int bill_ID=-1;
         ResultSet result = Db.Select("*" , " bill " , " Order_id = " + Order_id );
         try {
             while(result.next()){
@@ -110,16 +152,14 @@ public class System_manage {
                bill.setCost(result.getDouble("Cost"));
                bill.setMy_order(result.getInt("Order_id"));
                bill.setTime(result.getString("Time"));
-               Method_ID=result.getInt("Payment_method_id");
+               bill_ID = result.getInt("BILL_id");
+               P.Get_payment_type_in_bill(bill_ID);
             }
-               result=Db.Select("Payment_method_id", "parent_methode " , "parent_methode_id = " + Method_ID);
-               while(result.next())
-               {
-                //   bill.push("Payment_Method",result.getString("Methode"));
-               }
-               //return bill;
+         
+               return bill;
+               
         } catch (SQLException ex) {
-            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
             Db.Close();
         }
         return null;
@@ -143,10 +183,10 @@ public class System_manage {
               feedback.setSystem_quality(result.getInt("Service_quality"));
             }
         } catch (SQLException ex) {
-            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+            ex.printStackTrace();
             Db.Close();
             return null;
-        }
+        }   
         Db.Close();
         return feedback;
     }
@@ -572,11 +612,34 @@ public class System_manage {
     }
     
     
-    
-    
+    //Sala7
+    //return 1 -> this is Customer
+    //returb 2 -> this is Employee
     public int Check_type(String Username , String Password)
-    {
-        return 0;
+    {  
+        DB_controller DB = DB_controller.Get_DB_controller();
+        DB.Connect();
+        ResultSet result;
+        result =DB.Select("Type_id", " user ", " Email =  '" + Username + "'" + " and " + "Password = '" + Password +"'");
+        int type_id = -1;
+        try {
+            while(result.next())
+            {
+               type_id = result.getInt("Type_id");
+            }
+            if(type_id == 5)
+            {
+                return 1;
+            }else{
+                return 2;
+            }
+           
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            DB.Close();
+        }
+        
+     return 0;
     }
     
     

@@ -7,8 +7,11 @@ package SE;
 
 import Data_access.DB_controller;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -144,16 +147,51 @@ public class Customer extends User{
     {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
-        HashMap<String,String> H=new HashMap<String,String>();
+        HashMap<String,String> H=new HashMap<>();
         H.put("Order_id",Integer.toString(Order_id));
         H.put("Feedback_id",Integer.toString(feedback.getId()));
         H.put("System_quality",Integer.toString(feedback.getSystem_quality()));
         H.put("Service_quality",Integer.toString(feedback.getService_quality()));
         int check=Db.Insert("FEEDBACK", H);
         Db.Close();
-        if(check==-1)
-            return false;
-        return true;
+        return check != -1;
+    }
+    //sala7
+    @Override
+    public boolean Log_in(String User_Name, String Password) {
+        
+        DB_controller DB = DB_controller.Get_DB_controller();
+        DB.Connect();
+        ResultSet result = null;
+        System_manage s = System_manage.Get_System_manage();
+        Customer customer = new Customer();
+        int id = -1;
+        result = DB.Select("User_id ", " user "," Email =  '" + User_Name + "'" + " and " + "Password = '" + Password +"'");
+        int customer_id = -1;
+        try {
+              while(result.next())
+            {
+              customer_id = result.getInt("User_id");
+           }
+            customer = (Customer) s.Search_user_by_id(customer_id);
+              setF_name(customer.getF_name());
+              setL_name(customer.getL_name());
+              setEmail(customer.getEmail());
+              setPassword(customer.getPassword());
+              setGander(customer.getGander());
+              setBlock(customer.getBlock());
+              setType_id(customer.getType_id());
+              setPhones(customer.getPhones());
+              setAdditional_data(customer.getAdditional_data());
+              setAddresses(customer.getAddresses());
+              Set_sequrity_question(customer.Get_sequrity_question_id());
+              Set_sequrity_question_answer(customer.Get_sequrity_question_answer());
+           
+        } catch (SQLException ex) {
+              ex.printStackTrace();
+              DB.Close();
+        }
+       return true;
     }
     
 }
