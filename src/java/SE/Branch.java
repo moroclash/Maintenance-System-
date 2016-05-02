@@ -3,19 +3,29 @@ package SE;
 
 import Data_access.DB_controller;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Branch {
     private int Id;
-    private String Location;
     private int Manager_id;
     private ArrayList<String> phones;
     private ArrayList <Integer> Subscriber;
     private String notfy_message;
-
-    public void setMnager_id(int Mnager_id) {
+    private int Address_id; 
+    public void setMnager_id(int Mnager_id){
         this.Manager_id = Mnager_id;
+    }
+
+    public int getAddress_id() {
+        return Address_id;
+    }
+
+    public void setAddress_id(int Address_id) {
+        this.Address_id = Address_id;
     }
 
     public int getMnager_id() {
@@ -23,7 +33,7 @@ public class Branch {
     }
 
     
-    
+    //sala7
     public  void push (String value)
     {
        this.phones.add(value); 
@@ -42,17 +52,33 @@ public class Branch {
         this.Id = Id;
     }
 
-    public String getLocation() {
-        return Location;
-    }
-
-    public void setLocation(String Location) {
-        this.Location = Location;
-    }
 
     public ArrayList<String> getPhones() {
         return phones;
     }
+    //sala7
+     public ArrayList<String> getPhones_branch( int branch_id ) {
+         
+         ArrayList <String> phone = null;
+         DB_controller DB = DB_controller.Get_DB_controller();
+         DB.Connect();
+         
+         ResultSet result = null;
+         result = DB.Select(" phone ", " branch_phone ", " Branch_id = " + branch_id);
+         String Phone = "";
+         try {
+            while(result.next())
+            {
+               phone.add(result.getString("phone"));
+            }
+            return phone;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            DB.Close();
+        }
+        DB.Close();
+        return null;
+     }
     
    public double Show_salaris()
    {

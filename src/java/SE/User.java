@@ -15,7 +15,7 @@ import java.util.logging.Logger;
  *
  * @author moroclash
  */
-public class User {
+    public abstract class User {
     
     private int ID;
     private String F_name;
@@ -28,7 +28,7 @@ public class User {
     private HashMap<Integer,String> Phones;
     private HashMap<Integer,String> Addresses;
     private ArrayList <Massage> Inbox;
-    private boolean Block;
+    private int Block;
 
     public void setAddresses(HashMap<Integer, String> Addresses) {
         this.Addresses = Addresses;
@@ -43,15 +43,16 @@ public class User {
    {
     this.Phones.put(Key, Value);
    }
-   
-    public void setBlock(boolean Block) {
+
+    public void setBlock(int Block) {
         this.Block = Block;
     }
-    
-    public boolean getBlock()
-    {
-        return this.Block;
+
+    public int getBlock() {
+        return Block;
     }
+   
+    
  
     public void setID(int ID) {
         this.ID = ID;
@@ -162,7 +163,7 @@ public class User {
             Employee emp = new Employee();
             DB.Update(" user ", " Fname =" + emp.getF_name() + " Lname = " + emp.getL_name() + " Password = " + emp.getPassword()
                     + " Email = " + emp.getEmail() + " gender = " + emp.getGander(), " User_id = " + ID);
-            DB.Update("  ", "  ", "  ");
+            
         
         DB.Close();
         return true;
@@ -406,18 +407,15 @@ public class User {
         return null;
     }
     
-    public boolean Log_in()
-    {
-        return true;
-    }
+    public abstract boolean Log_in(String User_Name, String Password);
+    
     
      //sala7
-    public Object Log_in(String User_Name, String Password) {
+    /*public Object Log_in(String User_Name, String Password) {
         Validations E = Validations.Get_Validations();
         if(E.Is_email(User_Name) && E.Is_passord(Password))
         {
-                            DB_controller DB = DB_controller.Get_DB_controller();
-
+            DB_controller DB = DB_controller.Get_DB_controller();
             DB.Connect();
             System_manage system = System_manage.Get_System_manage();
             Employee employee ;
@@ -431,6 +429,7 @@ public class User {
                     name = result.getString("name");
                 }
             } catch (SQLException ex) {
+                ex.printStackTrace();
             }
             result =DB.Select("User_id", " user ", " Email =  '" + User_Name + "'" + " and " + "Password = '" + Password +"'");
             try {
@@ -447,13 +446,14 @@ public class User {
                     }
                 }
             } catch (SQLException ex) {
+                ex.printStackTrace();
             }
         }
         else{
-            System.err.println("username and password is incorrect");
+            System.err.println("ll2saf el username and password is incorrect");
         }
         return null;
-    }
+    }*/
     
     //omar
     public boolean DeleteMassge_that_send(int Massage_id) {

@@ -238,7 +238,7 @@ public class Service_Management {
 
     public void Return_order(int Order_id, String Technical_description) {
         DB_controller DB=DB_controller.Get_DB_controller();
-        DB.Update("order_fixable ", " State_id = " + 3 + " Technical_description = " + Technical_description, " Order_fixable_id = " + Order_id);
+         DB.Update("order_fixable ", " State_id = 3 ," +  "Technical_description = '" + Technical_description + "'", " Order_fixable_id = " + Order_id);
         DB.Close();
     }
     //omar
@@ -396,7 +396,7 @@ public class Service_Management {
         DB_controller.Get_DB_controller().Close();
         return null;
     }
-//sala7
+///sala7
    public String Show_satate(int state)
    {
        DB_controller.Get_DB_controller().Connect();
