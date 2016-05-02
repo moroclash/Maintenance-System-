@@ -11,7 +11,7 @@ package SE;
  */
 public class MSG {
     private int Id;
-    private String Date_id;
+    private int Date_id;
     private String Time;
     private String Content;
     private int Massage_type_id;
@@ -25,11 +25,11 @@ public class MSG {
         return Content;
     }
 
-    public void setDate_id(String Date_id) {
+    public void setDate_id(int Date_id) {
         this.Date_id = Date_id;
     }
 
-    public String getDate_id() {
+    public int getDate_id() {
         return Date_id;
     }
 

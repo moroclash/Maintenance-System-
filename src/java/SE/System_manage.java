@@ -29,69 +29,13 @@ public class System_manage {
     private System_manage()
     {}
     
+    
     public static System_manage Get_System_manage()
     {
         if(system_manage == null)
             system_manage = new System_manage();
         return system_manage;
     }
-    //sala7
-     public void add_phone_to_customer(Customer c , int customer_id)
-     {
-        DB_controller DB = DB_controller.Get_DB_controller();
-        for(Map.Entry<Integer,String> entry:c.getPhones().entrySet())
-        {
-            HashMap<String,String> ph=new HashMap<String,String> ();
-            ph.put("Phone_id",Integer.toString(entry.getKey()));
-            ph.put("User_id",Integer.toString(customer_id));
-            ph.put("Phone",entry.getValue());
-            DB.Insert("phone",ph);
-        }
-        DB.Close(); 
-     }
-     
-     //sala7
-     public void add_address_to_customer(Customer c , int customer_id)
-     {
-        DB_controller DB = DB_controller.Get_DB_controller();
-        for(Map.Entry<Integer,String> entry:c.getAddresses().entrySet())
-        {
-            HashMap<String,String> ad=new HashMap<String,String> ();
-            ad.put("Address_id",Integer.toString(entry.getKey()));
-            ad.put("Parent_id",Integer.toString(entry.getKey()));
-            ad.put("Address",entry.getValue());
-            int x = DB.Insert("address",ad);
-            ad.put("User_address_id", Integer.toString(entry.getKey()));
-            ad.put("Address_id", Integer.toString(x));
-            ad.put("User_id", Integer.toString(customer_id));
-            DB.Insert("user_address", ad);
-        }
-        DB.Close(); 
-     }
-     
-     
-    
-   //sala7
-    public boolean Regist_customer(Customer customer) {
-        DB_controller DB = DB_controller.Get_DB_controller();
-        HashMap<String, String> maininfo = null ;
-        HashMap<String, String> phoneinfo = null ;
-        User user = null;
-        maininfo.put("Fname", customer.getF_name());
-        maininfo.put("Lname", customer.getL_name());
-        maininfo.put("Email", customer.getEmail());
-        maininfo.put("Password", customer.getPassword());
-        maininfo.put("Gender", customer.getGander());
-        maininfo.put("Block", ""+customer.getBlock());
-        add_phone_to_customer(customer, customer.getID());
-        add_address_to_customer(customer , customer.getID());
-        user.Insert_Option_Values(customer, customer.getID());
-        DB.Insert("user", maininfo);
-        return true;
-    
-    }
-    
-    
     
     public Systemreport Get_System_Report()
     {
@@ -104,6 +48,67 @@ public class System_manage {
     {
         return null;
     }
+    
+    
+    
+    
+    //omar 0_0
+    private int address_helper(int num ,String TableName , int address_id)
+    {
+        try {
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            ResultSet res = Db.Select("*", TableName , "Address_id="+address_id);
+            while(res.next())
+            {
+               if(num == 0)
+                    return res.getInt("Address_id");
+               return address_helper(num-1, TableName, res.getInt("Parent_id"));   
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+    //omar 0_0
+    private int Get_n_b(int x ,int Requiest_address_id)
+    {
+        try {
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            int cuntry = address_helper(x, "address", Requiest_address_id);
+            ResultSet res = Db.Select("*", "branch", "1");
+            int branch_cuntry = 0 ;
+            while(res.next())
+            {
+                branch_cuntry = address_helper(x, "address", res.getInt("Address_id"));
+                if(cuntry == branch_cuntry)
+                {
+                    return res.getInt("Branch_id");
+                }
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return 0;
+    }
+    
+    
+    
+    //omar 0_0
+    public int Get_near_branch(int Requiest_address_id)
+    {
+        int x = 2;
+        int c = Get_n_b(x, Requiest_address_id);
+        if(c==0)
+        {
+            c = Get_n_b(x+1, Requiest_address_id);
+        }
+        return c;
+    }
+    
+    
     
     
     
@@ -132,9 +137,11 @@ public class System_manage {
         return branch;
     }
     
+
     //sala7
+ 
     public ArrayList<Employee> Show_all_employee(int Employee_type) {
-        
+       
         DB_controller DB = DB_controller.Get_DB_controller();
         ArrayList<Employee> em = null ;
         DB.Connect();
@@ -257,34 +264,73 @@ public class System_manage {
     
     
     
-    //Emad
-    public User Search_user_by_id(int User_id) {
-        DB_controller Db = DB_controller.Get_DB_controller();
-        Db.Connect();
-        String S;
-        ResultSet result = Db.Select("*", "user", "User_ID=" + User_id);
-        User U = new User();
-        try {
-            while (result.next()) {
-                U.setF_name(result.getString("FNAME"));
-                U.setL_name(result.getString("LNAME"));
-                U.setEmail(result.getString("Email"));
-                U.setGander(result.getString("GENDER"));
-                U.setPassword(result.getString("Password"));
-            }
-            U.setAdditional_data(Get_Option_Values_OF_USER(User_id));
-            return U;
-        } catch (Exception e) {
-            System.out.println("Error in Search User By ID"+e);
-        }
-        return null;
-    }
+  //Emad
+   public User Search_user_by_id(int User_id) {
+       DB_controller Db = DB_controller.Get_DB_controller();
+       Service_Management s=Service_Management.Get_Serive_Management();
+       Db.Connect();
+       String S;
+       int Type_ID=-1;
+       try { 
+       ResultSet result=Db.Select("Type_ID","User","User_ID="+User_id);
+       Type_ID=result.getInt("Type_ID");
+        ResultSet result2 = Db.Select("*", "user", "User_ID=" + User_id);
+        User U=null;
+        if(Type_ID==5)
+            U=new Customer();
+        else U=new Employee();
+           while (result2.next()) {
+               U.setF_name(result.getString("FNAME"));
+               U.setL_name(result.getString("LNAME"));
+               U.setEmail(result.getString("Email"));
+               U.setGander(result.getString("GENDER"));
+               U.setPassword(result.getString("Password"));
+           }
+           U.setAdditional_data(Get_Option_Values_OF_USER(User_id));
+           U.setPhones(s.Get_User_Phone(User_id));
+           U.setAddresses(s.Get_User_Address(User_id));
+           return U;
+       } catch (Exception e) {
+           System.out.println("Error in Search User By ID"+e);
+       }
+       return null;
+   }
     
     
-    //Emad
-    public User Search_user_by_name(String Name) {
-        return null;
-    }
+   //Emad
+   public User Search_user_by_name(String Name) {
+       DB_controller Db = DB_controller.Get_DB_controller();
+       int id=-1;
+       int Type_ID;
+       Service_Management s=Service_Management.Get_Serive_Management();
+       Db.Connect();
+       String S;
+       User U = null;
+       try {
+       ResultSet result=Db.Select("Type_ID","User","FNAME="+Name);
+       Type_ID=result.getInt("Type_ID");           
+       ResultSet result2 = Db.Select("*", "user", "FNAME=" + Name);  
+        if(Type_ID==5)
+            U=new Customer();
+        else U=new Employee();       
+           while (result.next()) {
+               id=result.getInt("User_ID");
+               U.setID(id);
+               U.setF_name(result.getString("FNAME"));
+               U.setL_name(result.getString("LNAME"));
+               U.setEmail(result.getString("Email"));
+               U.setGander(result.getString("GENDER"));
+               U.setPassword(result.getString("Password"));
+           }
+           U.setAdditional_data(Get_Option_Values_OF_USER(id));
+           U.setPhones(s.Get_User_Phone(id));
+           U.setAddresses(s.Get_User_Address(id));
+           return U;
+       } catch (Exception e) {
+           System.out.println("Error in Search User By ID"+e);
+       }
+       return null;
+   }
     
     
     
@@ -319,7 +365,7 @@ public class System_manage {
     
     
     
-     //Mohamed RAdwan  
+    //Mohamed RAdwan  
     public int Get_date_iD()
      {
         try
@@ -372,8 +418,21 @@ public class System_manage {
     }//END Get_time
     
     
-    
-    
+       //Emad
+    //pre Path Type_OPTION_ID(text,int,....),and Name OF Type
+    //post Add to Table user_option 
+    public int add_option (int Type_ID,String Name)
+    {
+                DB_controller DB = DB_controller.Get_DB_controller();
+
+        DB.Connect();
+        HashMap<String,String> H=new HashMap<String,String>();
+        H.put("Name",Name);
+        H.put("Type_id", Integer.toString(Type_ID));
+        return DB.Insert("user_option", H);
+    }
+
+        
     public boolean Add_New_phone_to_branch(String New_phone, int Branch_id)
     {
         return false;

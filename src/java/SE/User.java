@@ -15,7 +15,11 @@ import java.util.logging.Logger;
  *
  * @author moroclash
  */
-    public abstract class User {
+
+  
+
+public abstract class User {
+
     
     private int ID;
     private String F_name;
@@ -39,14 +43,17 @@ import java.util.logging.Logger;
     }
 
     
+    
     public void push(int Key,String Value)
    {
     this.Phones.put(Key, Value);
    }
 
+
     public void setBlock(int Block) {
-        this.Block = Block;
     }
+   
+
 
     public int getBlock() {
         return Block;
@@ -68,6 +75,7 @@ import java.util.logging.Logger;
     public int getID() {
         return ID;
     }
+    
 //omar
     public boolean setEmail(String Email) {
         Validations e = Validations.Get_Validations();
@@ -76,6 +84,7 @@ import java.util.logging.Logger;
         this.Email = Email;
         return true;
     }
+    
  public void setPhones(HashMap<Integer, String> Phones) {
         this.Phones = Phones;
     }
@@ -170,7 +179,8 @@ import java.util.logging.Logger;
     }
     
     
-    //omar
+    
+    //omar 0_0
     public ArrayList<General_massge> Show_all_my_rescived_massage() {
         try {
             DB_controller DB = DB_controller.Get_DB_controller();
@@ -194,219 +204,86 @@ import java.util.logging.Logger;
     }
   
    
+    //omar 0_0
+    public Massage Show_this_massage(int Massage_id)
+    {
+        Massage m = getInbox().get(Massage_id);
+        getInbox().remove(Massage_id);
+        Message_Controller mc = Message_Controller.Get_Message_Controller();
+        mc.Update_massage_state(m.getDate_id(), m.getReciver(), 4);
+        return m;
+    }
+    
     
    
     
     
-    //omar
+    //omar 0_0
     public void Add_massage(General_massge New_massage) {
+        Message_Controller Ct = Message_Controller.Get_Message_Controller();
+        Ct.Send_Message(New_massage);
+        Inbox.add(New_massage);
+    }
+    
+    
+
+    
+    
+   
+    //omar 0_0
+    public void Add_new_phone(String New_phone) {
+        Service_Management Sv = Service_Management.Get_Serive_Management();
+        int x = Sv.Add_New_Phone_To_User(New_phone, getID());
+        this.Phones.put(x, New_phone);
         
     }
     
-    
-
-    
-    
-   
-
-    public void Add_new_phone(String New_phone) {
-
-    }
-
+    //omar 0_0
     public boolean Delete_phone(int phone_id) {
-        return false;
+        this.Phones.remove(phone_id);
+        Service_Management Sv =Service_Management.Get_Serive_Management();
+        return Sv.Delete_User_Phone(phone_id);
     }
 
+    //omar 0_0
     public boolean Update_phone(int Old_phone_id, String New_phone) {
-        return false;
+        this.Phones.replace(Old_phone_id, New_phone);
+        Service_Management Sv = Service_Management.Get_Serive_Management();
+        return Sv.Update_User_Phone(Old_phone_id, New_phone);
     }
 
     
 
 
     
- 
-    
-    
 
-    //Emad
-    //pre Path the name of new user and the parent id 
-    //post add to table type user
-    public int add_new_user(String Name,int Parent_id)
-    {
-                DB_controller DB = DB_controller.Get_DB_controller();
-
-        DB.Connect();
-        HashMap<String,String> H=new HashMap<String,String>();
-        H.put("Name", Name);
-        H.put("parent_id",Integer.toString(Parent_id));
-        return DB.Insert("type_user", H);
-    }
-    
-    //Emad
-    public String Search_OptionByID(int Option_ID)
-    {
-                DB_controller DB = DB_controller.Get_DB_controller();
-
-        DB.Connect();
-        ResultSet result=DB.Select("*","user_option","User_Option_ID="+Option_ID);
-        try
-        {
-            while(result.next())
-            {
-                return result.getString("Name");
-            }
-        }
-        catch(Exception E)
-        {
-            System.out.println("Error in Search Option");
-        }
-        return null;
-    }
-    //Emad
-    public int Search_OptionByName(String Option_Name)
-    {
-                DB_controller DB = DB_controller.Get_DB_controller();
-
-        DB.Connect();
-        ResultSet result=DB.Select("*","user_option","Name='"+Option_Name+"'");
-        try
-        {
-            while(result.next())
-            {
-                return result.getInt("User_option_id");
-            }
-        }
-        catch(Exception E)
-        {
-            System.out.println("Error in Search Option");
-        }
-        return -1;
-    }
-    //Emad
-    //pre Path Type_OPTION_ID(text,int,....),and Name OF Type
-    //post Add to Table user_option 
-    public int add_option (int Type_ID,String Name)
-    {
-                DB_controller DB = DB_controller.Get_DB_controller();
-
-        DB.Connect();
-        HashMap<String,String> H=new HashMap<String,String>();
-        H.put("Name",Name);
-        H.put("Type_id", Integer.toString(Type_ID));
-        return DB.Insert("user_option", H);
-    }
-    //Emad
-    public int Add_User_Option (int user_type_id,int Option_ID)
-    {
-                DB_controller DB = DB_controller.Get_DB_controller();
-
-        DB.Connect();
-            HashMap<String,String> H=new HashMap<String,String>();
-            H.put("User_Type_ID",Integer.toString(user_type_id));
-            H.put("user_option_id",Integer.toString(Option_ID));
-            int i=DB.Insert("User_Selected_Option", H);
-        DB.Close();
-        return i;
-    }
-    //Emad
-    public ArrayList<Integer> All_Options_Available(int Type_ID)
-    {
-                DB_controller DB = DB_controller.Get_DB_controller();
-
-        DB.Connect();
-        ArrayList<Integer> A=new ArrayList<Integer>();
-        ResultSet result=DB.Select("*", "user_selected_option","user_type_id="+Type_ID);
-        try
-        {
-            while(result.next())
-            {
-                A.add(result.getInt("user_option_id"));
-            }
-        }
-        catch(Exception E)
-        {
-            System.out.println("Error in All Option Available");
-        }
-        DB.Close();
-        return A;
-    }
-    //Emad
-    public void Insert_Option_Values(User U,int User_ID)
-    {
-                DB_controller DB = DB_controller.Get_DB_controller();
-
-        DB.Connect();
-        for(Map.Entry<Integer,String> entry:U.getAdditional_data().entrySet())
-        {
-            HashMap<String,String> H=new HashMap<String,String> ();
-            H.put("User_ID",Integer.toString(User_ID));
-            H.put("User_option_id",Integer.toString(entry.getKey()));
-            H.put("value",entry.getValue());
-            DB.Insert("user_selected_option_values",H);
-        }
-        DB.Close();
-    } 
-    //Emad
-    public HashMap <Integer,String> Get_Option_Values_OF_USER(int  User_id)
-    {
-                DB_controller DB = DB_controller.Get_DB_controller();
-
-        HashMap <Integer,String> H=new HashMap<Integer,String> ();
-        DB.Connect();
-        ResultSet result=DB.Select("*","user_selected_option_values","User_ID="+User_id);
-        try
-        {
-            while(result.next())
-            {
-                H.put((result.getInt("User_option_id")),result.getString("Value"));
-            }
-        }
-        catch(Exception E)
-        {
-            System.out.println("Error in GET OPTION VALUES");
-        }
-        return H;
-    }
-    public HashMap <Integer,String> update_Option_Values_OF_USER(int  User_id)
-    {
-                DB_controller DB = DB_controller.Get_DB_controller();
-
-        HashMap <Integer,String> H=new HashMap<Integer,String> ();
-        DB.Connect();
-        DB.Update(" user_selected_option_values ", " * ", " User_id = " + User_id);
-        return H;
-    }
-    //Emad
-    public ArrayList<String> Get_Options_OF_TYPE(int  Type_ID)
-    {
-                DB_controller DB = DB_controller.Get_DB_controller();
-
-        ArrayList<String> A=new ArrayList<String>();
-        DB.Connect();
-        ResultSet result=DB.Select("*","user_option","Type_ID="+Type_ID);
-        try
-        {
-            while(result.next())
-            {
-                A.add(result.getString("NAME"));
-            }
-        }
-        catch(Exception E)
-        {
-            System.out.println("Error in GET OPTION OF TYPES");
-        }
-        return A;
-    }    
     //////////////////////////////////////////////////////
     
    
-    
-    public ArrayList <Massage> Load_inbox()
+    //omar 0_0
+    public void Load_inbox()
     {
-        return null;
+        try {
+            Data_access.DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            ArrayList<Massage> m = new ArrayList<>();
+            Message_Controller MC = Message_Controller.Get_Message_Controller();
+            ResultSet res = Db.Select("Message_id", "recieved", "Reciever_id="+ getID() + " and State_id=5");
+            int x = 0;
+            while (res.next()) {
+                x = res.getInt("Message_id");
+                m.add((Massage) MC.Search_Massage(x));
+            }
+            Db.Close();
+            this.Inbox = m;
+        } catch (SQLException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
     
+    
+    
+
     public abstract boolean Log_in(String User_Name, String Password);
     
     
@@ -454,8 +331,9 @@ import java.util.logging.Logger;
         }
         return null;
     }*/
+
     
-    //omar
+    //omar 0_0
     public boolean DeleteMassge_that_send(int Massage_id) {
             boolean z = false;
         try {
@@ -476,14 +354,14 @@ import java.util.logging.Logger;
         return z;
     }
    
-     //omar
+     //omar 0_0
     public ArrayList<General_massge> Show_my_massage_send() {
         try {
                             DB_controller DB = DB_controller.Get_DB_controller();
 
             ArrayList<General_massge> m = new ArrayList<>();
             DB.Connect();
-            ResultSet res = DB.Select("Message_id", "message", "sender_id="+getID());
+            ResultSet res = DB.Select("Message_id", "message", "sender_id="+getID() + " and Type_id = 2");
             int x=0;
             Message_Controller Ct = Message_Controller.Get_Message_Controller();
             while(res.next())
@@ -500,7 +378,7 @@ import java.util.logging.Logger;
         return null;
     }
      
-    //omar
+    //omar 0_0
     public boolean Delete_Massge_that_resived(int Massage_id) {
             DB_controller DB = DB_controller.Get_DB_controller();
             DB.Connect();
@@ -509,12 +387,14 @@ import java.util.logging.Logger;
             DB.Close();
             return z;
     }
-     //omar
+    
+    //omar 0_0
     public ArrayList<General_massge> Show_my_massage(int State_id) {
         try {
              DB_controller DB = DB_controller.Get_DB_controller();
+             DB.Connect();
             ArrayList<General_massge> m = new ArrayList<>();
-            ResultSet res = DB.Select("Message_id", "recieved", "Reciever_id="+getID()+",State_id="+State_id);
+            ResultSet res = DB.Select("Message_id", "recieved", "Reciever_id="+getID()+" and State_id="+State_id);
             int x=0;
             Message_Controller Ct = Message_Controller.Get_Message_Controller();
             while(res.next())

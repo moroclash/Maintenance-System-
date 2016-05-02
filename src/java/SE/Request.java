@@ -15,8 +15,29 @@ class Request {
     private int ID;
     private int Date_id;
     private int State_id;
+    private int Address_ID;
+    private int User_id;
+    private int Address_id;
     private ArrayList<Integer> Device_id;
 
+    public void setAddress_ID(int Address_ID) {
+        this.Address_ID = Address_ID;
+    }
+
+    public int getAddress_ID() {
+        return Address_ID;
+    }
+
+    
+    
+    public void setUser_id(int User_id) {
+        this.User_id = User_id;
+    }
+
+    public int getUser_id() {
+        return User_id;
+    }
+    
     public void setID(int ID) {
         this.ID = ID;
     }
