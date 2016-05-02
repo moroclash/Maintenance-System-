@@ -11,11 +11,15 @@ import java.util.logging.Logger;
 
 public class Branch {
     private int Id;
+
+
+    private int Address_id;
+
     private int Manager_id;
     private ArrayList<String> phones;
     private ArrayList <Integer> Subscriber;
     private String notfy_message;
-    private int Address_id; 
+    
     public void setMnager_id(int Mnager_id){
         this.Manager_id = Mnager_id;
     }
@@ -51,7 +55,6 @@ public class Branch {
     public void setId(int Id) {
         this.Id = Id;
     }
-
 
     public ArrayList<String> getPhones() {
         return phones;

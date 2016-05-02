@@ -22,6 +22,7 @@ import java.util.Map;
 public class MAin {
     public static void main(String[] args) {
 
+
         System_manage s= null;
         Customer c = new Customer();
         HashMap <Integer , String > ph = null;
@@ -44,6 +45,13 @@ public class MAin {
        
 
         System.out.println(s.Get_near_branch(17));
+
+
+        //System.out.println(s.Get_near_branch(17));
+          System.out.println(s.Get_time());  
+            
+            
+            
 
         }
 

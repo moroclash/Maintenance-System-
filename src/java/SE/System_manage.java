@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -112,7 +113,7 @@ public class System_manage {
     
     
     
-    
+    /*
     
     //sala7
     public Branch Search_branch(int Branch_id) {
@@ -135,7 +136,7 @@ public class System_manage {
         }
         Db.Close();
         return branch;
-    }
+    }*/
     
 
     //sala7
@@ -367,26 +368,28 @@ public class System_manage {
     
     //Mohamed RAdwan  
     public int Get_date_iD()
-     {
-        try
-        {
-         DB_controller Db = DB_controller.Get_DB_controller();
-         //Table date   
-         Db.Connect();
-         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-         Date date = new Date();
-         HashMap<String,String> Date=new HashMap<>(1);
-         Date.put("Date", date.toString());
-         Db.Insert("date", Date);
-         ResultSet isDate=Db.Select("Date_id", "date", "Date="+date.toString());
-         return isDate.getInt("Date_id");
-          //End Table date 
-        }//END Try
-         catch(Exception s){    
-             s.printStackTrace();
-             return -1;
-         } 
-     }//END Get_date_iD
+    {
+        DB_controller Db = DB_controller.Get_DB_controller();
+        //Table date   
+        Db.Connect();
+        Calendar cal = Calendar.getInstance();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); 
+        String strDate = sdf.format(cal.getTime());
+       try
+       { 
+        ResultSet isDate=Db.Select("Date_id", "date", "Date='"+strDate+"'");
+        while(isDate.next()){
+          return isDate.getInt("Date_id");
+        }
+        HashMap<String,String> Date=new HashMap<>(1);
+        Date.put("Date", strDate);
+        return Db.Insert("date", Date);
+       }//END Try
+        catch(Exception s){    
+            s.printStackTrace();  
+        } 
+       return -1;
+    }//END Get_date_iD
     
 
     
@@ -410,11 +413,10 @@ public class System_manage {
     //Mohamed RAdwan 
     public String Get_time()
     {
-         DB_controller Db = DB_controller.Get_DB_controller();
-         Db.Connect();
-         SimpleDateFormat printFormat = new SimpleDateFormat("HH:mm:ss");
-         Date date = new Date();
-         return  date.toString(); 
+         Calendar cal = Calendar.getInstance();
+         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss"); 
+         String strDate = sdf.format(cal.getTime());
+         return  strDate; 
     }//END Get_time
     
     
