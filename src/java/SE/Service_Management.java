@@ -24,8 +24,7 @@ public class Service_Management {
     private ArrayList<Complain> Complain_buffer;
 
     private Service_Management() {
-
-    }
+  }
 
     public static Service_Management Get_Serive_Management() {
         if (manage == null) {
@@ -33,8 +32,70 @@ public class Service_Management {
         }
         return null;
     }
-
     
+    //sala7
+    private ArrayList<Integer> Get_Technical (int order_id)
+    {
+       ArrayList<Integer> tech = null;
+       DB_controller DB=DB_controller.Get_DB_controller();
+       DB.Close();
+       ResultSet result = null;
+       
+       result = DB.Select(" Technical_id ", " device_of_this_request ", " Order_fixable_id = " + order_id);
+        try {
+            while(result.next())
+            {
+               tech.add(result.getInt("Technical_id"));
+            }
+            DB.Close();
+            return tech;
+        }
+        catch (SQLException ex) {
+            ex.printStackTrace();
+            DB.Close();
+            return null;
+        }
+    }
+    
+
+     //Sala7
+
+    public void Return_order(int Order_id, String Technical_description) {
+
+        DB_controller DB=DB_controller.Get_DB_controller();
+         DB.Update("order_fixable ", " State_id = 3 ," +  "Technical_description = '" + Technical_description + "'", " Order_fixable_id = " + Order_id);
+
+        DB.Close();
+    }
+     //sala7
+      public Order Search_order(int Order_id)
+      {
+         DB_controller DB=DB_controller.Get_DB_controller();
+         DB.Close();
+         ResultSet result = null;
+         Order order = new Order();
+         
+         result = DB.Select(" * ", " order_fixable ", " Order_fixable_id = " + Order_id);
+        try {
+            while(result.next())
+            {
+              order.setId(result.getInt("Order_fixable_id"));
+              order.setMy_requist_id(result.getInt("Requist_id"));
+              order.setDate_start_id(result.getInt("Date_start_id"));
+              order.setTecnical_description(result.getInt("Technical_description"));
+              order.setDate_end_id(result.getInt("recept_Date_id"));
+              order.setMy_service_id(result.getInt("Service_id"));
+              order.setDate_start_id(result.getInt("State_id"));
+              Get_Technical(Order_id);
+            }
+            DB.Close();
+            return order;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            DB.Close();
+            return null;
+        }
+      }
     
     //Emad 
     public void Add_Request(Request request) {
@@ -133,8 +194,7 @@ public class Service_Management {
         }
         return null;
     }
-    
-    
+
     
     
     
@@ -219,15 +279,9 @@ public class Service_Management {
        DB.Connect();
        try 
        {
-          ResultSet result=DB.Select("*", "Branch","Address_ID="+request.getAddress_ID());
-           {
-               while(result.next())
-               {
-               Branch_ID=result.getInt("Branch_ID");
-               }
-           }
+           Branch_ID=this.Get_near_branch(request.getAddress_ID());
            OptionID=S.Search_User_OptionByName("Branch_ID");
-           result=DB.Select("*", "user_selected_option_values","User_option_id="+OptionID);
+           ResultSet result=DB.Select("*", "user_selected_option_values","User_option_id="+OptionID);
            while(result.next())
            {
                NumberOfEmployees++;
@@ -264,6 +318,7 @@ public class Service_Management {
            }
            DayPlus++;
            }
+           
        } 
        catch (Exception E) 
        {
@@ -495,16 +550,7 @@ public class Service_Management {
         }
         return null;
     }
-    //Sala7
-
-    public void Return_order(int Order_id, String Technical_description) {
-
-        DB_controller DB=DB_controller.Get_DB_controller();
-         DB.Update("order_fixable ", " State_id = 3 ," +  "Technical_description = '" + Technical_description + "'", " Order_fixable_id = " + Order_id);
-
-        DB.Close();
-    }
-
+   
     //omar 0_0
     public String get_address_from_db(int Address_id) {
         DB_controller DB = DB_controller.Get_DB_controller();

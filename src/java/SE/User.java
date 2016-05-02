@@ -246,11 +246,11 @@ public abstract class User {
     }
 
     //omar 0_0
-    public boolean Update_phone(int Old_phone_id, String New_phone) {
+    /*public boolean Update_phone(int Old_phone_id, String New_phone) {
         this.Phones.replace(Old_phone_id, New_phone);
         Service_Management Sv = Service_Management.Get_Serive_Management();
         return Sv.Update_User_Phone(Old_phone_id, New_phone);
-    }
+    }*/
 
     
 

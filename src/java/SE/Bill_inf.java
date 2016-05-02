@@ -82,7 +82,9 @@ public class Bill_inf {
           }
           DB.Close();
           return spare;
-       } catch (SQLException ex) {
+       } 
+          
+       catch (SQLException ex) {
           ex.printStackTrace();
           DB.Close();
           return null;

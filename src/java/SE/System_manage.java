@@ -616,6 +616,25 @@ public class System_manage {
         return H;
     }
     
+    public String Get_Option_Value(int User_ID)
+    {
+        DB_controller DB=DB_controller.Get_DB_controller();
+        DB.Connect();
+        ResultSet result=DB.Select("Value","user_selected_option_values","User_ID="+User_ID);
+        try
+        {
+            while(result.next())
+            {
+                return result.getString("Value");
+            }
+        }
+       catch(Exception E)
+       {
+           System.out.println("Error in Option Value");
+       }
+        return null;
+    }
+    
     
     
     //Emad
