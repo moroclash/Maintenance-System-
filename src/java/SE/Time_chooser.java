@@ -14,6 +14,7 @@ import java.util.ArrayList;
 class Time_chooser {
    private ArrayList <String> Time;
    private String Selected_time;
+   private int Request_ID; 
 
    
    
@@ -25,6 +26,14 @@ class Time_chooser {
         this.Time = Time;
     }
 
+    public void setRequest_ID(int Request_ID) {
+        this.Request_ID = Request_ID;
+    }
+
+    public int getRequest_ID() {
+        return Request_ID;
+    }
+    
     public void setSelected_time(String Selected_time) {
         this.Selected_time = Selected_time;
     }

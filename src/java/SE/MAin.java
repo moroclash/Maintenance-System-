@@ -6,6 +6,7 @@
 package SE;
 
 import Data_access.DB_controller;
+import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ import java.util.HashMap;
 
 
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,14 +24,7 @@ import java.util.Map;
  */
 public class MAin {
     public static void main(String[] args) {
-            
-        ArrayList<Integer> aa = new ArrayList<>();
-        aa.add(1);
-        aa.add(2);
-        aa.add(3);
-        
-        System.out.println(Service_Management.Get_Serive_Management().Employee_order_numper(aa, 1));
-       
+
             
 
         }

@@ -79,6 +79,24 @@ public class DB_controller {
         }
         return null;
     }
+ 
+    //sala7
+    public  ResultSet Select_BY_Like_Statement(String FieldName, String TableName, String pattern) {
+        String Query="SELECT " +FieldName+ " FROM "+ TableName+ " WHERE " + FieldName + "LIKE" + pattern;
+        try
+        {
+            PreparedStatement pre=DB_controller.prepareStatement(Query);
+            ResultSet result=pre.executeQuery();
+            return result;
+        }
+        catch(Exception e)
+        {
+            System.out.println(e.getMessage());
+        }
+        return null;
+    }
+    
+    
    //sala7
     public  boolean Delete(String TableName, String condition) {
         String Query = "DELETE FROM " + TableName + " WHERE " + condition;

@@ -5,7 +5,12 @@
  */
 package SE;
 
+import Data_access.DB_controller;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,9 +22,9 @@ public class Order {
     private int Date_start_id;
     private int Tecnical_description;
     private int My_service_id ;
-    private ArrayList<Integer> My_Technical_id ;
     private int State;
     private int Date_end_id;
+    private ArrayList<Integer> My_Technical_id ;
     
     public void setDate_start_id(int Date_start_id) {
         this.Date_start_id = Date_start_id;
@@ -28,10 +33,6 @@ public class Order {
     public int getDate_start_id() {
         return Date_start_id;
     }
-
-    
-    
-    
 
     public ArrayList<Integer> getMy_Technical_id() {
         return My_Technical_id;
