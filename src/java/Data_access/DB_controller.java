@@ -45,7 +45,7 @@ public class DB_controller {
               if(DB_controller == null || DB_controller.isClosed())
               {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
-                DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
+                DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/swe?zeroDateTimeBehavior=convertToNull", "root", "");
                 System.out.println("Done");
               }
          } catch (Exception x) {
@@ -143,6 +143,7 @@ public class DB_controller {
         Attributes = "(" + Attributes + ")";
         Values = "(" + Values + ")";
         String Query = "INSERT INTO " + TableName + " " + Attributes + " VALUES " + Values + " ";
+        System.err.println(Query);
         try {
             PreparedStatement pre = DB_controller.prepareStatement(Query,Statement.RETURN_GENERATED_KEYS);
             pre.executeUpdate();
