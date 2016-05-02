@@ -209,7 +209,7 @@ public class System_manage {
         int Type_ID = -1;
         User U = null;
         try {
-            ResultSet result = Db.Select("Type_ID", "User", "User_ID=" + User_id);
+            ResultSet result = Db.Select("*", "user", "User_id=" + User_id);
             while (result.next()) {
                 Type_ID = result.getInt("Type_ID");
                 if (Type_ID == 5) {
@@ -222,10 +222,8 @@ public class System_manage {
                 U.setEmail(result.getString("Email"));
                 U.setGander(result.getString("GENDER"));
                 U.setPassword(result.getString("Password"));
-                U.setType_id(Type_ID);
-                
+                U.setType_id(Type_ID);                
             }
-
            U.setAdditional_data(Get_Option_Values_OF_USER(User_id));
            U.setPhones(s.Get_User_Phone(User_id));
            U.setAddresses(s.Get_User_Address(User_id));
