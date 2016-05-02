@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.mail.MessagingException;
 
 /**
  *
@@ -29,14 +28,7 @@ public class MAin {
      
     
     public static void main(String[] args) {
-        try {
-            Message_Controller mc = Message_Controller.Get_Message_Controller();
-            mc.Send_Email(1, "طه", "خد يا طة .. ");
-        } catch (MessagingException ex) {
-            Logger.getLogger(MAin.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (SQLException ex) {
-            Logger.getLogger(MAin.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         
     }
 

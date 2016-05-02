@@ -81,7 +81,7 @@ public class DB_controller {
     }
  
     //sala7
-    public  ResultSet Select_BY_Like_Statement(String FieldName, String TableName, String pattern) {
+    public  ResultSet Select_BY_Like_Statement(String FieldName,String s, String TableName, String pattern) {
         String Query="SELECT " +FieldName+ " FROM "+ TableName+ " WHERE " + FieldName + "LIKE" + pattern;
         try
         {

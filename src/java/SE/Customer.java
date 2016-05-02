@@ -92,7 +92,10 @@ public class Customer extends User {
         }
         DB.Close();
         if(A.equals(Q)&&B.equals(Answer))
-            return true;
+        {
+            Message_Controller M=Message_Controller.Get_Message_Controller();
+            return true;            
+        }
         return false;
     }
 
@@ -117,6 +120,7 @@ public class Customer extends User {
     }
 
     //Emad
+    //Add F al Service
     public boolean Make_request(Device Device, int User_ID) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -190,10 +194,12 @@ public class Customer extends User {
     //Emad
     public boolean Make_complain(Complain complain, int Order_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
+        Service_Management S=Service_Management.Get_Serive_Management();
         Db.Connect();
         HashMap<String, String> H = new HashMap<String, String>();
         H.put("Message_ID", Integer.toString(complain.getId()));
         H.put("Order_ID", Integer.toString(Order_id));
+        S.Add_Complain(complain);
         int check = Db.Insert("Complain’s_order", H);
         Db.Close();
         if (check == -1) {
