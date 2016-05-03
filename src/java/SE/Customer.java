@@ -50,13 +50,37 @@ public class Customer extends User {
         return true;
     }
 
-    public ArrayList<Request> Show_My_requist(int User_id) {
+    public ArrayList<Request> Show_My_requist() {
         return null;
     }
 
-    public ArrayList<Order> show_my_order(int User_id) {
+    
+    
+   //omar
+    public ArrayList<Order> show_my_order() {
+        try {
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Service_Management sr = Service_Management.Get_Serive_Management();
+            ArrayList<Order> or = new ArrayList<>();
+            Db.Connect();
+            ResultSet res = Db.Select("Request_id","request", "User_id="+getID()+" and not State_id=5");
+            int req = 0 ;
+            while (res.next()) {
+                req = res.getInt("Request_id");
+                ResultSet res2 = Db.Select("Order_fixable_id", "order_fixable", "Requist_id="+req);
+                while(res2.next())
+                {
+                    or.add(sr.Search_order(res2.getInt("Order_fixable_id")));
+                }
+            }
+            return or;
+        } catch (SQLException ex) {
+           
+        }
         return null;
     }
+    
+    
 //Emad
     public boolean forget_My_Password(String email, int Sequirty_question_id, String Answer) {
         DB_controller DB = DB_controller.Get_DB_controller();
@@ -106,7 +130,10 @@ public class Customer extends User {
         }
         DB.Close();
         if(A.equals(Q)&&B.equals(Answer))
-            return true;
+        {
+            Message_Controller M=Message_Controller.Get_Message_Controller();
+            return true;            
+        }
         return false;
     }
 
@@ -131,6 +158,7 @@ public class Customer extends User {
     }
 
     //Emad
+    //Add F al Service
     public boolean Make_request(Device Device, int User_ID) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -204,10 +232,12 @@ public class Customer extends User {
     //Emad
     public boolean Make_complain(Complain complain, int Order_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
+        Service_Management S=Service_Management.Get_Serive_Management();
         Db.Connect();
         HashMap<String, String> H = new HashMap<String, String>();
         H.put("Message_ID", Integer.toString(complain.getId()));
         H.put("Order_ID", Integer.toString(Order_id));
+        S.Add_Complain(complain);
         int check = Db.Insert("Complain’s_order", H);
         Db.Close();
         if (check == -1) {
@@ -271,4 +301,7 @@ public class Customer extends User {
         return true;
     }
 
+    
+    
+    
 }

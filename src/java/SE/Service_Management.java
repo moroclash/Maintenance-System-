@@ -79,16 +79,8 @@ public class Service_Management {
     }
     
 
-     //Sala7
-
-    public void Return_order(int Order_id, String Technical_description) {
-
-         DB_controller DB=DB_controller.Get_DB_controller();
-         DB.Connect();
-         DB.Update("order_fixable ", " State_id = 3 ," +  "Technical_description = '" + Technical_description + "'", " Order_fixable_id = " + Order_id);
-
-         DB.Close();
-    }
+ 
+    
      //sala7
       public Order Search_order(int Order_id)
       {
@@ -96,7 +88,6 @@ public class Service_Management {
          DB.Connect();
          ResultSet result ;
          Order order = new Order();
-         
          result = DB.Select(" * ", " order_fixable ", " Order_fixable_id = " + Order_id);
         try {
             while(result.next())
@@ -104,7 +95,7 @@ public class Service_Management {
               order.setId(result.getInt("Order_fixable_id"));
               order.setMy_requist_id(result.getInt("Requist_id"));
               order.setDate_start_id(result.getInt("Date_start_id"));
-              order.setTecnical_description(result.getInt("Technical_description"));
+              order.setTecnical_description(result.getString("Technical_description"));
               order.setDate_end_id(result.getInt("recept_Date_id"));
               order.setMy_service_id(result.getInt("Service_id"));
               order.setDate_start_id(result.getInt("State_id"));
@@ -124,7 +115,6 @@ public class Service_Management {
 
     //Emad 
     public void Add_Request(Request request) {
-        this.Request_buffer = new ArrayList<Request>();
         DB_controller DB = DB_controller.Get_DB_controller();
         DB.Connect();
         HashMap<String, String> H = new HashMap<String, String>();
@@ -132,6 +122,7 @@ public class Service_Management {
         H.put("Date_ID", Integer.toString(request.getDate_id()));
         H.put("State_ID", Integer.toString(request.getState_id()));
         H.put("User_ID", Integer.toString(request.getUser_id()));
+        H.put("Address_ID",Integer.toString(request.getAddress_ID()));
         DB.Insert("Request", H);
         DB.Close();
         Request_buffer.add(request);
@@ -139,7 +130,7 @@ public class Service_Management {
 
     
     
-    //omar
+    //omar 
     public void Add_Complain(Complain complain) {
         DB_controller DB = DB_controller.Get_DB_controller();
         System_manage sy = System_manage.Get_System_manage();
@@ -161,9 +152,7 @@ public class Service_Management {
         DB.Insert("complains_order", H);
     }
     
-    
-    
-    
+
     //sala7
      public ArrayList<String> get_branch_phones( int branch_id ) {
          
@@ -187,10 +176,7 @@ public class Service_Management {
         DB.Close();
         return null;
      }
-    
-    
-    
-    
+
     //omar 0_0
     public Complain Show_Complain(int Coplain_num_in_Bufer,int Reciver_id)
     {
@@ -259,7 +245,7 @@ public class Service_Management {
         this.Request_buffer = new ArrayList<Request>();
         ArrayList<Integer> H = new ArrayList<Integer>();
         DB_controller DB = DB_controller.Get_DB_controller();
-        ResultSet result = DB.Select("*", "request", "1");
+        ResultSet result = DB.Select("*", "request", "State_ID=5 and State_ID=11");
         ResultSet result2;
         int x = -1;
         try {
@@ -283,7 +269,7 @@ public class Service_Management {
         DB.Close();
     }
 
-//Emad
+    //Emad
     public ArrayList<Request> Show_requists(int State) {
         DB_controller DB = DB_controller.Get_DB_controller();
         DB.Connect();
@@ -355,7 +341,7 @@ public class Service_Management {
 
  
    //Emad
-   public Time_chooser Get_Three_Date(Request request,Time_chooser Chose)
+   public Time_chooser Get_Three_Date(Request request)
    {
        ArrayList<String> Dates=new ArrayList<String>();
        String Date = "";
@@ -416,6 +402,7 @@ public class Service_Management {
        {
            System.out.println("");
        }
+       Time_chooser Chose = new Time_chooser();
        Chose.setTime(Dates);
        DB.Close();
        return Chose;
@@ -424,7 +411,7 @@ public class Service_Management {
    
    
   //omar 0_0
-  private int Employee_order_numper(ArrayList<Integer> orders,int Employee_id)
+  public int Employee_order_numper(ArrayList<Integer> Device_of_this_requests,int Employee_id)
   {
       int num = 0;
       try {
@@ -432,12 +419,12 @@ public class Service_Management {
             Db.Connect();
             ResultSet res ;
             int id = 0 ;
-            for(int x : orders)
+            for(int x : Device_of_this_requests)
             {
-                res = Db.Select("Technical_id", "device_of_this_request", "Order_fexable_id="+x);
+                res = Db.Select("*", "Order_fixer", "Device_of_this_request_id = "+x);
                 while(res.next())
                 {
-                    id = res.getInt("Technical_id");
+                    id = res.getInt("Technical_id‏");
                     if(Employee_id == id)
                         num++;
                 }
@@ -464,10 +451,10 @@ public class Service_Management {
                 ResultSet res2 =Db.Select("Request_id", "time_chooser", "Time_chooser_id="+x+" and Times="+Date);
                 while (res2.next()) {                    
                     request_id = res2.getInt("Request_id");
-                    ResultSet res3 = Db.Select("Order_fixable_id", "order_fixable", "Requist_id="+request_id);
+                    ResultSet res3 = Db.Select("Device_of_this_request_id", "device_of_this_request", "Request_id="+request_id);
                     while(res3.next())
                     {
-                        aa.add(res3.getInt("Order_fixable_id"));
+                        aa.add(res3.getInt("Device_of_this_request_id"));
                     }
                 }
             }
@@ -493,20 +480,42 @@ public class Service_Management {
     
 
    
-    public ArrayList<Integer> Date_Choose() {
+    public Time_chooser Date_Choose(int Request_id) {
         return null;
     }
 
     
-    boolean Accept_Request(int Request_id) {
+    
+    
+    
+    //omar
+    public boolean Accept_Request(int Request_id) {
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        Request req = this.Request_buffer.get(Request_id);
+        this.Request_buffer.remove(Request_id);
+        Db.Update("request", "State_id=1", "Request_id="+req.getID());
+        Time_chooser times = Get_Three_Date(req);
+        HashMap<String,String> H = new HashMap<>();
+        for(String date : times.getTime())
+        {
+            H.clear();
+            H.put("Request_id", Integer.toString(Request_id));
+            H.put("Times", date);
+            Db.Insert("time_chooser", H);
+        }
         return true;
     }
 
     
-    Bill_inf Add_Componenet(ArrayList<Component> Component, Bill bill, String Technical_description) {
+        
+    
+    
+    public Bill_inf Add_Componenet(ArrayList<Component> Component, Bill bill, String Technical_description) {
         return null;
     }
 
+    
     //Emad
     public ArrayList<Order> Show_My_Order(int Employee_id) {
         ArrayList<Order> or = new ArrayList<Order>();
@@ -522,7 +531,7 @@ public class Service_Management {
                 O.setState(result.getInt("State_id"));
                 O.setDate_start_id(result.getInt("Date_start_id"));
                 O.setDate_end_id(result.getInt("recept_Date_id"));
-                O.setTecnical_description(result.getInt("Technical_description"));
+                O.setTecnical_description(result.getString("Technical_description"));
                 result2 = DB.Select("*", "device_of_this_request", "Device_of_this_request_id=" + ID);
                 while (result2.next()) {
                     S.add(result.getInt("Technical_ID"));
@@ -556,16 +565,26 @@ public class Service_Management {
         DB.Connect();
         ArrayList<Order> O = new ArrayList<Order>();
         ResultSet result = DB.Select("*", "order_fixable", "State_id=" + state);
+        ResultSet result2=null;
+        int Order_ID=0;
         try {
             while (result.next()) {
                 Order order = new Order();
-                order.setId(result.getInt("Order_fixable_id"));
+                Order_ID=result.getInt("Order_fixable_id");
+                order.setId(Order_ID);
                 order.setDate_start_id(result.getInt("Date_start_id"));
                 order.setDate_end_id(result.getInt("recept_date_id"));
                 order.setState(result.getInt("state_id"));
-                order.setTecnical_description(result.getInt("Technical_description"));
+                order.setTecnical_description(result.getString("Technical_description"));
                 order.setMy_service_id(result.getInt("Service_id"));
                 order.setMy_requist_id(result.getInt("Requist_id"));
+                result2=DB.Select("Technical_ID","device_of_this_request","Order_Fixable_ID="+Order_ID);
+                while(result2.next())
+                {
+                    ArrayList<Integer>A=new ArrayList<Integer>();
+                    A.add(result.getInt("Technical_ID"));
+                    order.setMy_Technical_id(A);
+                }
                 O.add(order);
             }
         } catch (Exception e) {
@@ -586,15 +605,20 @@ public class Service_Management {
             DB_controller DB = DB_controller.Get_DB_controller();
             DB.Connect();
             Request request = new Request();
-            ResultSet res = DB.Select("*", "request", "Request_id=" + Requist_id);
-            request.setID(Requist_id);
-            request.setState_id(res.getInt("ate_id"));
+            ResultSet res = DB.Select("*", "request", "Request_id=" + Requist_id);   
+            while(res.next())
+            {request.setID(Requist_id);          
+            request.setState_id(res.getInt("State_id"));
             request.setDate_id(res.getInt("Date_id"));//lw h8er el Date id to int 
-            ArrayList<Integer> Devices_ID = new ArrayList<Integer>();
+             System.err.println("1");
+            }
             //END Table Reqest
-
+            
             //Table device_of_this_request
-            ResultSet Devices = DB.Select("Device_id", "device_of_this_request", "request_id=" + Requist_id);
+             ArrayList<Integer> Devices_ID = new ArrayList<Integer>();
+            
+            System.err.println("2");
+            ResultSet Devices = DB.Select("Device_id", "device_of_this_request", "Request_id=" + Requist_id);
             while (Devices.next()) {
                 Devices_ID.add(Devices.getInt("Device_id"));
             }
@@ -615,11 +639,11 @@ public class Service_Management {
             //Table order_fixable 
             HashMap<String, String> Order = new HashMap<>(10);
             Order.put("Requist_id", String.valueOf(order.getMy_requist_id()));
-            Order.put("Date_start_id", String.valueOf(order.getDate_start_id()));
-            Order.put("Technical_description", Integer.toString(order.getTecnical_description()));
+            Order.put("Date_start_id", String.valueOf(System_manage.Get_System_manage().Get_date_iD()));
+            Order.put("Technical_description", order.getTecnical_description());
             Order.put("Service_id", String.valueOf(order.getMy_service_id()));
             Order.put("State_id", "3");//wait fix
-            Order.put("date_End_id", String.valueOf(order.getMy_requist_id()));
+            Order.put("	recept_Date_id", String.valueOf(order.getMy_requist_id()));
             DB.Insert("order_fixable", Order);
             //end teabl order_fixable
 
@@ -628,11 +652,15 @@ public class Service_Management {
             int counter = 0;
             Request req = Search_requist(order.getMy_requist_id());
             ArrayList<Integer> dev = req.getDevice_id();
+            System.err.println(dev);
             int id_request = req.getID();
+            System.err.println(id_request);
             ArrayList<Integer> ID_rder_flexible_details = new ArrayList<>();
             for (Integer d : dev) {
-                ResultSet result = DB.Select("Device_of_this_request_id", "device_of_this_request", "Device_id=" + d + " request_id=" + id_request);
+                ResultSet result = DB.Select("Device_of_this_request_id", "device_of_this_request", "Device_id=" + d + " and  Request_id=" + id_request);
+                result.first();
                 ID_rder_flexible_details.add(result.getInt("Device_of_this_request_id"));
+                result=null;
             }
 
             //if you want to use it in table Device_of_this_request_id to insert in
@@ -650,7 +678,7 @@ public class Service_Management {
             counter = 0;
             for (Integer d : ID_rder_flexible_details) {
                 ordflexde.put("Technical_id", String.valueOf(Techincal_ID.get(counter)));
-                ordflexde.put("Order_id", String.valueOf(d));
+                ordflexde.put("Device_of_this_request_id", String.valueOf(d));
                 DB_controller.Get_DB_controller().Insert("order_flixer", ordflexde);
                 ordflexde = new HashMap<>(1);
                 counter++;
@@ -695,6 +723,13 @@ public class Service_Management {
             while (result.next()) {
                 D.push("Type", result.getString("name"));
             }
+            result =DB.Select("*","selected_device_option_values","Selected_device_id="+Device_id);
+            HashMap <String,String> H=new HashMap<String,String>();
+            while(result.next())
+            {
+                H.put("Model_ID",result.getString("value"));
+            }
+            D.setMy_info(H);
             return D;
         } catch (Exception E) {
             System.out.println("Error in Search_DEVICE");
@@ -803,14 +838,14 @@ public class Service_Management {
                 x = res.getInt("Address_id");
                 m.put(x, this.get_address_from_db(x));
             }
-            DB_controller.Get_DB_controller().Close();
+        //    DB_controller.Get_DB_controller().Close();
             return m;
 
         } catch (SQLException ex) {
             Logger.getLogger(User.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
-        Db.Close();
+     //   Db.Close();
         return null;
     }
 
@@ -857,18 +892,18 @@ public class Service_Management {
             while (res.next()) {
                 m.put(res.getInt("Phone_id"), res.getString("phone"));
             }
-           
+
             return m;
 
         } catch (SQLException ex) {
             
         }
-        
+
         return null;
     }
 
 ///sala7
-    public String Show_satate(int state) {
+    public String Show_state(int state) {
         DB_controller.Get_DB_controller().Connect();
         ResultSet result = DB_controller.Get_DB_controller().Select("State", " state ", " State_id = " + state);
         String res = "";

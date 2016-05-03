@@ -212,12 +212,17 @@ public abstract class User {
     
     
     //omar 0_0
+
+    // num = 1 if you need to save in DB and inbox
+    // num = any numper to add in inbux
     public void Add_massage(General_massge New_massage ,int num) {
         if(num == 1)
         {
             Message_Controller Ct = Message_Controller.Get_Message_Controller();
             Ct.Send_Message(New_massage);
         }
+       
+       
         Inbox.add(New_massage);
     }
     
@@ -248,7 +253,12 @@ public abstract class User {
         return Sv.Update_User_Phone(Old_phone_id, New_phone);
     }*/
 
-    
+    // Requist        Done
+    //Load Requist    
+    //Show_My_Order   Done 
+    //Search_Device   Done
+    //Complain        Done
+    //Select Time btb3t Noti
 
 
     

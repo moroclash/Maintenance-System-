@@ -81,8 +81,10 @@ public class DB_controller {
     }
     
     //sala7
+
     public  ResultSet Select_BY_Like_Statement(String FieldName, String TableName, String ColumnName, String pattern) {
             String Query="SELECT " +FieldName+ " FROM "+ TableName+ " WHERE " + ColumnName + "LIKE" + pattern;
+
         try
         {
             PreparedStatement pre=DB_controller.prepareStatement(Query);
@@ -143,6 +145,7 @@ public class DB_controller {
         Attributes = "(" + Attributes + ")";
         Values = "(" + Values + ")";
         String Query = "INSERT INTO " + TableName + " " + Attributes + " VALUES " + Values + " ";
+        System.err.println(Query);
         try {
             PreparedStatement pre = DB_controller.prepareStatement(Query,Statement.RETURN_GENERATED_KEYS);
             pre.executeUpdate();
@@ -155,4 +158,8 @@ public class DB_controller {
         }
         return -1;
     }
+    
+    
+    
+    
 }

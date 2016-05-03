@@ -216,6 +216,7 @@ public class Branch {
         DB.Close();
         return Persatage;
    }
+   
    //Sala7
    public ArrayList <Bill_inf> Show_accounting()
    {   
@@ -270,22 +271,24 @@ public class Branch {
     DB.Connect();
     int Gender_ID;
     ResultSet result=DB.Select("*","user","Type_ID=1 Or Type_ID=2 Or Type_ID=3 Or Type_ID=4");
+       
     int USer_ID=-1;
         try 
         {
             while(result.next())
-            {
+            {  
                 Employee Em=new Employee();
                 USer_ID=result.getInt("User_ID");
                 Em.setID(USer_ID);
                 Em.setAdditional_data(S.Get_Option_Values_OF_USER(USer_ID));
                 Gender_ID=result.getInt("Gender");
                 Em.setF_name(result.getString("Fname"));
+                Em.SetMyBranchID(getId());
                 Em.setL_name(result.getString("Lname"));
                 Em.setEmail(result.getString("Email"));
                 Em.setPassword(result.getString("Password"));
                 Em.setType_id(result.getInt("Type_ID"));
-                Em.setBlock(result.getInt("Block"));
+                // Em.setBlock(result.getInt("Block"));
                 Em.setPhones(Ser.Get_User_Phone(USer_ID));
                 Em.setAddresses(Ser.Get_User_Address(USer_ID));
                 if(Gender_ID==1)
@@ -298,10 +301,12 @@ public class Branch {
                 }
                 E.add(Em);
             }
+         return E;
         }
         catch(Exception Er)
         {
             System.out.println("Error in Show Employee");
+            Er.printStackTrace();
         }
         return null;
    }
@@ -336,7 +341,7 @@ public class Branch {
    {
         try
        {
-           System_manage s =System_manage.Get_System_manage();
+            System_manage s =System_manage.Get_System_manage();
             DB_controller.Get_DB_controller().Connect();
             HashMap<String,String> Mass=new HashMap<>(10);
             int id=s.Get_date_iD();
@@ -348,12 +353,20 @@ public class Branch {
             Mass.put("Time", time);
             Mass.put("Parent_id", "0");
             int idmass= DB_controller.Get_DB_controller().Insert("message",Mass);
-            Mass=new  HashMap<String, String>(5);
-            Mass.put("Reciever_id", String.valueOf(message.getReciver()));
-            Mass.put("Message_id", String.valueOf(idmass));
-            Mass.put("State_id", "5");
-            DB_controller.Get_DB_controller().Insert("recieved", Mass);
-       }//END Try
+            ArrayList<Employee> Employee_ID=Show_employee();// error hena !! we  menf34 close fee kol function
+            for(Employee emp:Employee_ID)
+            {    
+                if(emp.getType_id()!=0||emp.getType_id()!=1)
+                {
+                    Mass=new  HashMap<String, String>(5);
+                    Mass.put("Reciever_id", String.valueOf(emp.getID()));
+                    Mass.put("Message_id", String.valueOf(idmass));
+                    Mass.put("State_id", "5");
+                    DB_controller.Get_DB_controller().Insert("recieved", Mass);
+                  emp.Add_massage(message,2);
+                }
+            }
+        }//END Try
        catch(Exception ex)
        {
            ex.printStackTrace();

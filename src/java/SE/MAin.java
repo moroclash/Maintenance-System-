@@ -6,6 +6,7 @@
 package SE;
 
 import Data_access.DB_controller;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,18 +14,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-
 /**
  *
  * @author moahmed A.Radwan
  */
 public class MAin {
+    
+     
+    
     public static void main(String[] args) {
+
 
            String username = "mohamed@yahoo.com";
            String pass = "123456789";
@@ -110,5 +109,7 @@ public class MAin {
        
         }
  }
+
+ 
 
 

@@ -70,6 +70,7 @@ public class Message_Controller {
         }
         return null;
     }
+    
      //Mohamed RAdwan    
     public boolean Send_Message(General_massge message) {
        
@@ -88,7 +89,13 @@ public class Message_Controller {
             Mass.put("Time", time);
             Mass.put("Parent_id", "0");
             int idmass= DB.Insert("message",Mass);
+
             Mass=new  HashMap<>(5);
+
+         
+                    System.err.println(idmass);
+            Mass=new  HashMap<String, String>(5);
+
             Mass.put("Reciever_id", String.valueOf(message.getReciver()));
             Mass.put("Message_id", String.valueOf(idmass));
             Mass.put("State_id", "5");

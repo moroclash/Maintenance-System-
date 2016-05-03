@@ -100,11 +100,13 @@ public  class Validations {
    public  boolean Is_passord(String Word)
    { //9 digit
        
+
         
        String s= "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$";
        pattern = Pattern.compile(s);
        matcher = pattern.matcher(Word);
       return matcher.matches();
+
    }
    
    public  boolean Is_date(String Word)
