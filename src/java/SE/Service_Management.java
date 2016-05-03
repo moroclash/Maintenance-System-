@@ -61,7 +61,7 @@ public class Service_Management {
             
            
            ResultSet result2 ;
-           result2 = DB.Select("Technical_id", "order_flixer", "Device_of_this_request = " + device_request);
+           result2 = DB.Select("Technical_id", "Order_fixer", "Device_of_this_request = " + device_request);
            while(result2.next())
            {
               Technical_id = result2.getInt("Technical_id");
