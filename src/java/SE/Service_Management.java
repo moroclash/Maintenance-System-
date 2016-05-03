@@ -382,7 +382,7 @@ public class Service_Management {
    
    
   //omar 0_0
-  private int Employee_order_numper(ArrayList<Integer> orders,int Employee_id)
+  public int Employee_order_numper(ArrayList<Integer> Device_of_this_requests,int Employee_id)
   {
       int num = 0;
       try {
@@ -390,12 +390,12 @@ public class Service_Management {
             Db.Connect();
             ResultSet res ;
             int id = 0 ;
-            for(int x : orders)
+            for(int x : Device_of_this_requests)
             {
-                res = Db.Select("Technical_id", "device_of_this_request", "Order_fexable_id="+x);
+                res = Db.Select("*", "Order_fixer", "Device_of_this_request_id = "+x);
                 while(res.next())
                 {
-                    id = res.getInt("Technical_id");
+                    id = res.getInt("Technical_id‏");
                     if(Employee_id == id)
                         num++;
                 }
@@ -422,10 +422,10 @@ public class Service_Management {
                 ResultSet res2 =Db.Select("Request_id", "time_chooser", "Time_chooser_id="+x+" and Times="+Date);
                 while (res2.next()) {                    
                     request_id = res2.getInt("Request_id");
-                    ResultSet res3 = Db.Select("Order_fixable_id", "order_fixable", "Requist_id="+request_id);
+                    ResultSet res3 = Db.Select("Device_of_this_request_id", "device_of_this_request", "Request_id="+request_id);
                     while(res3.next())
                     {
-                        aa.add(res3.getInt("Order_fixable_id"));
+                        aa.add(res3.getInt("Device_of_this_request_id"));
                     }
                 }
             }
@@ -459,25 +459,34 @@ public class Service_Management {
     
     
     
-    
+    //omar
     public boolean Accept_Request(int Request_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
         Request req = this.Request_buffer.get(Request_id);
         this.Request_buffer.remove(Request_id);
         Db.Update("request", "State_id=1", "Request_id="+req.getID());
-        Get_Three_Date(req);
+        Time_chooser times = Get_Three_Date(req);
+        HashMap<String,String> H = new HashMap<>();
+        for(String date : times.getTime())
+        {
+            H.clear();
+            H.put("Request_id", Integer.toString(Request_id));
+            H.put("Times", date);
+            Db.Insert("time_chooser", H);
+        }
         return true;
     }
 
     
-    
+        
     
     
     public Bill_inf Add_Componenet(ArrayList<Component> Component, Bill bill, String Technical_description) {
         return null;
     }
 
+    
     //Emad
     public ArrayList<Order> Show_My_Order(int Employee_id) {
         ArrayList<Order> or = new ArrayList<Order>();

@@ -40,9 +40,33 @@ public class Customer extends User {
         return null;
     }
 
+    
+    
+   //omar
     public ArrayList<Order> show_my_order() {
+        try {
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Service_Management sr = Service_Management.Get_Serive_Management();
+            ArrayList<Order> or = new ArrayList<>();
+            Db.Connect();
+            ResultSet res = Db.Select("Request_id","request", "User_id="+getID()+" and not State_id=5");
+            int req = 0 ;
+            while (res.next()) {
+                req = res.getInt("Request_id");
+                ResultSet res2 = Db.Select("Order_fixable_id", "order_fixable", "Requist_id="+req);
+                while(res2.next())
+                {
+                    or.add(sr.Search_order(res2.getInt("Order_fixable_id")));
+                }
+            }
+            return or;
+        } catch (SQLException ex) {
+            Logger.getLogger(Customer.class.getName()).log(Level.SEVERE, null, ex);
+        }
         return null;
     }
+    
+    
 //Emad
     public boolean forget_My_Password(String email, int Sequirty_question_id, String Answer) {
         DB_controller DB = DB_controller.Get_DB_controller();
