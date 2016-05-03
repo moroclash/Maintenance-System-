@@ -5,9 +5,6 @@
  */
 package SE;
 import com.sun.mail.smtp.SMTPTransport;
-import java.security.Security;
-import java.util.Date;
-import java.util.Properties;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -52,7 +49,7 @@ public class Message_Controller {
 
         DB.Connect();
         ResultSet result = DB.Select("*", "Message_type", "Name='Complain'");
-        ArrayList<Complain> C = new ArrayList<Complain>();
+        ArrayList<Complain> C = new ArrayList<>();
         int ID = 0;
         try {
             while (result.next()) {
@@ -92,9 +89,13 @@ public class Message_Controller {
             Mass.put("Time", time);
             Mass.put("Parent_id", "0");
             int idmass= DB.Insert("message",Mass);
+
+            Mass=new  HashMap<>(5);
+
          
                     System.err.println(idmass);
             Mass=new  HashMap<String, String>(5);
+
             Mass.put("Reciever_id", String.valueOf(message.getReciver()));
             Mass.put("Message_id", String.valueOf(idmass));
             Mass.put("State_id", "5");
@@ -155,7 +156,7 @@ public class Message_Controller {
             DB_controller DB = DB_controller.Get_DB_controller();
             DB.Connect();
             ResultSet res = DB.Select("*", "message", "Message_id="+Massage_id);
-            int type=0;
+            int type;
             while (res.next()) {
                 type = res.getInt("Type_id");
                 if(type == 1)

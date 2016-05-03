@@ -162,24 +162,7 @@ public abstract class User {
     public String getF_name() {
         return F_name;
     }
-
-    //Sala7
-    public boolean Update_user() {
-        System_manage m = System_manage.Get_System_manage();
-        DB_controller DB = DB_controller.Get_DB_controller();
-        DB.Connect();
-        
-            Employee emp = new Employee();
-            DB.Update(" user ", " Fname =" + emp.getF_name() + " Lname = " + emp.getL_name() + " Password = " + emp.getPassword()
-                    + " Email = " + emp.getEmail() + " gender = " + emp.getGander(), " User_id = " + ID);
-            
-        
-        DB.Close();
-        return true;
-    }
-    
-    
-    
+ 
     //omar 0_0
     public ArrayList<General_massge> Show_all_my_rescived_massage() {
         try {

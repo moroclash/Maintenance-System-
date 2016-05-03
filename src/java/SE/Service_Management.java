@@ -36,47 +36,57 @@ public class Service_Management {
 
     
     //sala7
-    private ArrayList<Integer> Get_Technical (int order_id)
+    public ArrayList<Integer> Get_Technical (int order_id)
     {
-       ArrayList<Integer> tech = null;
+       ArrayList<Integer> tech = new ArrayList<>();
        DB_controller DB=DB_controller.Get_DB_controller();
-       DB.Close();
-       ResultSet result = null;
-       
-       result = DB.Select(" Technical_id ", " device_of_this_request ", " Order_fixable_id = " + order_id);
-        try {
+       DB.Connect();
+     
+       int request_id =-1; 
+       int device_request  = -1;
+       int Technical_id = -1;
+       try {
+           ResultSet result ;
+           result = DB.Select(" Requist_id ", " order_fixable ", " Order_fixable_id = " + order_id);
             while(result.next())
             {
-               tech.add(result.getInt("Technical_id"));
+               request_id = result.getInt("Requist_id");
+             
             }
-            DB.Close();
-            return tech;
+           ResultSet result1 ;
+           result1 = DB.Select("Device_of_this_request_id", "device_of_this_request", "Request_id = " + request_id);
+           while(result1.next())
+           {
+             device_request = result1.getInt("Device_of_this_request_id");
+            
+           
+           ResultSet result2 ;
+           result2 = DB.Select("Technical_id", "Order_fixer", "Device_of_this_request = " + device_request);
+           while(result2.next())
+           {
+              Technical_id = result2.getInt("Technical_id");
+              
+              tech.add(Technical_id);
+           }
+           }
+           return tech;
         }
         catch (SQLException ex) {
             ex.printStackTrace();
-            DB.Close();
+           
             return null;
         }
     }
     
 
-     //Sala7
-
-    public void Return_order(int Order_id, String Technical_description) {
-
-        DB_controller DB=DB_controller.Get_DB_controller();
-        DB.Update("order_fixable ", " State_id = 3 ," +  "Technical_description = '" + Technical_description + "'", " Order_fixable_id = " + Order_id);
-
-        DB.Close();
-    }
-    
+ 
     
      //sala7
       public Order Search_order(int Order_id)
       {
          DB_controller DB=DB_controller.Get_DB_controller();
-         DB.Close();
-         ResultSet result = null;
+         DB.Connect();
+         ResultSet result ;
          Order order = new Order();
          result = DB.Select(" * ", " order_fixable ", " Order_fixable_id = " + Order_id);
         try {
@@ -89,15 +99,17 @@ public class Service_Management {
               order.setDate_end_id(result.getInt("recept_Date_id"));
               order.setMy_service_id(result.getInt("Service_id"));
               order.setDate_start_id(result.getInt("State_id"));
-              Get_Technical(Order_id);
+              ArrayList <Integer> container = Get_Technical(Order_id);
+              order.setMy_Technical_id(container);
             }
-            DB.Close();
-            return order;
+           
         } catch (SQLException ex) {
             ex.printStackTrace();
-            DB.Close();
+           DB.Close();
             return null;
         }
+            DB.Close();
+            return order;
       }
     
 
@@ -140,14 +152,31 @@ public class Service_Management {
         DB.Insert("complains_order", H);
     }
     
-    
-    
-    
-    
-    
-    
-    
-    
+
+    //sala7
+     public ArrayList<String> get_branch_phones( int branch_id ) {
+         
+         ArrayList <String> phone = new ArrayList <String>();
+         DB_controller DB = DB_controller.Get_DB_controller();
+         DB.Connect();
+         
+         ResultSet result = null;
+         result = DB.Select(" phone ", " branch_phone ", " Branch_id = " + branch_id);
+         String Phone = "";
+         try {
+            while(result.next())
+            {
+               phone.add(result.getString("phone"));
+            }
+            return phone;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            DB.Close();
+        }
+        DB.Close();
+        return null;
+     }
+
     //omar 0_0
     public Complain Show_Complain(int Coplain_num_in_Bufer,int Reciver_id)
     {
@@ -863,14 +892,13 @@ public class Service_Management {
             while (res.next()) {
                 m.put(res.getInt("Phone_id"), res.getString("phone"));
             }
-           // DB_controller.Get_DB_controller().Close();
+
             return m;
 
         } catch (SQLException ex) {
-            Logger.getLogger(System_manage.class
-                    .getName()).log(Level.SEVERE, null, ex);
+            
         }
-       // DB_controller.Get_DB_controller().Close();
+
         return null;
     }
 

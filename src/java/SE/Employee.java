@@ -31,7 +31,7 @@ public class Employee extends User
        
         DB_controller DB = DB_controller.Get_DB_controller();
         DB.Connect();
-        ResultSet result = null;
+        ResultSet result ;
         System_manage s = System_manage.Get_System_manage();
         Employee employee ;
         int id = -1;
@@ -42,7 +42,7 @@ public class Employee extends User
             {
               employee_id = result.getInt("User_id");
            }
-            employee = (Employee) s.Search_user_by_id(employee_id);
+              employee = (Employee) s.Search_user_by_id(employee_id);
               setF_name(employee.getF_name());
               setL_name(employee.getL_name());
               setEmail(employee.getEmail());
@@ -53,27 +53,27 @@ public class Employee extends User
               setPhones(employee.getPhones());
               setAddresses(employee.getAddresses());
               
-              result = DB.Select(" Type_user_id ", " user ", " User_id = " + employee_id);
+              result = DB.Select(" Type_id ", " user ", " User_id = " + employee_id);
               while(result.next())
               {
-                 id = result.getInt("Type_user_id");
+                 id = result.getInt("Type_id");
               }
-              if(id == 1)
-              {
-                  setAdditional_data(employee.getAdditional_data());
-              }
-              else if(id == 2)
-              {
-                 setAdditional_data(employee.getAdditional_data()); 
-              }
-              else if (id == 3)
-              {
-                  setAdditional_data(employee.getAdditional_data());
-              }
-              else if(id == 4)
-              {
-                setAdditional_data(employee.getAdditional_data());  
-              }
+            switch (id) {
+                case 1:
+                    setAdditional_data(employee.getAdditional_data());
+                    break;
+                case 2:
+                    setAdditional_data(employee.getAdditional_data());
+                    break;
+                case 3:
+                    setAdditional_data(employee.getAdditional_data());
+                    break;
+                case 4:
+                    setAdditional_data(employee.getAdditional_data());
+                    break;
+                default:
+                    break;
+            }
         } catch (SQLException ex) {
               ex.printStackTrace();
               DB.Close();

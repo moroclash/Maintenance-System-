@@ -19,6 +19,72 @@ public class Branch {
     private ArrayList<String> phones;
     private ArrayList <Integer> Subscriber;
     private String notfy_message;
+
+    public int getManager_id() {
+        return Manager_id;
+    }
+
+    public void setNotfy_message(String notfy_message) {
+        this.notfy_message = notfy_message;
+    }
+
+    public String getNotfy_message() {
+        return notfy_message;
+    }
+    
+    //sala7
+    public String Get_notify (int branch_id)
+    {
+        DB_controller DB=DB_controller.Get_DB_controller();
+        DB.Connect();
+        ResultSet result = null;
+        result = DB.Select("Content", "message", "sender_id = " + branch_id + " and " + "Type_id = 3");
+        String notify = "";
+        try {
+            while(result.next())
+            {
+               notify = result.getString("Content");
+            }
+            return notify;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return "";
+        }
+        
+    }
+    
+   
+    //sala7
+    public ArrayList <Integer> Get_Subscriber(int branch_id)
+    {
+        ArrayList <Integer> sub = new ArrayList<>();
+        
+        DB_controller DB=DB_controller.Get_DB_controller();
+        DB.Connect();
+        ResultSet result = null;
+        result = DB.Select("User_id", "Subscriber", "Branch_id = " + branch_id);
+        try {
+            while(result.next())
+            {
+              int subscribe = result.getInt("User_id");
+              sub.add(subscribe);
+            }
+            return sub;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+      
+    }
+
+    public void setSubscriber(ArrayList<Integer> Subscriber) {
+        this.Subscriber = Subscriber;
+    }
+
+    public ArrayList<Integer> getSubscriber() {
+        return Subscriber;
+    }
+    
     
     public void setMnager_id(int Mnager_id){
         this.Manager_id = Mnager_id;
@@ -154,32 +220,38 @@ public class Branch {
    //Sala7
    public ArrayList <Bill_inf> Show_accounting()
    {   
-       ArrayList <Bill_inf> b = null;
+       ArrayList <Bill_inf> b = new ArrayList <>();
        Bill bill = new Bill();
+       System_manage syst = System_manage.Get_System_manage();
        Bill_inf bi_inf = new Bill_inf();
        Payment_Method pay = new Payment_Method();
        Spare_parts s = new Spare_parts();
        DB_controller DB = DB_controller.Get_DB_controller();
        DB.Connect();
-       ResultSet result = null;
-       
-       result = DB.Select(" * ", " bill ", " 1 ");
+       ResultSet result;
+       int bill_id = -1;
     
+       result = DB.Select(" * ", " bill ", " 1 ");
+       
        try {
             while (result.next())
             {
+             bill_id = result.getInt("BILL_id");
+                
              bill.setId(result.getInt("BILL_id"));
              bill.setCost(result.getDouble("Cost"));
              bill.setDate_id(result.getInt("Date_id"));
              bill.setMy_order(result.getInt("Order_id"));
              bill.setTime(result.getString("Time"));
-             pay.Get_payment_type_in_bill(result.getInt("BILL_id"));
-             bi_inf.Get_spare_parts(result.getInt("BILL_id"));
              bi_inf.setMy_bill(bill);
-             bi_inf.setPayment_Method_id(pay);
-           
+             int offer = bi_inf.Get_offer(bill_id);
+             bi_inf.setOffer(offer);
+             HashMap <Integer,String> sa = pay.Get_payment_type_in_bill(bill_id);
+             bi_inf.setPayment_method_info(sa);
+             ArrayList <Spare_parts> sa2 = syst.Get_spare_parts(bill_id);
+             bi_inf.setSpare_part(sa2);
              b.add(bi_inf);
-             
+            
             }
             return b;
         } catch (SQLException ex) {
