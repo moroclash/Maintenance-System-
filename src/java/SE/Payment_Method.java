@@ -15,43 +15,46 @@ import java.util.HashMap;
  */
 public class Payment_Method extends Component{
     
-    private HashMap <String , String > Payment_method_option;
+    private HashMap <Integer , String > Payment_method_option;
     private int method_id;
     
     //sala7
-    public HashMap <String,String> Get_payment_type_in_bill(int bill_id)
+    public HashMap <Integer,String> Get_payment_type_in_bill(int bill_id)
     {
         int Method_ID = -1;
          DB_controller DB = DB_controller.Get_DB_controller();
-
-        HashMap <String,String> H=new HashMap<String,String> ();
+         ResultSet result = null;
+         ResultSet result2 = null;
+        HashMap <Integer,String> H=new HashMap<Integer,String> ();
         DB.Connect();
-        ResultSet result=DB.Select(" Payment_method_id " ," bill "," BILL_id = "+ bill_id );
+       result=DB.Select("Payment_method_id" ,"bill","BILL_id = " + bill_id );
         try
         {
             while(result.next())
             {
-              Method_ID=result.getInt("Payment_method_id") ; 
+              Method_ID=result.getInt("Payment_method_id") ;
+                
             }
             
-            result=DB.Select("Methode", "Payment_methode " , "Payment_methode_id = " + Method_ID);
+            result2=DB.Select(" Methode ", " payment_methode " , " Payment_methode_id = " + Method_ID);
                
-            while(result.next())
+            while(result2.next())
                {
-                 H.put(result.getString("Payment_methode_id"),result.getString("Methode"));
-                 
+                String s =result2.getString("Methode");
+                H.put(Method_ID, s);
+                
                }
         }
         catch(Exception E)
         {
             E.printStackTrace();
-            DB.Close();
+            
         }
-        DB.Close();
+     
         return H;
     }
    //sala7 
-   public void push(String Key,String Value)
+   public void push(int Key,String Value)
    {
     this.Payment_method_option.put(Key, Value);
    }
@@ -64,12 +67,16 @@ public class Payment_Method extends Component{
         return method_id;
     }
 
-    public void setPayment_method_option(HashMap<String, String> Payment_method_option) {
+    public void setPayment_method_option(HashMap<Integer, String> Payment_method_option) {
         this.Payment_method_option = Payment_method_option;
     }
 
-    public HashMap<String, String> getPayment_method_option() {
+    public HashMap<Integer, String> getPayment_method_option() {
         return Payment_method_option;
     }
+
+    
+
+   
    
 }

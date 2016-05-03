@@ -45,7 +45,7 @@ public class DB_controller {
               if(DB_controller == null || DB_controller.isClosed())
               {
                 Class.forName("com.mysql.jdbc.Driver").newInstance();
-                DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/DB_phase2?zeroDateTimeBehavior=convertToNull", "root", "");
+                DB_controller = DriverManager.getConnection("jdbc:mysql://localhost:3306/maintenance?zeroDateTimeBehavior=convertToNull", "root", "");
                 System.out.println("Done");
               }
          } catch (Exception x) {
@@ -79,10 +79,10 @@ public class DB_controller {
         }
         return null;
     }
- 
+    
     //sala7
-    public  ResultSet Select_BY_Like_Statement(String FieldName, String TableName, String pattern) {
-        String Query="SELECT " +FieldName+ " FROM "+ TableName+ " WHERE " + FieldName + "LIKE" + pattern;
+    public  ResultSet Select_BY_Like_Statement(String FieldName, String TableName, String ColumnName, String pattern) {
+            String Query="SELECT " +FieldName+ " FROM "+ TableName+ " WHERE " + ColumnName + "LIKE" + pattern;
         try
         {
             PreparedStatement pre=DB_controller.prepareStatement(Query);

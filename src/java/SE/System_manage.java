@@ -52,14 +52,7 @@ public class System_manage {
         return b;
     }
     
-    
-    
-    
-    
-  
-    
-    
-  
+
     
     //sala7
     public Branch Search_branch(int Branch_id) {
@@ -76,6 +69,10 @@ public class System_manage {
               branch.setMnager_id(result.getInt("User_id"));
               branch.setPhones(sv.get_branch_phones(Branch_id));
               branch.setAddress_id(result.getInt("Address_id"));
+              ArrayList <Integer> sub = branch.Get_Subscriber(Branch_id);
+              branch.setSubscriber(sub);
+              branch.SetNotfy_message(branch.Get_notify(Branch_id));
+              
             }
          } catch (SQLException ex) {
             Db.Close();
@@ -85,13 +82,48 @@ public class System_manage {
         return branch;
     }
     
+    //sala7
+    public ArrayList <Spare_parts> Get_spare_parts(int bill_id)
+    {   
+       DB_controller DB = DB_controller.Get_DB_controller();
+       ArrayList <Spare_parts> spare = new ArrayList<>();
+       DB.Connect();
+       Spare_parts s = new Spare_parts();
+       ResultSet result = null;
+       
+       result = DB.Select(" Spare_parts_id ", " details_bill ", " Bill_id = " + bill_id);
+       int spare_id = -1;
+       try {
+           while(result.next())
+           {
+             spare_id = result.getInt("Spare_parts_id");
+           }
+          result = DB.Select(" * ", " spare_parts ", " Spare_parts_id = " + spare_id);
+          while(result.next())
+          {  
+             s.setName(result.getString("Name"));
+             s.setMony(result.getDouble("Cost"));
+             spare.add(s);
+          }
+          
+          return spare;
+       } 
+          
+       catch (SQLException ex) {
+          ex.printStackTrace();
+         
+          return null;
+       }
+       
+    }
+    
 
     //sala7
  
     public ArrayList<Employee> Show_all_employee(int Employee_type) {
        
         DB_controller DB = DB_controller.Get_DB_controller();
-        ArrayList<Employee> em = null ;
+        ArrayList<Employee> em = new ArrayList<>();
         DB.Connect();
         Employee employee = new Employee();
         Service_Management serv = Service_Management.Get_Serive_Management();
@@ -140,10 +172,11 @@ public class System_manage {
     
     
     //sala7
-    public Bill Search_bill(int Order_id) {
+    public Bill_inf Search_bill(int Order_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
         Bill bill = new Bill();
+        Bill_inf bill_inf = new Bill_inf();
         Payment_Method P = new Payment_Method();
         HashMap <String,String> H=new HashMap<String,String> ();
         int bill_ID=-1;
@@ -155,23 +188,24 @@ public class System_manage {
                bill.setCost(result.getDouble("Cost"));
                bill.setMy_order(result.getInt("Order_id"));
                bill.setTime(result.getString("Time"));
+               bill_inf.setMy_bill(bill);
                bill_ID = result.getInt("BILL_id");
-               P.Get_payment_type_in_bill(bill_ID);
+               HashMap <Integer , String > contain = P.Get_payment_type_in_bill(bill_ID);
+               bill_inf.setPayment_method_info(contain);
+       
             }
          
-               return bill;
-               
         } catch (SQLException ex) {
             ex.printStackTrace();
-            Db.Close();
+           
         }
-        return null;
+       return bill_inf;
     }
     
     
     
     
-    //sala7
+    //sala7 -_- 
     public Feedback Search_feedback(int Order_id) {
         Feedback feedback = new Feedback();
         DB_controller Db = DB_controller.Get_DB_controller();
@@ -200,7 +234,7 @@ public class System_manage {
     public void Add_User(User user) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
-        HashMap<String, String> U = new HashMap<String, String>();
+        HashMap<String, String> U = new HashMap<>();
         U.put("Fname", user.getF_name());
         U.put("Lname", user.getL_name());
         U.put("Email", user.getEmail());
@@ -220,23 +254,33 @@ public class System_manage {
        String S;
        int Type_ID=-1;
        try { 
-       ResultSet result=Db.Select("Type_ID","User","User_ID="+User_id);
+       ResultSet result=Db.Select("Type_ID","user","User_id="+User_id);
+       while(result.next())
+       {
        Type_ID=result.getInt("Type_ID");
-        ResultSet result2 = Db.Select("*", "user", "User_ID=" + User_id);
-        User U=null;
+           System.out.println(Type_ID);
+       }
+        User U;
         if(Type_ID==5)
+        {
             U=new Customer();
-        else U=new Employee();
+        }
+        else
+        {
+         U=new Employee();            
+        }
+        U.setType_id(Type_ID);
+        ResultSet result2 = Db.Select("*", "user", "User_ID=" + User_id);        
            while (result2.next()) {
-               U.setF_name(result.getString("FNAME"));
-               U.setL_name(result.getString("LNAME"));
-               U.setEmail(result.getString("Email"));
-               U.setGander(result.getString("GENDER"));
-               U.setPassword(result.getString("Password"));
+               U.setF_name(result2.getString("FNAME"));
+               U.setL_name(result2.getString("LNAME"));
+               U.setEmail(result2.getString("Email"));
+               U.setGander(result2.getString("GENDER"));
+               U.setPassword(result2.getString("Password"));
            }
-           U.setAdditional_data(Get_Option_Values_OF_USER(User_id));
+          /* U.setAdditional_data(Get_Option_Values_OF_USER(User_id));
            U.setPhones(s.Get_User_Phone(User_id));
-           U.setAddresses(s.Get_User_Address(User_id));
+           U.setAddresses(s.Get_User_Address(User_id));*/
            return U;
        } catch (Exception e) {
            System.out.println("Error in Search User By ID"+e);
@@ -410,7 +454,7 @@ public class System_manage {
     {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
-        HashMap<String,String> H=new HashMap<String,String>();
+        HashMap<String,String> H=new HashMap<>();
         H.put("Name", Name);
         H.put("parent_id",Integer.toString(Parent_id));
         return Db.Insert("type_user", H);
@@ -663,13 +707,11 @@ public class System_manage {
         
      return 0;
     }
-    
-    
-    
-    public boolean Make_History(History history)
+ 
+    public boolean Make_History(History history) 
     {
         return true;
-    };
+    }
     
     
 }
