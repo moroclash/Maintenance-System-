@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.5.1
+-- version 4.5.2
 -- http://www.phpmyadmin.net
 --
--- Host: 127.0.0.1
--- Generation Time: May 01, 2016 at 05:03 AM
--- Server version: 10.1.8-MariaDB
--- PHP Version: 5.6.14
+-- Host: localhost
+-- Generation Time: May 03, 2016 at 08:48 PM
+-- Server version: 10.1.10-MariaDB
+-- PHP Version: 5.5.33
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `maintenance`
+-- Database: `DP_phase2`
 --
 
 -- --------------------------------------------------------
@@ -38,15 +38,24 @@ CREATE TABLE `address` (
 
 INSERT INTO `address` (`Address_id`, `Address`, `Parent_id`) VALUES
 (1, 'Egypt', 0),
-(2, 'Swesra', 0),
 (3, 'Cairo', 1),
 (4, 'Giza', 1),
-(5, 'Lenoio', 2),
+(5, 'Empapa', 4),
 (6, 'Wraak', 4),
 (7, 'Zmalek', 3),
-(13, 'moksh', 7),
-(14, '66', 13),
-(15, 'sdas', 7);
+(8, 'Msdk', 7),
+(9, '66', 8),
+(10, 'stFore', 5),
+(16, '108', 10),
+(17, 'ELSook', 6),
+(18, '22', 17),
+(19, 'Sa3ed', 5),
+(20, '12', 19),
+(21, 'ELMaadi', 3),
+(22, 'soria', 21),
+(23, '121', 22),
+(24, 'sodaan', 7),
+(25, '21', 24);
 
 -- --------------------------------------------------------
 
@@ -60,7 +69,7 @@ CREATE TABLE `bill` (
   `Cost` double NOT NULL,
   `Payment_method_id` int(11) NOT NULL,
   `Order_id` int(11) NOT NULL,
-  `Time` time NOT NULL
+  `Time` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -69,7 +78,12 @@ CREATE TABLE `bill` (
 
 INSERT INTO `bill` (`BILL_id`, `Date_id`, `Cost`, `Payment_method_id`, `Order_id`, `Time`) VALUES
 (1, 1, 5454, 1, 1, '05:16:10'),
-(2, 2, 24, 2, 2, '05:17:17');
+(2, 2, 24, 2, 2, '05:17:17'),
+(3, 3, 15648, 1, 5, '05:16:10'),
+(4, 4, 4848, 2, 3, '05:17:17'),
+(5, 6, 4848, 1, 2, '2:37:48'),
+(6, 7, 49845, 1, 8, '12:38:47'),
+(7, 9, 1646, 2, 2, '15:48:12');
 
 -- --------------------------------------------------------
 
@@ -79,7 +93,7 @@ INSERT INTO `bill` (`BILL_id`, `Date_id`, `Cost`, `Payment_method_id`, `Order_id
 
 CREATE TABLE `branch` (
   `Branch_id` int(11) NOT NULL,
-  `User_id` varchar(50) NOT NULL,
+  `User_id` int(11) NOT NULL,
   `Address_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -88,8 +102,8 @@ CREATE TABLE `branch` (
 --
 
 INSERT INTO `branch` (`Branch_id`, `User_id`, `Address_id`) VALUES
-(1, '1', 1),
-(2, '2', 2);
+(1, 18, 20),
+(3, 2, 16);
 
 -- --------------------------------------------------------
 
@@ -98,7 +112,7 @@ INSERT INTO `branch` (`Branch_id`, `User_id`, `Address_id`) VALUES
 --
 
 CREATE TABLE `branch_phone` (
-  `Branch_phone` int(11) NOT NULL,
+  `Branch_phone_id` int(11) NOT NULL,
   `Branch_id` int(11) NOT NULL,
   `phone` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -107,7 +121,7 @@ CREATE TABLE `branch_phone` (
 -- Dumping data for table `branch_phone`
 --
 
-INSERT INTO `branch_phone` (`Branch_phone`, `Branch_id`, `phone`) VALUES
+INSERT INTO `branch_phone` (`Branch_phone_id`, `Branch_id`, `phone`) VALUES
 (1, 1, 10187458),
 (2, 2, 12548798);
 
@@ -129,7 +143,25 @@ CREATE TABLE `company_have_device` (
 
 INSERT INTO `company_have_device` (`Company_have_device_id`, `Main_factor_id`, `Device_type_id`) VALUES
 (1, 1, 1),
-(2, 2, 2);
+(2, 2, 2),
+(3, 3, 3),
+(4, 4, 3),
+(5, 5, 3),
+(6, 6, 3),
+(7, 7, 3),
+(8, 8, 3),
+(9, 9, 3),
+(10, 10, 3),
+(11, 11, 3),
+(12, 2, 1),
+(13, 5, 1),
+(14, 6, 1),
+(15, 9, 1),
+(16, 10, 1),
+(17, 11, 1),
+(18, 6, 2),
+(19, 10, 2),
+(20, 5, 4);
 
 -- --------------------------------------------------------
 
@@ -148,7 +180,12 @@ CREATE TABLE `complains_order` (
 --
 
 INSERT INTO `complains_order` (`Complains_order_id`, `Message_id`, `Order_id`) VALUES
-(1, 2, 1);
+(1, 2, 1),
+(2, 11, 3),
+(3, 12, 4),
+(4, 13, 5),
+(5, 14, 6),
+(6, 15, 7);
 
 -- --------------------------------------------------------
 
@@ -158,7 +195,7 @@ INSERT INTO `complains_order` (`Complains_order_id`, `Message_id`, `Order_id`) V
 
 CREATE TABLE `date` (
   `Date_id` int(11) NOT NULL,
-  `Date` date NOT NULL
+  `Date` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -167,7 +204,18 @@ CREATE TABLE `date` (
 
 INSERT INTO `date` (`Date_id`, `Date`) VALUES
 (1, '2016-04-11'),
-(2, '2016-04-07');
+(2, '2016-04-07'),
+(3, '2016-04-06'),
+(4, '2016-05-07'),
+(5, '2016-05-08'),
+(6, '2016-05-09'),
+(7, '2016-05-10'),
+(8, '2016-05-11'),
+(11, '2016-05-12'),
+(12, '2016-06-11'),
+(13, '2016-07-12'),
+(14, '2016-08-10'),
+(15, '2016-03-05');
 
 -- --------------------------------------------------------
 
@@ -187,7 +235,17 @@ CREATE TABLE `description` (
 
 INSERT INTO `description` (`Description_id`, `Device_id`, `Description`) VALUES
 (1, 1, 'hjghghhjhhghghghghhvyyv y'),
-(2, 2, 'yhghjkrtyutgrsdtfyguyikokuh');
+(2, 2, 'yhghjkrtyutgrsdtfyguyikokuh'),
+(3, 3, 'sdfafewfewf'),
+(4, 4, 'asklfnkjfqewjkfe'),
+(5, 5, 'ewflweflkwenflkew'),
+(6, 6, 'asdlmasdoeawifnewf'),
+(7, 7, 'asdhyuvwqdhbwqjdwqhjd'),
+(8, 8, 'qwdhjqwvdyqwvddw'),
+(9, 9, 'wqdbqydgwgdd'),
+(10, 10, 'qwdhqwdyuwqgydug'),
+(11, 11, 'qwdbgddywvyuwq'),
+(12, 12, 'qwdhjqwgdwdwqd');
 
 -- --------------------------------------------------------
 
@@ -200,6 +258,19 @@ CREATE TABLE `details_bill` (
   `Spare_parts_id` int(11) NOT NULL,
   `Bill_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `details_bill`
+--
+
+INSERT INTO `details_bill` (`Details_bill_id`, `Spare_parts_id`, `Bill_id`) VALUES
+(1, 3, 1),
+(2, 5, 2),
+(3, 1, 3),
+(4, 2, 4),
+(5, 4, 5),
+(6, 7, 6),
+(7, 8, 7);
 
 -- --------------------------------------------------------
 
@@ -302,7 +373,14 @@ CREATE TABLE `feedback` (
 
 INSERT INTO `feedback` (`Feedback_id`, `Order_id`, `System_quality`, `Service_quality`, `Branch_id`) VALUES
 (1, 1, 5, 3, 0),
-(2, 2, 7, 4, 0);
+(2, 2, 7, 4, 0),
+(3, 3, 8, 4, 1),
+(4, 4, 9, 7, 2),
+(5, 5, 9, 8, 1),
+(6, 6, 7, 8, 2),
+(7, 7, 8, 9, 1),
+(8, 8, 8, 8, 2),
+(9, 9, 9, 9, 1);
 
 -- --------------------------------------------------------
 
@@ -332,7 +410,7 @@ INSERT INTO `filed_html` (`Filed_html_id`, `Html`) VALUES
 CREATE TABLE `links` (
   `Links_id` int(11) NOT NULL,
   `Function_name` varchar(50) NOT NULL,
-  `Physical_name` varchar(50) NOT NULL
+  `Physical_name` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -396,7 +474,16 @@ CREATE TABLE `main_factor` (
 
 INSERT INTO `main_factor` (`Main_factor_id`, `name`) VALUES
 (1, 'toshiba'),
-(2, 'samsung');
+(2, 'samsung'),
+(3, 'hawaii'),
+(4, 'Nokia'),
+(5, 'apple'),
+(6, 'LG'),
+(7, 'G-tide'),
+(8, 'Hisence'),
+(9, 'Lenovo'),
+(10, 'HP'),
+(11, 'Acer');
 
 -- --------------------------------------------------------
 
@@ -408,8 +495,8 @@ CREATE TABLE `message` (
   `Message_id` int(11) NOT NULL,
   `sender_id` int(11) NOT NULL,
   `Date_id` int(11) NOT NULL,
-  `Time` varchar(10) NOT NULL,
-  `Content` varchar(50) NOT NULL,
+  `Time` varchar(30) NOT NULL,
+  `Content` text NOT NULL,
   `Type_id` int(11) NOT NULL,
   `Parent_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -423,7 +510,17 @@ INSERT INTO `message` (`Message_id`, `sender_id`, `Date_id`, `Time`, `Content`, 
 (2, 1, 1, '05:30:21', 'gfhjjkjjhhgfdgfrthyjukjh', 1, 0),
 (3, 2, 2, '12:36:36', '2', 2, 0),
 (4, 1, 2, '12:25', 'msajdlaskdjlkjldkjalskdjl', 3, 2),
-(5, 1, 2, '12:44', 'dasdkjlkasjdkl', 3, 2);
+(5, 1, 2, '12:44', 'dasdkjlkasjdkl', 3, 2),
+(11, 4, 7, '18:44:14', 'this is my complain', 1, 0),
+(12, 8, 2, '12:46:17', 'this is my complain yaaaaad', 1, 0),
+(13, 4, 1, '12:47:26', 'this is my complain yaaaaad msh ha2olaak :)', 1, 0),
+(14, 6, 6, '14:52:27', 'bs hya mo4kla kbera', 1, 0),
+(15, 4, 8, '12:45:46', 'bs brdo msh ha2olak :)', 1, 0),
+(16, 6, 8, '17:15:13', 'de genealllllll ', 2, 0),
+(17, 8, 7, '17:56:21', 'w de kamaaaan ', 2, 0),
+(18, 2, 9, '14:48:14', 'w 2nt 3amel 2h delwa2ty', 2, 0),
+(19, 9, 3, '17:17', 'da b2a notify ', 4, 0),
+(20, 10, 10, '16:45', 'ya3ny type id 4', 4, 0);
 
 -- --------------------------------------------------------
 
@@ -442,7 +539,9 @@ CREATE TABLE `message_type` (
 
 INSERT INTO `message_type` (`Message_type_id`, `Name`) VALUES
 (1, 'Complain'),
-(2, 'General');
+(2, 'General'),
+(3, 'comments'),
+(4, 'notify');
 
 -- --------------------------------------------------------
 
@@ -486,7 +585,7 @@ CREATE TABLE `order_fixable` (
   `Order_fixable_id` int(11) NOT NULL,
   `Requist_id` int(11) NOT NULL,
   `Date_start_id` int(11) NOT NULL,
-  `Technical_description` int(11) NOT NULL,
+  `Technical_description` text NOT NULL,
   `Service_id` int(11) NOT NULL,
   `State_id` int(11) NOT NULL,
   `recept_Date_id` int(11) NOT NULL
@@ -497,8 +596,20 @@ CREATE TABLE `order_fixable` (
 --
 
 INSERT INTO `order_fixable` (`Order_fixable_id`, `Requist_id`, `Date_start_id`, `Technical_description`, `Service_id`, `State_id`, `recept_Date_id`) VALUES
-(1, 1, 1, 1, 1, 1, 1),
-(2, 2, 2, 2, 2, 2, 2);
+(1, 4, 1, 'Error in Motor', 1, 1, 1),
+(2, 6, 2, 'Fix fan', 2, 2, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `order_fixer`
+--
+
+CREATE TABLE `order_fixer` (
+  `Technical_id` int(11) NOT NULL,
+  `Device_of_this_request_id` int(11) NOT NULL,
+  `order_flixer_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -549,7 +660,7 @@ INSERT INTO `pages_selected_option` (`Pages_selected_option_id`, `Pages_option_i
 
 CREATE TABLE `payment_methode` (
   `Payment_methode_id` int(11) NOT NULL,
-  `Methode` text NOT NULL
+  `Methode` varchar(50) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
@@ -663,7 +774,14 @@ CREATE TABLE `recieved` (
 
 INSERT INTO `recieved` (`recieved_id`, `Reciever_id`, `Message_id`, `State_id`) VALUES
 (1, 1, 1, 3),
-(2, 2, 2, 2);
+(2, 2, 2, 2),
+(3, 2, -1, 5),
+(4, 2, -1, 5),
+(5, 2, -1, 5),
+(6, 2, -1, 5),
+(7, 2, -1, 5),
+(8, 2, -1, 5),
+(9, 2, -1, 5);
 
 -- --------------------------------------------------------
 
@@ -675,16 +793,21 @@ CREATE TABLE `request` (
   `Request_id` int(11) NOT NULL,
   `User_id` int(11) NOT NULL,
   `Date_id` int(11) NOT NULL,
-  `State_id` int(11) NOT NULL DEFAULT '5'
+  `State_id` int(11) NOT NULL DEFAULT '5',
+  `Address_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Dumping data for table `request`
 --
 
-INSERT INTO `request` (`Request_id`, `User_id`, `Date_id`, `State_id`) VALUES
-(1, 1, 1, 1),
-(1, 1, 1, 1);
+INSERT INTO `request` (`Request_id`, `User_id`, `Date_id`, `State_id`, `Address_id`) VALUES
+(1, 5, 2, 5, 25),
+(2, 19, 3, 5, 23),
+(3, 5, 4, 5, 16),
+(4, 5, 6, 11, 18),
+(5, 20, 9, 1, 9),
+(21, 2, 3, 11, 16);
 
 -- --------------------------------------------------------
 
@@ -703,7 +826,11 @@ CREATE TABLE `security_question` (
 
 INSERT INTO `security_question` (`Security_question_id`, `Question`) VALUES
 (1, 'waht is your favourite hopy?'),
-(2, 'how many times you do ?');
+(2, 'how many times you do ?'),
+(3, 'What is your favorite teacher ?'),
+(4, 'What is your favorite pet ?'),
+(5, 'what is your best food?'),
+(6, 'who is your Best Friend ?');
 
 -- --------------------------------------------------------
 
@@ -726,7 +853,7 @@ CREATE TABLE `selected_device_option_values` (
 
 CREATE TABLE `select_device_option` (
   `Select_device_option_id` int(11) NOT NULL,
-  `Sevice_type_id` int(11) NOT NULL,
+  `Device_type_id` int(11) NOT NULL,
   `device_option_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -734,7 +861,7 @@ CREATE TABLE `select_device_option` (
 -- Dumping data for table `select_device_option`
 --
 
-INSERT INTO `select_device_option` (`Select_device_option_id`, `Sevice_type_id`, `device_option_id`) VALUES
+INSERT INTO `select_device_option` (`Select_device_option_id`, `Device_type_id`, `device_option_id`) VALUES
 (1, 1, 1),
 (2, 2, 2);
 
@@ -746,9 +873,22 @@ INSERT INTO `select_device_option` (`Select_device_option_id`, `Sevice_type_id`,
 
 CREATE TABLE `spare_parts` (
   `Spare_parts_id` int(11) NOT NULL,
-  `Name` int(11) NOT NULL,
+  `Name` varchar(30) NOT NULL,
   `Cost` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `spare_parts`
+--
+
+INSERT INTO `spare_parts` (`Spare_parts_id`, `Name`, `Cost`) VALUES
+(1, 'Screaan', 50),
+(2, 'Cover', 20),
+(3, 'engine', 200),
+(4, 'Motor', 1000),
+(5, 'chaseh', 750),
+(6, 'remote', 120),
+(7, 'bnsa', 30);
 
 -- --------------------------------------------------------
 
@@ -774,7 +914,30 @@ INSERT INTO `state` (`State_id`, `State`) VALUES
 (6, 'Sender_delete_massage'),
 (7, 'Reciver_delete_massage'),
 (8, 'Commint'),
-(9, 'Cancel');
+(9, 'Cancel'),
+(10, 'reterned_order'),
+(11, 'Done_replied');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `subscribe`
+--
+
+CREATE TABLE `subscribe` (
+  `Subscribe_id` int(11) NOT NULL,
+  `Branch_id` int(11) NOT NULL,
+  `User_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `subscribe`
+--
+
+INSERT INTO `subscribe` (`Subscribe_id`, `Branch_id`, `User_id`) VALUES
+(1, 1, 5),
+(2, 1, 19),
+(3, 3, 20);
 
 -- --------------------------------------------------------
 
@@ -784,9 +947,16 @@ INSERT INTO `state` (`State_id`, `State`) VALUES
 
 CREATE TABLE `time_choosed` (
   `Time_choosed_id` int(11) NOT NULL,
-  `Choosed` varchar(10) NOT NULL,
-  `Time_chooser_id` int(11) NOT NULL
+  `Time_chooser_id` int(11) NOT NULL,
+  `Branch_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `time_choosed`
+--
+
+INSERT INTO `time_choosed` (`Time_choosed_id`, `Time_chooser_id`, `Branch_id`) VALUES
+(1, 5, 1);
 
 -- --------------------------------------------------------
 
@@ -796,9 +966,21 @@ CREATE TABLE `time_choosed` (
 
 CREATE TABLE `time_chooser` (
   `Time_chooser_id` int(11) NOT NULL,
-  `Order_fixable_id` int(11) NOT NULL,
+  `Request_id` int(11) NOT NULL,
   `Times` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `time_chooser`
+--
+
+INSERT INTO `time_chooser` (`Time_chooser_id`, `Request_id`, `Times`) VALUES
+(1, 5, '2016-08-9'),
+(2, 5, '2016-08-10'),
+(3, 5, '2016-08-10'),
+(4, 4, '2016-09-09'),
+(5, 4, '2016-09-10'),
+(6, 4, '2016-09-15');
 
 -- --------------------------------------------------------
 
@@ -821,7 +1003,8 @@ INSERT INTO `type` (`Type_id`, `Name`) VALUES
 (3, 'text'),
 (4, 'date'),
 (5, 'time'),
-(6, 'bolean');
+(6, 'bolean'),
+(7, 'double');
 
 -- --------------------------------------------------------
 
@@ -871,8 +1054,23 @@ CREATE TABLE `user` (
   `Password` varchar(20) NOT NULL,
   `Email` varchar(50) NOT NULL,
   `gender` int(11) NOT NULL,
-  `Type_id` int(11) NOT NULL
+  `Type_id` int(11) NOT NULL,
+  `Block` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`User_id`, `Fname`, `Lname`, `Password`, `Email`, `gender`, `Type_id`, `Block`) VALUES
+(1, 'Omar', 'Mohamed', 'moro12345', 'mmoroclash@gmail.com', 1, 1, 0),
+(2, 'Emad', 'Sayed', 'emad12345', 'emadsayedd@gmail.com', 1, 2, 0),
+(3, 'Rdwaan', 'mohamed', '2nas1234', 'mohamedelnagm211@gmail.com', 2, 4, 1),
+(4, 'ahmed', 'ayman', 'sad18987', 'ahyman@hotmail.com', 1, 3, 0),
+(5, 'mohamed', 'assem', '8sa9d1d9', 'mohasem@gmail.com', 1, 5, 0),
+(18, 'soso', 'Magy', 'soso1234', 'soso@gmail.com', 2, 2, 0),
+(19, 'samy', 'moha', 'asmy1234', 'asmy@gmail.com', 1, 5, 0),
+(20, 'tfeda', 'tfeda', 'tfeda1234', 'tfeda@gmail.com', 2, 5, 0);
 
 -- --------------------------------------------------------
 
@@ -891,8 +1089,13 @@ CREATE TABLE `user_address` (
 --
 
 INSERT INTO `user_address` (`User_address_id`, `Address_id`, `User_id`) VALUES
-(1, 14, 1),
-(2, 15, 1);
+(1, 9, 1),
+(2, 18, 1),
+(3, 16, 2),
+(4, 20, 3),
+(5, 23, 4),
+(8, 23, 5),
+(9, 25, 20);
 
 -- --------------------------------------------------------
 
@@ -911,8 +1114,15 @@ CREATE TABLE `user_option` (
 --
 
 INSERT INTO `user_option` (`User_option_id`, `Name`, `Type_id`) VALUES
-(1, 'SSN', 3),
-(2, 'Sequrity_Question', 6);
+(1, 'SSN', 7),
+(2, 'Sequrity_Question_id', 1),
+(3, 'Salary', 6),
+(4, 'Age', 1),
+(5, 'Branch_id', 1),
+(6, 'Answer_question', 4),
+(7, 'Birth_date', 3),
+(8, 'Work_hours', 1),
+(9, 'Reagion_id', 1);
 
 -- --------------------------------------------------------
 
@@ -926,6 +1136,36 @@ CREATE TABLE `user_selected_option` (
   `User_option_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+--
+-- Dumping data for table `user_selected_option`
+--
+
+INSERT INTO `user_selected_option` (`User_selected_option_id`, `User_type_id`, `User_option_id`) VALUES
+(1, 1, 3),
+(2, 1, 4),
+(3, 1, 1),
+(4, 2, 1),
+(5, 2, 3),
+(6, 2, 4),
+(7, 2, 5),
+(8, 2, 7),
+(9, 2, 8),
+(10, 3, 1),
+(11, 3, 3),
+(12, 3, 4),
+(13, 3, 5),
+(14, 3, 7),
+(15, 3, 8),
+(16, 4, 1),
+(17, 4, 3),
+(18, 4, 4),
+(19, 4, 5),
+(20, 4, 7),
+(21, 4, 8),
+(22, 4, 9),
+(23, 5, 2),
+(24, 5, 6);
+
 -- --------------------------------------------------------
 
 --
@@ -934,7 +1174,7 @@ CREATE TABLE `user_selected_option` (
 
 CREATE TABLE `user_selected_option_values` (
   `user_selected_option_values_id` int(11) NOT NULL,
-  `User_option_id` int(11) NOT NULL,
+  `User_selected_option_id` int(11) NOT NULL,
   `User_id` int(11) NOT NULL,
   `value` text NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -943,7 +1183,7 @@ CREATE TABLE `user_selected_option_values` (
 -- Dumping data for table `user_selected_option_values`
 --
 
-INSERT INTO `user_selected_option_values` (`user_selected_option_values_id`, `User_option_id`, `User_id`, `value`) VALUES
+INSERT INTO `user_selected_option_values` (`user_selected_option_values_id`, `User_selected_option_id`, `User_id`, `value`) VALUES
 (1, 1, 1, '2135465797'),
 (2, 2, 2, '8');
 
@@ -985,7 +1225,7 @@ ALTER TABLE `branch`
 -- Indexes for table `branch_phone`
 --
 ALTER TABLE `branch_phone`
-  ADD PRIMARY KEY (`Branch_phone`);
+  ADD PRIMARY KEY (`Branch_phone_id`);
 
 --
 -- Indexes for table `company_have_device`
@@ -1016,6 +1256,12 @@ ALTER TABLE `description`
 --
 ALTER TABLE `details_bill`
   ADD PRIMARY KEY (`Details_bill_id`);
+
+--
+-- Indexes for table `device`
+--
+ALTER TABLE `device`
+  ADD PRIMARY KEY (`Device_id`);
 
 --
 -- Indexes for table `device_of_this_request`
@@ -1108,6 +1354,12 @@ ALTER TABLE `order_fixable`
   ADD PRIMARY KEY (`Order_fixable_id`);
 
 --
+-- Indexes for table `order_fixer`
+--
+ALTER TABLE `order_fixer`
+  ADD PRIMARY KEY (`order_flixer_id`);
+
+--
 -- Indexes for table `pages_option`
 --
 ALTER TABLE `pages_option`
@@ -1156,6 +1408,12 @@ ALTER TABLE `recieved`
   ADD PRIMARY KEY (`recieved_id`);
 
 --
+-- Indexes for table `request`
+--
+ALTER TABLE `request`
+  ADD PRIMARY KEY (`Request_id`);
+
+--
 -- Indexes for table `security_question`
 --
 ALTER TABLE `security_question`
@@ -1184,6 +1442,12 @@ ALTER TABLE `spare_parts`
 --
 ALTER TABLE `state`
   ADD PRIMARY KEY (`State_id`);
+
+--
+-- Indexes for table `subscribe`
+--
+ALTER TABLE `subscribe`
+  ADD PRIMARY KEY (`Subscribe_id`);
 
 --
 -- Indexes for table `time_choosed`
@@ -1259,47 +1523,52 @@ ALTER TABLE `user_type_links`
 -- AUTO_INCREMENT for table `address`
 --
 ALTER TABLE `address`
-  MODIFY `Address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `Address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `bill`
 --
 ALTER TABLE `bill`
-  MODIFY `BILL_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `BILL_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `branch`
 --
 ALTER TABLE `branch`
-  MODIFY `Branch_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Branch_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `branch_phone`
 --
 ALTER TABLE `branch_phone`
-  MODIFY `Branch_phone` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Branch_phone_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `company_have_device`
 --
 ALTER TABLE `company_have_device`
-  MODIFY `Company_have_device_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Company_have_device_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `complains_order`
 --
 ALTER TABLE `complains_order`
-  MODIFY `Complains_order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `Complains_order_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `date`
 --
 ALTER TABLE `date`
-  MODIFY `Date_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Date_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `description`
 --
 ALTER TABLE `description`
-  MODIFY `Description_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Description_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `details_bill`
 --
 ALTER TABLE `details_bill`
-  MODIFY `Details_bill_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Details_bill_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+--
+-- AUTO_INCREMENT for table `device`
+--
+ALTER TABLE `device`
+  MODIFY `Device_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `device_of_this_request`
 --
@@ -1319,7 +1588,7 @@ ALTER TABLE `device_type`
 -- AUTO_INCREMENT for table `feedback`
 --
 ALTER TABLE `feedback`
-  MODIFY `Feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Feedback_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `filed_html`
 --
@@ -1349,17 +1618,17 @@ ALTER TABLE `log_on_select_value`
 -- AUTO_INCREMENT for table `main_factor`
 --
 ALTER TABLE `main_factor`
-  MODIFY `Main_factor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Main_factor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 --
 -- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
-  MODIFY `Message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `Message_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `message_type`
 --
 ALTER TABLE `message_type`
-  MODIFY `Message_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Message_type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `model`
 --
@@ -1375,6 +1644,11 @@ ALTER TABLE `offer_bill`
 --
 ALTER TABLE `order_fixable`
   MODIFY `Order_fixable_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+--
+-- AUTO_INCREMENT for table `order_fixer`
+--
+ALTER TABLE `order_fixer`
+  MODIFY `order_flixer_id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `pages_option`
 --
@@ -1414,12 +1688,17 @@ ALTER TABLE `phone`
 -- AUTO_INCREMENT for table `recieved`
 --
 ALTER TABLE `recieved`
-  MODIFY `recieved_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `recieved_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+--
+-- AUTO_INCREMENT for table `request`
+--
+ALTER TABLE `request`
+  MODIFY `Request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 --
 -- AUTO_INCREMENT for table `security_question`
 --
 ALTER TABLE `security_question`
-  MODIFY `Security_question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `Security_question_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `selected_device_option_values`
 --
@@ -1434,27 +1713,32 @@ ALTER TABLE `select_device_option`
 -- AUTO_INCREMENT for table `spare_parts`
 --
 ALTER TABLE `spare_parts`
-  MODIFY `Spare_parts_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Spare_parts_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `state`
 --
 ALTER TABLE `state`
-  MODIFY `State_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `State_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+--
+-- AUTO_INCREMENT for table `subscribe`
+--
+ALTER TABLE `subscribe`
+  MODIFY `Subscribe_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `time_choosed`
 --
 ALTER TABLE `time_choosed`
-  MODIFY `Time_choosed_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Time_choosed_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `time_chooser`
 --
 ALTER TABLE `time_chooser`
-  MODIFY `Time_chooser_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Time_chooser_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `type`
 --
 ALTER TABLE `type`
-  MODIFY `Type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `Type_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 --
 -- AUTO_INCREMENT for table `type_filed_html`
 --
@@ -1469,22 +1753,22 @@ ALTER TABLE `type_user`
 -- AUTO_INCREMENT for table `user`
 --
 ALTER TABLE `user`
-  MODIFY `User_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `User_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `user_address`
 --
 ALTER TABLE `user_address`
-  MODIFY `User_address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `User_address_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `user_option`
 --
 ALTER TABLE `user_option`
-  MODIFY `User_option_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `User_option_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 --
 -- AUTO_INCREMENT for table `user_selected_option`
 --
 ALTER TABLE `user_selected_option`
-  MODIFY `User_selected_option_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `User_selected_option_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT for table `user_selected_option_values`
 --

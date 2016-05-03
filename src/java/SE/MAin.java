@@ -29,11 +29,9 @@ public class MAin {
     
     public static void main(String[] args) {
 
-            Service_Management s = Service_Management.Get_Serive_Management();
-            ArrayList<Integer> a = new ArrayList<>();
-            a.add(1);
-            a.add(3);
-            System.out.println(s.Employee_order_numper(a, 2));
+            System_manage s = System_manage.Get_System_manage();
+            s.Get_date_iD();
+            
             
             
                  

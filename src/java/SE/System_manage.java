@@ -309,7 +309,7 @@ public class System_manage {
         //Table date   
         Db.Connect();
         Calendar cal = Calendar.getInstance();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM");
         String strDate = sdf.format(cal.getTime());
         try {
             ResultSet isDate = Db.Select("Date_id", "date", "Date='" + strDate + "'");
