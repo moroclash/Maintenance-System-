@@ -13,6 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -21,76 +24,53 @@ import java.util.HashMap;
 public class MAin {
     
      
-    
+
     public static void main(String[] args) {
 
 
-          /* String username = "mohamed@yahoo.com";
-           String pass = "123456789";
-           int order_id = 2;
-           int System_quality ;
-           Customer customer = new Customer();
-           Feedback feedback = new Feedback();
-           Bill bill = new Bill();
-           Bill_inf bill_inf = new Bill_inf();
-           Payment_Method pay = new Payment_Method();
-           System_manage s = System_manage.Get_System_manage();
-           Service_Management se = Service_Management.Get_Serive_Management();
-           Order order = new Order();
-           Branch branch = new Branch();
-           
-          
-           //searchbranch
-           int num = s.Check_type(username, pass);
-           //System.out.println(num);
-           
-          feedback = s.Search_feedback(order_id);
-          
-          */
-          //System.out.println(feedback.getSystem_quality());
-          
-//          bill_inf = s.Search_bill(1);
-//          System.out.println(bill_inf.getPayment_method_info()); 
-         
-//System.out.println(bill_inf.getMy_bill().getCost());
-         
-////        order = se.Search_order(1);
-////        System.out.println(order.getMy_Technical_id());
+     
         
+        
+        
+       // System.out.println(b.earning_branch());
+System_manage s = System_manage.Get_System_manage();   
+        //System.err.println(s.Get_Option_Value(3, 19));
 
-//          ArrayList <Integer> t = se.Get_Technical(1);
-//          System.out.println("all is"+ t);
 
-      // HashMap <Integer , String > p = pay.Get_payment_type_in_bill(2);
-       //System.out.println( p);
+
+
+   Branch b = new Branch();
+   b.setId(1);
+        System.err.println(b.earning_branch());
+        
+            
+            
+            
+            /*Service_Management s = Service_Management.Get_Serive_Management();
+            Request r = s.Search_requist(1);
+            System.err.println(r.getUser_id());*/
+            //Object o = ma.Search_User_OptionByID(2);
+            ///Customer s = (Customer) o;
+            
+            /*Customer cu = new Customer();
+            cu.Log_in("mohasem@gmail.com", "8sa9d1d9");
+            System.out.println(cu.getF_name()); 
+            ArrayList<String> name = ma.Get_Options_OF_TYPE(cu.getType_id());
+            int x =0;
+            HashMap<Integer , String> ss = cu.getAdditional_data();
+            for (Map.Entry<Integer, String> entry : ss.entrySet()) {
+            System.err.println(name.get(x));
+            x++;
+            System.err.println(entry.getValue());
+            }*/
+            
+            /*System_manage s = System_manage.Get_System_manage();
+            s.Delete_branch_phone(3, 3);*/
+    
+                    
       
-         
-       //s.Search_user_by_id(1);
        
-//        ArrayList <Bill_inf> ss = branch.Show_accounting();
-//        
-//        System.out.println(ss.get(0).getMy_bill().getCost());
-//        System.out.println(ss.get(0).getPayment_method_info());
-//        System.out.println(ss.get(0).getOffer());
-         
-//          customer.setID(8);
-//          customer.Add_Subscribe(9);
-          
 
-         //ArrayList <Employee> ee = s.Show_all_employee(5);
-         
-         //System.out.println(ee.get(0).getEmail());
-        
-//        int offer = bill_inf.Get_offer(1);
-//        System.out.println("offer is"+offer);
-
-
-//         ArrayList <Spare_parts> we = s.Get_spare_parts(1);
-//         System.out.println(we.get(0).getMony());
-//         System.out.println(we.get(0).getName());
-         
-
-         
         //branch = s.Search_branch(2);
         //System.out.println(branch.getNotfy_message());
         
@@ -105,6 +85,7 @@ public class MAin {
 //       }else{
 //           System.out.println(em.getF_name());
 //       as}
+
 /*Customer C=new Customer();
 C.setID(19);
 DB_controller DB=DB_controller.Get_DB_controller();
@@ -112,22 +93,30 @@ DB.Connect();
                 ResultSet result2=DB.Select("*","device_of_this_request","Request_id=1");*/
 /*System.out.println(C.forget_My_Password("mohamedelnagm211@gmail.com",1,"football"));
     */
-        Component s=new Component();
-        Bill n=new Bill();
+      /*  Bill n=new Bill();
         
         n.setCost(2500.0);
     
         Offer ss =  Service_Management.Get_Serive_Management().Add_offer_toBill(n, 10);
         Spare_parts v= Service_Management.Get_Serive_Management().Add_SpareParts_toBill(ss,"wa7ed amplyha" ,2500);
         Spare_parts c= Service_Management.Get_Serive_Management().Add_SpareParts_toBill(v,"wa7ed amplyha m3 3omer   :" ,200);
-        /* Offer sa=new Offer(n);
+         Offer sa=new Offer(n);
         sa.setOffer(10.0);
         Spare_parts v=new Spare_parts(sa);
         v.setMony(2500.0);
-        v.setName("Kahasa");*/
-        System.out.println(c+"final Cost           :"+c.Get_Cost());
+        v.setName("Kahasa");
+        System.out.println(c+"final Cost           :"+c.Get_Cost());*/
     }
     
+//Customer C=new Customer();
+//C.setID(19);
+///*DB_controller DB=DB_controller.Get_DB_controller();
+//DB.Connect();
+//                ResultSet result2=DB.Select("*","device_of_this_request","Request_id=1");*/
+//System_manage S=System_manage.Get_System_manage();
+//S.Get_Option_Values_OF_USER("user_selected_option_values","User_id=1");
+
+
  }
 
  

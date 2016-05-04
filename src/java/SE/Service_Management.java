@@ -33,6 +33,16 @@ public class Service_Management {
         return null;
     }
 
+    public ArrayList<Complain> getComplain_buffer() {
+        return Complain_buffer;
+    }
+
+    public ArrayList<Request> getRequest_buffer() {
+        return Request_buffer;
+    }
+
+    
+
     //sala7
 
     public ArrayList<Integer> Get_Technical (int order_id)
@@ -197,6 +207,7 @@ public class Service_Management {
         ArrayList<Integer> A = new ArrayList<Integer>();
         Message_Controller MC = Message_Controller.Get_Message_Controller();
         DB_controller DB = DB_controller.Get_DB_controller();
+        DB.Connect();
         int x = -1;
         try {
             ResultSet result = DB.Select("*", "complains_order", "1");
@@ -245,6 +256,7 @@ public class Service_Management {
         ArrayList<Integer> H = new ArrayList<Integer>();
         DB_controller DB = DB_controller.Get_DB_controller();
         DB.Connect();
+
         ResultSet result = DB.Select("*", "request", "State_ID=5 or State_ID=11");
         ResultSet result2;
         int x = -1;
@@ -257,6 +269,7 @@ public class Service_Management {
                 R.setDate_id(result.getInt("Date_ID"));
                 R.setUser_id(result.getInt("User_ID"));
                 result2 = DB.Select("*", "device_of_this_request", "Request_ID=" + x);
+
                 while (result2.next())
                 {
                     H.add(result2.getInt("Device_ID"));
@@ -265,7 +278,7 @@ public class Service_Management {
                 this.Request_buffer.add(R);
             }
         } catch (Exception E) {
-            System.out.println("Error in load Request");
+            System.out.println(E.getMessage());
         }
     }
 
@@ -290,7 +303,7 @@ public class Service_Management {
         return null;
     }
 
-    //omar 0_0
+    //omar 0_0 
     private int address_helper(int num, String TableName, int address_id) {
         try {
             DB_controller Db = DB_controller.Get_DB_controller();
@@ -325,7 +338,7 @@ public class Service_Management {
         } catch (SQLException ex) {
             Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return 0;
+        return -1;
     }
 
     //omar 0_0
@@ -680,8 +693,13 @@ public class Service_Management {
         return O;
     }
 
-    boolean Cancel_Request(int Request_id) {
-        return true;
+    //omar 0_0
+    public boolean Cancel_Request(int Request_id) {
+        Request re = this.Request_buffer.get(Request_id);
+        this.Request_buffer.remove(Request_id);
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        return Db.Update("request", "State_id = 9", "Request_id="+re.getID());
     }
 
     //Mohamed RAdwan
@@ -696,14 +714,12 @@ public class Service_Management {
             {request.setID(Requist_id);          
             request.setState_id(res.getInt("State_id"));
             request.setDate_id(res.getInt("Date_id"));//lw h8er el Date id to int 
-             System.err.println("1");
             }
             //END Table Reqest
             
             //Table device_of_this_request
              ArrayList<Integer> Devices_ID = new ArrayList<Integer>();
             
-            System.err.println("2");
             ResultSet Devices = DB.Select("Device_id", "device_of_this_request", "Request_id=" + Requist_id);
             while (Devices.next()) {
                 Devices_ID.add(Devices.getInt("Device_id"));
