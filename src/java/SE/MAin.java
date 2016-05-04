@@ -105,13 +105,29 @@ public class MAin {
 //       }else{
 //           System.out.println(em.getF_name());
 //       as}
-Customer C=new Customer();
+/*Customer C=new Customer();
 C.setID(19);
-/*DB_controller DB=DB_controller.Get_DB_controller();
+DB_controller DB=DB_controller.Get_DB_controller();
 DB.Connect();
                 ResultSet result2=DB.Select("*","device_of_this_request","Request_id=1");*/
-System.out.println(C.forget_My_Password("mohamedelnagm211@gmail.com",1,"football"));
-        }
+/*System.out.println(C.forget_My_Password("mohamedelnagm211@gmail.com",1,"football"));
+    */
+        Component s=new Component();
+        Bill n=new Bill();
+        
+        n.setCost(2500.0);
+    
+        Offer ss =  Service_Management.Get_Serive_Management().Add_offer_toBill(n, 10);
+        Spare_parts v= Service_Management.Get_Serive_Management().Add_SpareParts_toBill(ss,"wa7ed amplyha" ,2500);
+        Spare_parts c= Service_Management.Get_Serive_Management().Add_SpareParts_toBill(v,"wa7ed amplyha m3 3omer   :" ,200);
+        /* Offer sa=new Offer(n);
+        sa.setOffer(10.0);
+        Spare_parts v=new Spare_parts(sa);
+        v.setMony(2500.0);
+        v.setName("Kahasa");*/
+        System.out.println(c+"final Cost           :"+c.Get_Cost());
+    }
+    
  }
 
  

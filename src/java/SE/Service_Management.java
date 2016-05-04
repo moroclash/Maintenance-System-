@@ -535,14 +535,78 @@ public class Service_Management {
         return true;
     }
 
-    
-        
-    
-    
-    public Bill_inf Add_Componenet(ArrayList<Component> Component, Bill bill, String Technical_description) {
-        return null;
-    }
 
+    
+    
+    
+    
+    
+///////////////////////////////Decorate pattern
+    ///////////////////////////////Decorate pattern
+    
+    public Offer Add_offer_toBill(Bill bill,int precntage)
+    {
+       Offer offer=new Offer(bill);
+       offer.setOffer(precntage);
+       return offer;
+    }
+    public Offer Add_offer_toBill(Spare_parts bill,int precntage)
+    {
+       Offer offer=new Offer(bill);
+       offer.setOffer(precntage);
+       return offer;
+    }
+    public Offer Add_offer_toBill(Payment_Method bill,int precntage)
+    {
+       Offer offer=new Offer(bill);
+       offer.setOffer(precntage);
+       return offer;
+    }
+    
+     public Spare_parts Add_SpareParts_toBill(Bill bill,String Name_Spare_parts,double Cost)
+    {
+       Spare_parts spare=new Spare_parts(bill);
+       spare.setName(Name_Spare_parts);
+       spare.setMony(Cost);
+       return spare;
+    }
+     public Spare_parts Add_SpareParts_toBill(Offer bill,String Name_Spare_parts,double Cost)
+    {
+       Spare_parts spare=new Spare_parts(bill);
+       spare.setName(Name_Spare_parts);
+       spare.setMony(Cost);
+       return spare;
+    }
+     public Spare_parts Add_SpareParts_toBill(Spare_parts bill,String Name_Spare_parts,double Cost)
+    {
+       Spare_parts spare=new Spare_parts(bill);
+       spare.setName(Name_Spare_parts);
+       spare.setMony(Cost);
+       return spare;
+    }
+      
+     public Payment_Method Add_Payment_Method_toBill(Bill bill,HashMap <Integer , String > Payment_method_option, int method_id)
+    {
+       Payment_Method payment=new Payment_Method(bill);
+       payment.setMethod_id(method_id);
+       payment.setPayment_method_option(Payment_method_option);
+       return payment;
+    }
+     public Payment_Method Add_Payment_Method_toBill(Spare_parts bill,HashMap <Integer , String > Payment_method_option, int method_id)
+    {
+       Payment_Method payment=new Payment_Method(bill);
+       payment.setMethod_id(method_id);
+       payment.setPayment_method_option(Payment_method_option);
+       return payment;
+    }public Payment_Method Add_Payment_Method_toBill(Offer bill,HashMap <Integer , String > Payment_method_option, int method_id)
+    {
+       Payment_Method payment=new Payment_Method(bill);
+       payment.setMethod_id(method_id);
+       payment.setPayment_method_option(Payment_method_option);
+       return payment;
+    }
+  
+///////////////////////////////Decorate pattern
 
     
     //Emad

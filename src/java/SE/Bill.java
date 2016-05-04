@@ -61,8 +61,12 @@ public class Bill implements Decoration{
 
 
     @Override
-    public void Get_Cost() {
+    public double Get_Cost() {
     
+        return Cost;
     }
-
+ public String toString() {
+      return "HEllo bill  :)  "
+              + Get_Cost()+"\n";
+    }
 }
