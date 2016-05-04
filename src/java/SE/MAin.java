@@ -31,18 +31,9 @@ public class MAin {
      
         
         
-        
-       // System.out.println(b.earning_branch());
-System_manage s = System_manage.Get_System_manage();   
-        //System.err.println(s.Get_Option_Value(3, 19));
-
-
-
-
-   Branch b = new Branch();
-   b.setId(1);
-        System.err.println(b.earning_branch());
-        
+        Employee e = new Employee();
+        e.Log_in("mmoroclash@gmail.com", "modo12345");
+        System.err.println(e.getF_name());
             
             
             
