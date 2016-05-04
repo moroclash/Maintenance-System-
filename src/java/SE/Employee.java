@@ -23,6 +23,7 @@ public class Employee extends User
     }
     public int GetMyBranchID()
     {
+        String s = this.getAdditional_data().get(4);
         return this.MyBranch_id;
     }
   //sala7
@@ -41,7 +42,7 @@ public class Employee extends User
               while(result.next())
             {
               employee_id = result.getInt("User_id");
-           }
+            }
               employee = (Employee) s.Search_user_by_id(employee_id);
               setF_name(employee.getF_name());
               setL_name(employee.getL_name());

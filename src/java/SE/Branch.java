@@ -262,7 +262,7 @@ public class Branch {
 
    }
    //Emad T
-   public ArrayList <Employee> Show_employee()
+   public ArrayList<Employee> Show_employee()
    {
        System_manage S=System_manage.Get_System_manage();
        Service_Management Ser=Service_Management.Get_Serive_Management();
@@ -320,9 +320,20 @@ public class Branch {
        return "";
    }
    
+   //omar 0_0
    public void Subcribe( int user_id)
    {
-       
+        DB_controller Db = DB_controller.Get_DB_controller();
+        Db.Connect();
+        HashMap<String, String> A = new HashMap<>();
+        A.put("User_id", Integer.toString(user_id));
+        A.put("Branch_id", Integer.toString(getId()));
+        try{
+           Db.Insert("Subscriber", A);
+        }catch(Exception ex)
+        {
+            ex.printStackTrace();
+        }        
    }
    
    public void Desubcribe( int user_id)
@@ -334,6 +345,59 @@ public class Branch {
    {
        
    }
+   
+   
+   public double earning_branch()
+   {
+        Double earning = 0.0 ;
+        try {
+            DB_controller Db = DB_controller.Get_DB_controller();
+            System_manage sy =System_manage.Get_System_manage();
+            Db.Connect();
+            ResultSet res = Db.Select( "*", "order_fixable", "State_id=2");
+            ResultSet res2 = null;
+            ArrayList<Integer> Orders_ids = new ArrayList<>();
+            int id = 0;
+            boolean flage = false;
+            while(res.next()) // get all order that done
+            {
+                System.err.println("1");
+                flage= false;
+                res2= Db.Select("Device_of_this_request_id", "device_of_this_request", "Request_id="+res.getInt("Requist_id"));
+                while(res2.next()) //get all Device_of_this_request_id of this order to get his technical 
+                {
+                    System.err.println("2");
+                   ResultSet res3 = Db.Select("Technical_id", "order_fixer", "Device_of_this_request_id="+res2.getInt("Device_of_this_request_id"));
+                   while(res3.next()) //to get tecnicals that do this 
+                   {
+                       System.err.println("3");
+                       Employee e =(Employee) sy.Search_user_by_id(res3.getInt("Technical_id"));
+                       System.out.println(e.GetMyBranchID());
+                       if(e.GetMyBranchID() == this.getId() && !flage)
+                       {
+                           Orders_ids.add(res.getInt("Order_fixable_id"));
+                           flage=true;
+                       }
+                   }
+                }
+     
+            }
+            for(int i : Orders_ids)
+            {
+                res = Db.Select("Cost", "bill", "Order_id="+i);
+                while(res.next())
+                {
+                    earning += res.getDouble("Cost");
+                }
+            }
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Branch.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return earning;
+   }
+   
+   
    
    
    //Mohamed RAdwan 

@@ -13,6 +13,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -22,90 +25,56 @@ public class MAin {
     
      
     
-    public static void main(String[] args) {
-
-
-           String username = "mohamed@yahoo.com";
-           String pass = "123456789";
-           int order_id = 2;
-           int System_quality ;
-           Customer customer = new Customer();
-           Feedback feedback = new Feedback();
-           Bill bill = new Bill();
-           Bill_inf bill_inf = new Bill_inf();
-           Payment_Method pay = new Payment_Method();
-           System_manage s = System_manage.Get_System_manage();
-           Service_Management se = Service_Management.Get_Serive_Management();
-           Order order = new Order();
-           Branch branch = new Branch();
-           
-          
-           //searchbranch
-           int num = s.Check_type(username, pass);
-           //System.out.println(num);
-           
-          feedback = s.Search_feedback(order_id);
-          
-          
-          //System.out.println(feedback.getSystem_quality());
-          
-//          bill_inf = s.Search_bill(1);
-//          System.out.println(bill_inf.getPayment_method_info()); 
-         
-//System.out.println(bill_inf.getMy_bill().getCost());
-         
-////        order = se.Search_order(1);
-////        System.out.println(order.getMy_Technical_id());
+    public static void main(String[] args) {                      
         
+        
+        Branch b = new Branch();
+        b.setId(1);
+        
+        
+        
+        
+       // System.out.println(b.earning_branch());
+System_manage s = System_manage.Get_System_manage();   
+        System.err.println(s.Get_Option_Value(3, 19));
 
-//          ArrayList <Integer> t = se.Get_Technical(1);
-//          System.out.println("all is"+ t);
 
-      // HashMap <Integer , String > p = pay.Get_payment_type_in_bill(2);
-       //System.out.println( p);
+
+
+Employee e = (Employee) s.Search_user_by_id(3);
+        HashMap<Integer , String> a = e.getAdditional_data();
+        for (Map.Entry<Integer, String> entry : a.entrySet()) {
+            Integer key = entry.getKey();
+            String value = entry.getValue();
+            
+        }
+        
+            
+            
+            
+            /*Service_Management s = Service_Management.Get_Serive_Management();
+            Request r = s.Search_requist(1);
+            System.err.println(r.getUser_id());*/
+            //Object o = ma.Search_User_OptionByID(2);
+            ///Customer s = (Customer) o;
+            
+            /*Customer cu = new Customer();
+            cu.Log_in("mohasem@gmail.com", "8sa9d1d9");
+            System.out.println(cu.getF_name()); 
+            ArrayList<String> name = ma.Get_Options_OF_TYPE(cu.getType_id());
+            int x =0;
+            HashMap<Integer , String> ss = cu.getAdditional_data();
+            for (Map.Entry<Integer, String> entry : ss.entrySet()) {
+            System.err.println(name.get(x));
+            x++;
+            System.err.println(entry.getValue());
+            }*/
+            
+            /*System_manage s = System_manage.Get_System_manage();
+            s.Delete_branch_phone(3, 3);*/
+    
+                    
       
-         
-       //s.Search_user_by_id(1);
-       
-//        ArrayList <Bill_inf> ss = branch.Show_accounting();
-//        
-//        System.out.println(ss.get(0).getMy_bill().getCost());
-//        System.out.println(ss.get(0).getPayment_method_info());
-//        System.out.println(ss.get(0).getOffer());
-         
-//          customer.setID(8);
-//          customer.Add_Subscribe(9);
-          
-
-         //ArrayList <Employee> ee = s.Show_all_employee(5);
-         
-         //System.out.println(ee.get(0).getEmail());
-        
-//        int offer = bill_inf.Get_offer(1);
-//        System.out.println("offer is"+offer);
-
-
-//         ArrayList <Spare_parts> we = s.Get_spare_parts(1);
-//         System.out.println(we.get(0).getMony());
-//         System.out.println(we.get(0).getName());
-         
-
-         
-        //branch = s.Search_branch(2);
-        //System.out.println(branch.getNotfy_message());
-        
-        //String content = branch.Get_notify(1);
-       // System.out.println(content);
-       
-//       Employee em = new Employee();
-//       
-//       if(!em.Log_in("emad@yahoo.com", "medo1232"))
-//       {
-//           System.out.println("error");
-//       }else{
-//           System.out.println(em.getF_name());
-//       }
-
        
         }
  }

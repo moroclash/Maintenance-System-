@@ -38,10 +38,52 @@ public class System_manage {
     }
 
     
-    
+    //omar
     public Systemreport Get_System_Report()
     {
-        return null;
+        Systemreport report = new Systemreport();
+        try {
+            ArrayList<Branch> Branches = new ArrayList<>();
+            int ComplainNumper = 0;
+            int Employeenum = 0;
+            double presentage = 0;
+            double Salaries = 0;
+            int EmployeeComplainNum = 0;
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            ResultSet res = Db.Select("Branch_id", "branch", "1");
+            int branch_id = 0;
+            Branch branch = null;
+            BranchReport B_report = null;
+            while(res.next())
+            {
+                branch_id = res.getInt("Branch_id");
+                branch=Search_branch(branch_id);
+                Branches.add(branch);
+                B_report = new BranchReport(branch);
+                ComplainNumper += B_report.getCustomer_ComplainNumper();
+                Employeenum += B_report.getEmployeNum();
+                presentage += B_report.getPresantage();
+                Salaries += B_report.getSalaries();
+                EmployeeComplainNum += B_report.getEmployee_ComplainNumper();
+            }
+            res = Db.Select("User_id", "user", "Type_id=5");
+            int customernumper = 0;
+            while(res.next())
+            {
+                customernumper++;
+            }
+            report.setBrach_Quality(Branches);
+            report.setCustomer_ComplainNumper(ComplainNumper);
+            report.setCustomernumber(customernumper);
+            report.setEmployeNum(Employeenum);
+            report.setPresantage(((presentage/(Branches.size()*100))*100));
+            report.setSalaries(Salaries);
+            report.setEmployee_ComplainNumper(EmployeeComplainNum);
+        } catch (SQLException ex) {
+            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return report;
     }
     
     
@@ -272,7 +314,7 @@ public class System_manage {
 
 
     //Emad
-    public User Search_user_by_id(int User_id) {
+    public Object Search_user_by_id(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Service_Management s = Service_Management.Get_Serive_Management();
         Db.Connect();
@@ -434,8 +476,19 @@ public class System_manage {
         return DB.Insert("user_option", H);
     }
 
-    public boolean Add_New_phone_to_branch(String New_phone, int Branch_id) {
-        return false;
+    //omar 0_0
+    public int Add_New_phone_to_branch(String New_phone, int Branch_id) {
+        Validations v = Validations.Get_Validations();
+        if (!v.Is_digit(New_phone)) {
+            return 0;
+        }
+        DB_controller.Get_DB_controller().Connect();
+        HashMap<String, String> m = new HashMap<>();
+        m.put("Branch_id", Integer.toString(Branch_id));
+        m.put("phone", New_phone);
+        int x = DB_controller.Get_DB_controller().Insert("branch_phone", m);
+        DB_controller.Get_DB_controller().Close();
+        return x;
     }
     
     
@@ -465,13 +518,24 @@ public class System_manage {
     
     
 
-
+    //omar 0_0
     public boolean Delete_branch_phone(int phone_id, int Branch_id) {
-        return false;
+        DB_controller.Get_DB_controller().Connect();
+        boolean z = DB_controller.Get_DB_controller().Delete("branch_phone", "Branch_phone_id=" + phone_id + " and Branch_id="+Branch_id);
+        DB_controller.Get_DB_controller().Close();
+        return z;
     }
 
+    
+    //omar 0_0
     public boolean Update_branch_phone(int Old_phone_id, int Branch_id, String New_phone) {
-        return false;
+        if (!Validations.Get_Validations().Is_digit(New_phone)) {
+            return false;
+        }
+        DB_controller.Get_DB_controller().Connect();
+        boolean z = DB_controller.Get_DB_controller().Update("branch_phone", "phone=" + New_phone, "Branch_phone_id=" + Old_phone_id+" and Branch_id="+Branch_id);
+        DB_controller.Get_DB_controller().Close();
+        return z;
     }
 
     //Emad
@@ -574,51 +638,63 @@ public class System_manage {
     }
 
     //Emad
-    public HashMap<Integer, String> Get_Option_Values_OF_USER(int User_id) {
-        HashMap<Integer, String> H = new HashMap<Integer, String>();
-        DB_controller Db = DB_controller.Get_DB_controller();
-        Db.Connect();
-        ResultSet result = Db.Select("*", "user_selected_option_values", "User_ID=" + User_id);
-        try {
-            while (result.next()) {
-                H.put((result.getInt("User_option_id")), result.getString("Value"));
-            }
-        } catch (Exception E) {
-            System.out.println("Error in GET OPTION VALUES");
-        }
-        return H;
-    }
+        public HashMap<Integer, String> Get_Option_Values_OF_USER(int User_id) {
+       HashMap<Integer, String> H = new HashMap<Integer, String>();
+       DB_controller Db =DB_controller.Get_DB_controller();
+       Db.Connect();
+       ResultSet result = Db.Select("*", "user_selected_option_values", "User_id=" + User_id);
+       try {
+           while (result.next()) {
+               H.put((result.getInt("User_selected_option_id")), result.getString("Value"));
+           }
+       } catch (Exception E) {
+           System.out.println("Error in GET OPTION VALUES+ "+E);
+       }
+       return H;
+    }    
 
-    public String Get_Option_Value(int User_ID) {
-        DB_controller DB = DB_controller.Get_DB_controller();
-        DB.Connect();
-        ResultSet result = DB.Select("Value", "user_selected_option_values", "User_ID=" + User_ID);
-        try {
-            while (result.next()) {
-                return result.getString("Value");
-            }
-        } catch (Exception E) {
-            System.out.println("Error in Option Value");
-        }
-        return null;
-    }
+    
+    public String Get_Option_Value(int User_ID , int Option_Value) {
+       DB_controller DB = DB_controller.Get_DB_controller();
+       DB.Connect();
+       ResultSet result = DB.Select("Value", "user_selected_option_values", "User_ID=" + User_ID +" and User_selected_option_id="+Option_Value);
+       try {
+           while (result.next()) {
+               return result.getString("Value");
+           }
+       } catch (Exception E) {
+           System.out.println("Error in Option Value");
+       }
+       return null;
+   }
 
-    //Emad
-    public ArrayList<String> Get_Options_OF_TYPE(int Type_ID) {
-        ArrayList<String> A = new ArrayList<String>();
-        DB_controller Db = DB_controller.Get_DB_controller();
-        Db.Connect();
-        ResultSet result = Db.Select("*", "user_option", "Type_ID=" + Type_ID);
-        try {
-            while (result.next()) {
-                A.add(result.getString("NAME"));
-            }
-        } catch (Exception E) {
-            System.out.println("Error in GET OPTION OF TYPES");
-        }
-        return A;
-    }
+    //Emad  Done
+   public ArrayList<String> Get_Options_OF_TYPE(int Type_ID) {
+       ArrayList<String> A = new ArrayList<String>();
+       ArrayList<Integer> Ids = new ArrayList<Integer>();
+       DB_controller DB=DB_controller.Get_DB_controller();
+       DB.Connect();
+       ResultSet result = DB.Select("*", "user_selected_option", "User_type_id=" + Type_ID);
+       try {
+           while (result.next()) {
+               Ids.add(result.getInt("User_option_id"));
+           }
+           for (int i = 0; i < Ids.size(); i++) {
+               result = DB.Select("*", "user_option", "User_option_id=" + Ids.get(i));
+               while (result.next()) {
+                   A.add(result.getString("Name"));
+               }
+           }
+       } catch (Exception E) {
+           System.out.println("Error in GET OPTION OF TYPES");
+       }
+       return A;
+   }
 
+    
+    
+    
+    
     public boolean Upload_file(File file) {
         return false;
     }
@@ -662,10 +738,42 @@ public class System_manage {
         return 0;
     }
 
- 
+    
+    //omar 
     public boolean Make_History(History history) 
     {
-        return true;
+        try {
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            HashMap<String,String> H = new HashMap<>();
+            H.put("Link_id", Integer.toString(history.getLink_id()));
+            H.put("Date_id", Integer.toString(Get_date_iD()));
+            H.put("User_id", Integer.toString(history.getUser_id()));
+            H.put("Time", Get_time());
+            int x = Db.Insert("Log_on", H);
+            ArrayList<String> AA = new ArrayList<>();
+            ResultSet res  =  Db.Select("Log_on_select_option_id","log_on_select_option", "Links_id="+history.getLink_id());
+            while(res.next())
+            {
+               AA.add(Integer.toString(res.getInt("Log_on_select_option_id")));
+            }
+            int i=0;
+            HashMap<Integer,String> H2 = history.getAdditional_info();
+            if(H2 != null)
+            {
+                for (Map.Entry<Integer, String> entry : H2.entrySet()) {
+                     H.clear();
+                     H.put("Log_on_id", Integer.toString(x));
+                     H.put("Log_on_select_id",AA.get(i));
+                     H.put("value", entry.getValue());
+                     Db.Insert("log_on_select_value", H);
+                     i++;
+                }
+            }
+            return true;
+        } catch (SQLException ex) {
+            Logger.getLogger(System_manage.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
     }
- 
 }
