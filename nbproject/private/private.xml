@@ -4,6 +4,29 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
 <<<<<<< HEAD
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Notify.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/System_manage.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Decoration.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Offer.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Systemreport.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Branch.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Component.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Validations.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Device.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Report.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Feedback.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Request.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Payment_Method.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Employee.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Service_Management.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Order.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Message_Controller.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Customer.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Bill_inf.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/User.java</file>
+            <file>file:/C:/phase-2/Maintenance-System-/src/java/SE/Spare_parts.java</file>
+=======
+<<<<<<< HEAD
             <file>file:/home/mohamedsalah/Downloads/project/Maintenance-System-/src/java/SE/Message_Controller.java</file>
             <file>file:/home/mohamedsalah/Downloads/project/Maintenance-System-/src/java/SE/Service_Management.java</file>
             <file>file:/home/mohamedsalah/Downloads/project/Maintenance-System-/src/java/SE/MAin.java</file>
@@ -19,6 +42,7 @@
             <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/Data_access/DB_controller.java</file>
             <file>file:/home/moroclash/maintenance_project_lvl2_sem2/maintance-phas-2/pro/Maintenance-System-/src/java/SE/Service_Management.java</file>
 >>>>>>> 0cf2723176ab38689a22dcadc9e1a78b59e77333
+>>>>>>> 559615779b01ac0a648677df270baa94f69163d3
         </group>
     </open-files>
 </project-private>

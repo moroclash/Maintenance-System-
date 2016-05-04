@@ -23,8 +23,7 @@ public class Employee extends User
     }
     public int GetMyBranchID()
     {
-        String s = this.getAdditional_data().get(4);
-        return this.MyBranch_id;
+        return Integer.parseInt(this.getAdditional_data().get(19));
     }
   //sala7
     @Override
@@ -81,4 +80,5 @@ public class Employee extends User
         }
         return true;
     }
+    
 }

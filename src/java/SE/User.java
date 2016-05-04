@@ -162,6 +162,7 @@ public abstract class User {
     public String getF_name() {
         return F_name;
     }
+
  
     //omar 0_0
     public ArrayList<General_massge> Show_all_my_rescived_massage() {
@@ -253,12 +254,6 @@ public abstract class User {
         return Sv.Update_User_Phone(Old_phone_id, New_phone);
     }*/
 
-    // Requist        Done
-    //Load Requist    
-    //Show_My_Order   Done 
-    //Search_Device   Done
-    //Complain        Done
-    //Select Time btb3t Noti
 
 
     

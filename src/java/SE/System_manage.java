@@ -187,7 +187,7 @@ public class System_manage {
                 employee.setBlock(result.getInt("Account_block"));
                 employee.setAddresses(serv.Get_User_Phone(Employee_type));
                 employee.setPhones(serv.Get_User_Phone(Employee_type));
-                switch (Employee_type) {
+              /*  switch (Employee_type) {
                     case 1:
                         employee.setAdditional_data(Get_Option_Values_OF_USER(Employee_type));
                         break;
@@ -202,7 +202,7 @@ public class System_manage {
                         break;
                     default:
                         break;
-                }
+                }*/
                 em.add(employee);
             }
 
@@ -288,7 +288,7 @@ public class System_manage {
         return feedback;
     }
 
-    //Emad
+    //Emad Done
     public void Add_User(User user) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -337,7 +337,7 @@ public class System_manage {
                 U.setPassword(result.getString("Password"));
                 U.setType_id(Type_ID);                
             }
-           U.setAdditional_data(Get_Option_Values_OF_USER(User_id));
+           U.setAdditional_data(Get_Option_Values_OF_USER("user_selected_option_values","User_id="+User_id));;
            U.setPhones(s.Get_User_Phone(User_id));
            U.setAddresses(s.Get_User_Address(User_id));
                 return U;
@@ -347,8 +347,8 @@ public class System_manage {
        }
             return null;
         }
-        //Emad
-        //like
+    
+        //Emad Done
     public User Search_user_by_name(String Name) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Service_Management s = Service_Management.Get_Serive_Management();
@@ -376,7 +376,7 @@ public class System_manage {
                 
             }
 
-           U.setAdditional_data(Get_Option_Values_OF_USER(id));
+           U.setAdditional_data(Get_Option_Values_OF_USER("user_selected_option_values","User_id-"+id));
            U.setPhones(s.Get_User_Phone(id));
            U.setAddresses(s.Get_User_Address(id));
                 return U;
@@ -388,7 +388,7 @@ public class System_manage {
     
     
     
-    //Emad  
+    //Emad   Done
     public boolean Delete_user(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -399,7 +399,7 @@ public class System_manage {
         return check;
     }
 
-    //Emad
+    //Emad Done
     public boolean Block_user(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -408,7 +408,7 @@ public class System_manage {
         return check;
     }
 
-    //Emad
+    //Emad Done
     public boolean Unblock_user(int User_id) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -463,7 +463,7 @@ public class System_manage {
 
     
     
-    //Emad
+    //Emad D
     //pre Path Type_OPTION_ID(text,int,....),and Name OF Type
     //post Add to Table user_option 
     public int add_option(int Type_ID, String Name) {
@@ -538,7 +538,7 @@ public class System_manage {
         return z;
     }
 
-    //Emad
+    //Emad Done
     //pre Path the name of new user and the parent id 
     //post add to table type user
     private int add_new_actor(String Name, int Parent_id) {
@@ -551,7 +551,7 @@ public class System_manage {
         return Db.Insert("type_user", H);
     }
 
-    //Emad
+    //Emad Done
     public String Search_User_OptionByID(int Option_ID)
     {
         DB_controller Db = DB_controller.Get_DB_controller();
@@ -566,8 +566,7 @@ public class System_manage {
         }
         return null;
     }
-
-    //Emad
+    //Emad  
     public int Search_User_OptionByName(String Option_Name) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -582,7 +581,7 @@ public class System_manage {
         return -1;
     }
 
-    //Emad
+    //Emad  Done
     //pre Path Type_OPTION_ID(text,int,....),and Name OF Type
     //post Add to Table user_option 
     public int add_user_option(int Type_ID, String Name) {
@@ -594,7 +593,7 @@ public class System_manage {
         return Db.Insert("user_option", H);
     }
 
-    //Emad
+    //Emad  Done
     public int Add_to_actor_Option(int user_type_id, int Option_ID) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -606,7 +605,7 @@ public class System_manage {
         return i;
     }
 
-    //Emad
+    //Emad  Done
     public ArrayList<Integer> All_Options_Available(int Type_ID) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -623,7 +622,7 @@ public class System_manage {
         return A;
     }
 
-    //Emad
+    //Emad  Done
     public void Insert_Option_Values(User U, int User_ID) {
         DB_controller Db = DB_controller.Get_DB_controller();
         Db.Connect();
@@ -637,59 +636,76 @@ public class System_manage {
         Db.Close();
     }
 
-    //Emad
-        public HashMap<Integer, String> Get_Option_Values_OF_USER(int User_id) {
-       HashMap<Integer, String> H = new HashMap<Integer, String>();
-       DB_controller Db =DB_controller.Get_DB_controller();
-       Db.Connect();
-       ResultSet result = Db.Select("*", "user_selected_option_values", "User_id=" + User_id);
-       try {
-           while (result.next()) {
-               H.put((result.getInt("User_selected_option_id")), result.getString("Value"));
-           }
-       } catch (Exception E) {
-           System.out.println("Error in GET OPTION VALUES+ "+E);
-       }
-       return H;
-    }    
-
-    
-    public String Get_Option_Value(int User_ID , int Option_Value) {
-       DB_controller DB = DB_controller.Get_DB_controller();
-       DB.Connect();
-       ResultSet result = DB.Select("Value", "user_selected_option_values", "User_ID=" + User_ID +" and User_selected_option_id="+Option_Value);
-       try {
-           while (result.next()) {
-               return result.getString("Value");
-           }
-       } catch (Exception E) {
-           System.out.println("Error in Option Value");
-       }
-       return null;
-   }
 
     //Emad  Done
-   public ArrayList<String> Get_Options_OF_TYPE(int Type_ID) {
-       ArrayList<String> A = new ArrayList<String>();
-       ArrayList<Integer> Ids = new ArrayList<Integer>();
-       DB_controller DB=DB_controller.Get_DB_controller();
-       DB.Connect();
-       ResultSet result = DB.Select("*", "user_selected_option", "User_type_id=" + Type_ID);
-       try {
-           while (result.next()) {
-               Ids.add(result.getInt("User_option_id"));
-           }
-           for (int i = 0; i < Ids.size(); i++) {
-               result = DB.Select("*", "user_option", "User_option_id=" + Ids.get(i));
-               while (result.next()) {
-                   A.add(result.getString("Name"));
-               }
-           }
-       } catch (Exception E) {
-           System.out.println("Error in GET OPTION OF TYPES");
-       }
-       return A;
-   }
+    public HashMap<Integer, String> Get_Option_Values_OF_USER(String TableName,String Condition) {
+        HashMap<Integer, String> H = new HashMap<Integer, String>();
+        DB_controller DB=DB_controller.Get_DB_controller();
+        DB.Connect();
+        ResultSet result = DB.Select("*",TableName,Condition);
+        try {
+            String Column=null;
+            if(TableName.equals("user_selected_option_values"))
+            {
+                Column="User_selected_option_id";
+            }
+            else if(TableName.equals("selected_device_option_values"))
+            {
+                Column="Model_id";
+            }
+            else
+            {
+                Column="Log_on_select_id";
+            }
+            while (result.next())
+            {
+                H.put((result.getInt(Column)), result.getString("Value"));
+            }                
+            }
+        catch (Exception E)
+        {
+            System.out.println("Error in GET OPTION VALUES+ " + E);
+        }
+        return H;
+    }
+    
+    //Emad Done
+    public String Get_Option_Value(int User_ID , int Option_Value) {
+        DB_controller DB = DB_controller.Get_DB_controller();
+        DB.Connect();
+        ResultSet result = DB.Select("Value", "user_selected_option_values", "User_ID=" + User_ID +" and User_selected_option_id="+Option_Value);
+        try {
+            while (result.next()) {
+                return result.getString("Value");
+            }
+        } catch (Exception E) {
+            System.out.println("Error in Option Value");
+        }
+        return null;
+    }
+
+    //Emad  Done
+    public ArrayList<String> Get_Options_OF_TYPE(int Type_ID) {
+        ArrayList<String> A = new ArrayList<String>();
+        ArrayList<Integer> Ids = new ArrayList<Integer>();
+        DB_controller DB=DB_controller.Get_DB_controller();
+        DB.Connect();
+        ResultSet result = DB.Select("*", "user_selected_option", "User_type_id=" + Type_ID);
+        try {
+            while (result.next()) {
+                Ids.add(result.getInt("User_option_id"));
+            }
+            for (int i = 0; i < Ids.size(); i++) {
+                result = DB.Select("*", "user_option", "User_option_id=" + Ids.get(i));
+                while (result.next()) {
+                    A.add(result.getString("Name"));
+                }
+            }
+        } catch (Exception E) {
+            System.out.println("Error in GET OPTION OF TYPES");
+        }
+        return A;
+    }
 
     
     

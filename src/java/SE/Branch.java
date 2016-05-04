@@ -128,7 +128,7 @@ public class Branch {
     
     
     
-     //Emad T
+     //Emad D
    public double Show_salaris()
    {
        DB_controller DB=DB_controller.Get_DB_controller();
@@ -149,7 +149,7 @@ public class Branch {
            {
                Branch_ID=result.getInt("User_Option_ID");
            }           
-           result=DB.Select("*", "user_selected_option", "User_Option_ID="+Branch_ID);
+           result=DB.Select("*", "user_option", "User_Option_ID="+Branch_ID);
            while(result.next())
            {
                EmployeesSalaries.add(result.getInt("User_Type_ID"));
@@ -174,8 +174,8 @@ public class Branch {
    //Emad T
     public double Get_quality() {
         DB_controller.Get_DB_controller().Connect();
-        int NumberOfRows = 0;
-        int Summtion = 0;
+        double NumberOfRows = 0;
+        double Summtion = 0;
         double Persatage = 0;
         try {
             ResultSet result = DB_controller.Get_DB_controller().Select("*", "Feedback", "Branch_ID=" + Id);
@@ -280,7 +280,7 @@ public class Branch {
                 Employee Em=new Employee();
                 USer_ID=result.getInt("User_ID");
                 Em.setID(USer_ID);
-                Em.setAdditional_data(S.Get_Option_Values_OF_USER(USer_ID));
+                Em.setAdditional_data(S.Get_Option_Values_OF_USER("user_selected_option_values","User_id="+USer_ID));
                 Gender_ID=result.getInt("Gender");
                 Em.setF_name(result.getString("Fname"));
                 Em.SetMyBranchID(getId());
@@ -314,6 +314,7 @@ public class Branch {
 
    public void SetNotfy_message(String notfy) {
         this.notfy_message = notfy;
+        notify();
    }
 
    public String GetNotfy_message() {
@@ -335,18 +336,67 @@ public class Branch {
             ex.printStackTrace();
         }        
    }
-   
+   //Emad
    public void Desubcribe( int user_id)
    {
-       
+       DB_controller DB=DB_controller.Get_DB_controller();
+       DB.Connect();
+       DB.Delete("subscribe","User_id="+user_id);
    }
    
+   //Emad
+   public void Load_Subscribe()
+   {
+       this.Subscriber=new ArrayList<Integer>();
+       DB_controller DB=DB_controller.Get_DB_controller();
+       DB.Connect();
+       ResultSet result=DB.Select("*","subscribe","1");
+        try 
+        {
+            while(result.next())
+            {
+                this.Subscriber.add(result.getInt("Subscribe_id"));
+            }
+        } 
+        catch (SQLException ex)
+        {
+            Logger.getLogger(Branch.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
+   
+   //Emad
    public void Notify()
    {
-       
+       int DateId;
+      Notify N=new Notify();       
+       String Time="";
+      DB_controller DB=DB_controller.Get_DB_controller();
+      System_manage S=System_manage.Get_System_manage();
+      HashMap <String,String> H=new HashMap<String,String>();
+      H.put("Sender_ID",Integer.toString(Id));
+      Time=S.Get_time();
+      H.put("Time",Time);
+      DateId=S.Get_date_iD();
+      H.put("Date_id",Integer.toString(DateId));
+      H.put("Content",this.GetNotfy_message());
+      H.put("Type_id","4");
+      H.put("Parent_id","0");
+      DB.Insert("message", H);
+      N.setBranch_id(this.Id);
+      N.setContent(this.notfy_message);
+      N.setDate_id(DateId);
+      N.setMassage_type_id(4);
+      N.setState(5);
+      N.setTime(Time);
+      for(int i=0;i<this.Subscriber.size();i++)
+      {
+          Object C=S.Search_user_by_id(this.Subscriber.get(Id));
+          Customer Cus=(Customer) C;
+          Cus.Add_notify(N);
+      }
    }
    
-   
+   //omar 0_0
    public double earning_branch()
    {
         Double earning = 0.0 ;
@@ -361,16 +411,13 @@ public class Branch {
             boolean flage = false;
             while(res.next()) // get all order that done
             {
-                System.err.println("1");
                 flage= false;
                 res2= Db.Select("Device_of_this_request_id", "device_of_this_request", "Request_id="+res.getInt("Requist_id"));
                 while(res2.next()) //get all Device_of_this_request_id of this order to get his technical 
                 {
-                    System.err.println("2");
                    ResultSet res3 = Db.Select("Technical_id", "order_fixer", "Device_of_this_request_id="+res2.getInt("Device_of_this_request_id"));
                    while(res3.next()) //to get tecnicals that do this 
                    {
-                       System.err.println("3");
                        Employee e =(Employee) sy.Search_user_by_id(res3.getInt("Technical_id"));
                        System.out.println(e.GetMyBranchID());
                        if(e.GetMyBranchID() == this.getId() && !flage)

@@ -24,30 +24,24 @@ import java.util.logging.Logger;
 public class MAin {
     
      
-    
-    public static void main(String[] args) {                      
-        
-        
-        Branch b = new Branch();
-        b.setId(1);
-        
+
+    public static void main(String[] args) {
+
+
+     
         
         
         
        // System.out.println(b.earning_branch());
 System_manage s = System_manage.Get_System_manage();   
-        System.err.println(s.Get_Option_Value(3, 19));
+        //System.err.println(s.Get_Option_Value(3, 19));
 
 
 
 
-Employee e = (Employee) s.Search_user_by_id(3);
-        HashMap<Integer , String> a = e.getAdditional_data();
-        for (Map.Entry<Integer, String> entry : a.entrySet()) {
-            Integer key = entry.getKey();
-            String value = entry.getValue();
-            
-        }
+   Branch b = new Branch();
+   b.setId(1);
+        System.err.println(b.earning_branch());
         
             
             
@@ -76,6 +70,29 @@ Employee e = (Employee) s.Search_user_by_id(3);
                     
       
        
+
+        //branch = s.Search_branch(2);
+        //System.out.println(branch.getNotfy_message());
+        
+        //String content = branch.Get_notify(1);
+       // System.out.println(content);
+       
+//       Employee em = new Employee();
+//       
+//       if(!em.Log_in("emad@yahoo.com", "medo1232"))
+//       {
+//           System.out.println("error");
+//       }else{
+//           System.out.println(em.getF_name());
+//       as}
+//Customer C=new Customer();
+//C.setID(19);
+///*DB_controller DB=DB_controller.Get_DB_controller();
+//DB.Connect();
+//                ResultSet result2=DB.Select("*","device_of_this_request","Request_id=1");*/
+//System_manage S=System_manage.Get_System_manage();
+//S.Get_Option_Values_OF_USER("user_selected_option_values","User_id=1");
+
         }
  }
 
