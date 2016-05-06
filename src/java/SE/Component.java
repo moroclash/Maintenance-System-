@@ -9,14 +9,21 @@ package SE;
  *
  * @author mohamedsalah
  */
-class Component implements Decoration{
-    Bill bill;
-
+class Component extends Bill {
+    
+    protected Bill bill;
     @Override
-    public void Get_Cost() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public double Get_Cost() {
+          return bill.Get_Cost();
     }
-
+    public void SEt_Bill(Bill bil)
+    {
+       this.bill=bil;
+    }
+    
+   
+    
+    
 
     
 }

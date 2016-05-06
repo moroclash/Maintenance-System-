@@ -8,6 +8,7 @@ package SE;
 import Data_access.DB_controller;
 import java.sql.ResultSet;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
@@ -17,6 +18,15 @@ public class Payment_Method extends Component{
     
     private HashMap <Integer , String > Payment_method_option;
     private int method_id;
+
+    Payment_Method(Bill bill) {
+
+       this.bill=bill;
+    }
+
+    Payment_Method() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
     //sala7
     public HashMap <Integer,String> Get_payment_type_in_bill(int bill_id)
@@ -73,6 +83,15 @@ public class Payment_Method extends Component{
 
     public HashMap<Integer, String> getPayment_method_option() {
         return Payment_method_option;
+    }
+
+    @Override
+    public String toString() {
+        String s = "";
+        for (Map.Entry<Integer, String> entry : Payment_method_option.entrySet()) {
+            s ="\n" + entry.getKey() +  "     " +  entry.getValue() + "  \n ";
+        }
+        return s;
     }
 
     

@@ -1,0 +1,117 @@
+.Input{
+    width: 549px;
+    height: 30px;
+    border-radius: 10px 10px 10px 10px;
+    border: 2px solid #fff;
+    color: #fff;
+    font-size: 20px;
+    font-family: sans-serif;
+   color: black;
+    background-color: #2a2a2a;
+      position: relative;
+    top: 15px;
+    display: block;
+}
+input:valid,
+input:in-range {
+    background:hsl(120, 50%, 90%);
+    border-color:hsl(120, 50%, 50%);
+}
+
+input:invalid,
+input:out-of-range {
+    border-color:hsl(0, 50%, 50%);
+    background:hsl(0, 50%, 90%);
+}
+.top{
+  
+   margin-right: 30px;
+ position: relative;
+    left: -19px;
+    top:25px;
+    
+}
+.topSD{
+  
+   margin-right: -13px;
+ position: relative;
+    left: -19px;
+        
+}
+.topAd{
+        margin-right: 30px;
+    position: relative;
+    left: 17px;
+    top: 25px;
+}
+.topAdw{
+        margin-right: 30px;
+    position: relative;
+    left: 43px;
+    top: 25px;
+}
+.topAds{
+        margin-right: 30px;
+    position: relative;
+      left: -32px;
+
+    top: 25px;
+}
+.top1{
+
+    align: center;
+     width: 300px;
+    height: 30px;
+    border-radius: 10px 10px 10px 10px;
+    border: 2px solid #fff;
+    color: #fff;
+    font-size: 20px;
+    font-family: sans-serif;
+    background-color: #2a2a2a;
+}
+.Inputs{
+    width: 549px;
+    height: 30px;
+    border-radius: 10px 10px 10px 10px;
+    border: 2px solid #fff;
+    color: #fff;
+    font-size: 20px;
+    font-family: sans-serif;
+    background-color: #2a2a2a;
+    position: relative;
+    top: 15px;
+    display: block;
+}
+.tops{
+  margin-right: 30px;
+ position: relative;
+    left: -19px;
+    top:25px;
+    
+}
+.top1s{
+
+    align: center;
+     width: 300px;
+    height: 30px;
+    border-radius: 10px 10px 10px 10px;
+    border: 2px solid #fff;
+    color: #fff;
+    font-size: 20px;
+    font-family: sans-serif;
+    background-color: #2a2a2a;
+}
+center{
+    position: relative;
+    right: 80px;
+}
+.radio2{
+    position: relative;
+    top: 25px;
+    right: -26px;
+}
+.radio3{
+    position: relative;
+    top: 25px;
+    right: 48px;
+}

@@ -43,6 +43,10 @@ public class Employee extends User
               employee_id = result.getInt("User_id");
             }
               employee = (Employee) s.Search_user_by_id(employee_id);
+              if(employee == null)
+              {
+                  return false;
+              }
               setF_name(employee.getF_name());
               setL_name(employee.getL_name());
               setEmail(employee.getEmail());
@@ -74,11 +78,9 @@ public class Employee extends User
                 default:
                     break;
             }
-        } catch (SQLException ex) {
-              ex.printStackTrace();
-              DB.Close();
+        } catch (Exception ex) {
+              return false;
         }
         return true;
     }
-    
 }

@@ -337,15 +337,13 @@ public class System_manage {
                 U.setPassword(result.getString("Password"));
                 U.setType_id(Type_ID);                
             }
-           U.setAdditional_data(Get_Option_Values_OF_USER("user_selected_option_values","User_id="+User_id));;
+           U.setAdditional_data(Get_Option_Values_OF_USER("user_selected_option_values","User_id="+User_id));
            U.setPhones(s.Get_User_Phone(User_id));
            U.setAddresses(s.Get_User_Address(User_id));
                 return U;
             }catch (Exception e) {
-
-           System.out.println("Error in Search User By ID"+e);
-       }
-            return null;
+                return null;
+            }
         }
     
         //Emad Done
