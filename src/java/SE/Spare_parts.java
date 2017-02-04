@@ -5,52 +5,54 @@
  */
 package SE;
 
-import Data_access.DB_controller;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  *
  * @author mohamedsalah
  */
 public class Spare_parts extends Component{
-    private String  Name;
-    private Double mony;
-    HashMap<String,Double> s;
+    HashMap<String,Double> NAmeMony;
 
-    Spare_parts() {
+    public Spare_parts() {
+       }
+    
 
+    public void setNAmeMony(HashMap<String, Double> NAmeMony) {
+        this.NAmeMony = NAmeMony;
     }
+
+    public HashMap<String, Double> getNAmeMony() {
+        return NAmeMony;
+    }
+    
+
     Spare_parts(Bill bill) {
        this.bill= bill;
     }
-    @Override
-    public double Get_Cost() {    
-    return super.Get_Cost()+mony;
-    }
-    public void setMony(Double mony) {
-        this.mony = mony;
-    }
-
-    public void setName(String Spare_part) {
-        this.Name= Spare_part;
-    }
-
-    public Double getMony() {
-        return mony;
-    }
-
-    public String getName() {
-        return Name;
-    }
 
     @Override
-    public String toString() {
-        return this.bill.toString()+Name+"             "+mony+"\n";
-        
+    public double Get_Cost() {
+        Double value=0.0;
+        for (Map.Entry<String, Double> entrySet : NAmeMony.entrySet()) {
+             value += entrySet.getValue();
+            
+        }
+        return this.bill.Get_Cost() +value;//To change body of generated methods, choose Tools | Templates.
     }
     
+    @Override
+    public String toString() {
+        String total="";
+        for (Map.Entry<String, Double> entrySet : NAmeMony.entrySet()) {
+            String key = entrySet.getKey();
+            Double value = entrySet.getValue();
+        total+=key+"             "+value+"\n";
+        }
+      return this.bill.toString()+total;   
+    }
+   
     
   
     

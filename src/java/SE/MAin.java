@@ -16,6 +16,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
 /**
  *
@@ -25,91 +27,12 @@ public class MAin{
     
      
 
-    public static void main(String[] args) {
-
-
-       /* DB_controller ddb =DB_controller.Get_DB_controller();
-        ddb.Connect();
-        ddb.Select("User_id", "user", "Email=mmoroclash@gmailcom and Password=moro12345");*/
-        
-        
-        Employee e = new Employee();
-        System.out.println(e.Log_in("a' or 't'='t", "a' or 't'='t"));
-        System.err.println(e.getF_name());
-            
-            
-            
-            /*Service_Management s = Service_Management.Get_Serive_Management();
-            Request r = s.Search_requist(1);
-            System.err.println(r.getUser_id());*/
-            //Object o = ma.Search_User_OptionByID(2);
-            ///Customer s = (Customer) o;
-            
-            /*Customer cu = new Customer();
-            cu.Log_in("mohasem@gmail.com", "8sa9d1d9");
-            System.out.println(cu.getF_name()); 
-            ArrayList<String> name = ma.Get_Options_OF_TYPE(cu.getType_id());
-            int x =0;
-            HashMap<Integer , String> ss = cu.getAdditional_data();
-            for (Map.Entry<Integer, String> entry : ss.entrySet()) {
-            System.err.println(name.get(x));
-            x++;
-            System.err.println(entry.getValue());
-            }*/
-            
-            /*System_manage s = System_manage.Get_System_manage();
-            s.Delete_branch_phone(3, 3);*/
-    
-                    
+    public static void main(String[] args) throws SQLException {
+       DB_controller Db =DB_controller.Get_DB_controller();
+       Db.Connect();
+       System.err.println(Db.Login("mmoroclash@gmail.com", "moro12345"));
       
-       
-
-        //branch = s.Search_branch(2);
-        //System.out.println(branch.getNotfy_message());
-        
-        //String content = branch.Get_notify(1);
-       // System.out.println(content);
-       
-//       Employee em = new Employee();
-//       
-//       if(!em.Log_in("emad@yahoo.com", "medo1232"))
-//       {
-//           System.out.println("error");
-//       }else{
-//           System.out.println(em.getF_name());
-//       as}
-
-
-/*Customer C=new Customer();
-C.setID(19);
-DB_controller DB=DB_controller.Get_DB_controller();
-DB.Connect();
-                ResultSet result2=DB.Select("*","device_of_this_request","Request_id=1");*/
-/*System.out.println(C.forget_My_Password("mohamedelnagm211@gmail.com",1,"football"));
-    */
-      /*  Bill n=new Bill();
-        
-        n.setCost(2500.0);
-    
-        Offer ss =  Service_Management.Get_Serive_Management().Add_offer_toBill(n, 10);
-        Spare_parts v= Service_Management.Get_Serive_Management().Add_SpareParts_toBill(ss,"wa7ed amplyha" ,2500);
-        Spare_parts c= Service_Management.Get_Serive_Management().Add_SpareParts_toBill(v,"wa7ed amplyha m3 3omer   :" ,200);
-         Offer sa=new Offer(n);
-        sa.setOffer(10.0);
-        Spare_parts v=new Spare_parts(sa);
-        v.setMony(2500.0);
-        v.setName("Kahasa");
-        System.out.println(c+"final Cost           :"+c.Get_Cost());*/
     }
-    
-//Customer C=new Customer();
-//C.setID(19);
-///*DB_controller DB=DB_controller.Get_DB_controller();
-//DB.Connect();
-//                ResultSet result2=DB.Select("*","device_of_this_request","Request_id=1");*/
-//System_manage S=System_manage.Get_System_manage();
-//S.Get_Option_Values_OF_USER("user_selected_option_values","User_id=1");
-
 
  }
 

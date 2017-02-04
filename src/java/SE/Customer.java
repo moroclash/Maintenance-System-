@@ -30,41 +30,36 @@ public class Customer extends User {
     //Emad
     public void Load_Notify()
     {
-
         this.My_notify=new ArrayList<Notify>();
-        ArrayList<Integer>A=new ArrayList<Integer>();
         DB_controller DB=DB_controller.Get_DB_controller();
         DB.Connect();
         System_manage S=System_manage.Get_System_manage();
-        ResultSet result=DB.Select("*","recieved","Reciever_id=2");
+        ResultSet result1=DB.Select("*","recieved","Reciever_id="+getID());
         try 
         {
-            while(result.next())
+            int id;
+            while(result1.next())
             {
-                A.add(result.getInt("Message_id"));
-            }
-            for(int i=0;i<A.size();i++)
-            {
-            result=DB.Select("*","message","Message_id="+A.get(i)+" and Type_id=4");
-            while(result.next())
-            {
+                id = result1.getInt("Message_id");
+                System.err.println("aaaaaaa "+id);
+                ResultSet result=DB.Select("*","message","Message_id="+id+" and Type_id=4");
+                while(result.next())
+                {
                 Notify N=new Notify();
-                N.setId(A.get(i));
+                N.setId(id);
                 N.setContent(result.getString("Content"));
                 N.setDate_id(result.getInt("Date_id"));
                 N.setMassage_type_id(4);
-                N.setState(result.getInt("State_id"));
-                N.setMassage_type_id(result.getInt("Type_id"));
+                N.setState(result1.getInt("State_id"));
                 N.setTime(Integer.toString(result.getInt("Time")));
                 N.setBranch_id(result.getInt("sender_id"));
                 this.My_notify.add(N);                
-            }
+                }
             }
         } 
         catch (SQLException ex)
-        
         {
-            System.out.println("E"+ex);
+           ex.printStackTrace();
         }
     }
     
@@ -81,8 +76,11 @@ public class Customer extends User {
     }
 
     public ArrayList<Notify> Get_notify() {
-        return null;
+        return My_notify;
     }
+    
+    
+    
     //sala7
     public boolean Add_Subscribe(int bransh_id) {
         
@@ -350,46 +348,53 @@ public class Customer extends User {
         return check != -1;
     }
 
-    //sala7
-    @Override
-    public boolean Log_in(String User_Name, String Password) {
+      //sala7
+      public boolean Log_in(String User_Name, String Password) {
 
-        DB_controller DB = DB_controller.Get_DB_controller();
-        DB.Connect();
-        ResultSet result ;
-        System_manage s = System_manage.Get_System_manage();
-        Customer customer ;
-        int id = -1;
-        result = DB.Select("User_id ", " user ", " Email =  '" + User_Name + "'" + " and " + "Password = '" + Password + "'");
-        
-        int customer_id = -1;
-        try {
-            while (result.next()) {
-              customer_id = result.getInt("User_id");
-               
-            }
-            customer = (Customer) s.Search_user_by_id(customer_id);
-            setF_name(customer.getF_name());
-            setL_name(customer.getL_name());
-            setEmail(customer.getEmail());
-            setPassword(customer.getPassword());
-            setGander(customer.getGander());
-            setBlock(customer.getBlock());
-            setType_id(customer.getType_id());
-            setPhones(customer.getPhones());
-            setAdditional_data(customer.getAdditional_data());
-            setAddresses(customer.getAddresses());
-            Set_sequrity_question(customer.Get_sequrity_question_id());
-            Set_sequrity_question_answer(customer.Get_sequrity_question_answer());
+       DB_controller DB = DB_controller.Get_DB_controller();
+       DB.Connect();
+       ResultSet result ;
+       System_manage s = System_manage.Get_System_manage();
+       Customer customer ;
+       int id = -1;
+       result = DB.Select("User_id ", " user ", " Email =  '" + User_Name + "'" + " and " + "Password = '" + Password + "'");
+       
+       int customer_id = -1;
+       try {
+           while (result.next()) {
+             customer_id = result.getInt("User_id");
+              
+           }
+           customer = (Customer) s.Search_user_by_id(customer_id);
+           if(customer==null)
+           {
+               return false;
+           }
+           setID(customer.getID());
+           setF_name(customer.getF_name());
+           setL_name(customer.getL_name());
+           setEmail(customer.getEmail());
+           setPassword(customer.getPassword());
+           setGander(customer.getGander());
+           setBlock(customer.getBlock());
+           setType_id(customer.getType_id());
+           setPhones(customer.getPhones());
+           setAdditional_data(customer.getAdditional_data());
+           setAddresses(customer.getAddresses());
+           Set_sequrity_question(customer.Get_sequrity_question_id());
+           Set_sequrity_question_answer(customer.Get_sequrity_question_answer());
 
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-          
-            return false;
-        }
-      
-        return true;
-    }
+       } catch (SQLException ex) {
+           ex.printStackTrace();
+         
+           return false;
+       }
+       History h = new History();
+       h.setUser_id(this.getID());
+       h.setLink_id("logIn");
+       System_manage.Get_System_manage().Make_History(h);
+       return true;
+   }
 
     
     

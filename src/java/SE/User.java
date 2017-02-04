@@ -27,18 +27,18 @@ public abstract class User {
     private String Email;
     private String Password;
     private int Type_id;
-    private String Gander;
+    private int Gander;
     private HashMap<Integer, String> Additional_data;
     private HashMap<Integer,String> Phones;
     private HashMap<Integer,String> Addresses;
-    private ArrayList <Object> Inbox;
+    private ArrayList <Massage> Inbox;
     private int Block;
 
     public void setAddresses(HashMap<Integer, String> Addresses) {
         this.Addresses = Addresses;
     }
 
-    public ArrayList<Object> getInbox() {
+    public ArrayList<Massage> getInbox() {
         return Inbox;
     }
 
@@ -51,12 +51,13 @@ public abstract class User {
 
 
     public void setBlock(int Block) {
+        this.Block =Block;
     }
    
 
 
     public int getBlock() {
-        return Block;
+        return this.Block;
     }
    
     
@@ -96,16 +97,11 @@ public abstract class User {
         return Email;
     }
     //omar
-    public boolean setGander(String Gander) {
-                Validations e = Validations.Get_Validations();
-
-        if(!e.Is_gender(Gander))
-            return false;
+    public void setGander(int Gander) {
         this.Gander = Gander;
-        return true;
     }
 
-    public String getGander() {
+    public int getGander() {
         return Gander;
     }
     //omar
@@ -172,12 +168,22 @@ public abstract class User {
             DB.Connect();
             ResultSet res = DB.Select("Message_id", "recieved", "Reciever_id="+getID());
             int x=0;
+            int type_id=0;
             Message_Controller Ct = Message_Controller.Get_Message_Controller();
             while(res.next())
             {
                 x = res.getInt("Message_id");
-                General_massge ms =  (General_massge)  Ct.Search_Massage(x);  
-                m.add(ms);
+                ResultSet res2 = DB.Select("Type_id", "message", "Message_id="+x);
+                while(res2.next())
+                {
+                    type_id = res2.getInt("Type_id");
+                    if(type_id == 2)
+                    {
+                         General_massge ms =  (General_massge)  Ct.Search_Massage(x);  
+                         m.add(ms);
+                    }
+                }
+               
             }
             DB.Close();
             return m;
@@ -195,9 +201,11 @@ public abstract class User {
         if(ob instanceof Massage)
         {
           Massage mm = (Massage) ob;
+            System.err.println(mm.getId());
+            System.err.println("cc "+ mm.getReciver());
           getInbox().remove(Massage_id);
           Message_Controller mc = Message_Controller.Get_Message_Controller();
-          mc.Update_massage_state(mm.getDate_id(), mm.getReciver(), 4);
+          mc.Update_massage_state(mm.getId(), mm.getReciver(), 4);
           return mm;
         }
         else
@@ -267,9 +275,9 @@ public abstract class User {
         try {
             Data_access.DB_controller Db = DB_controller.Get_DB_controller();
             Db.Connect();
-            ArrayList<Object> m = new ArrayList<>();
+            ArrayList<Massage> m = new ArrayList<>();
             Message_Controller MC = Message_Controller.Get_Message_Controller();
-            ResultSet res = Db.Select("Message_id", "recieved", "Reciever_id="+ getID() + " and State_id=5");
+            ResultSet res = Db.Select("Message_id", "recieved", "Reciever_id="+this.getID() + " and State_id=5");
             int x = 0;
             while (res.next()) {
                 x = res.getInt("Message_id");

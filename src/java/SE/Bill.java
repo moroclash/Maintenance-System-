@@ -12,11 +12,31 @@ import java.util.HashMap;
  * @author Mohamed Salah
  */
 public class Bill implements Decoration{
-    private int Id;
-    private int Date_id;
-    private Double Cost;
-    private int My_order;
-    private String Time;
+    private static int Id;
+    private static int Date_id;
+    private static Double Cost;
+    private static int My_order;
+    private static String Time;
+    private static int payment_method_id;
+    private static int Techincal_id;
+
+    public  void setTechincal_id(int Techincal_id) {
+        Bill.Techincal_id = Techincal_id;
+    }
+
+    public  int getTechincal_id() {
+        return Techincal_id;
+    }
+
+    
+    public void setPayment_method_id(int payment_method_id) {
+        this.payment_method_id = payment_method_id;
+    }
+
+    public int getPayment_method_id() {
+        return payment_method_id;
+    }
+    
    
     public void setId(int Id) {
         this.Id = Id;
@@ -30,12 +50,12 @@ public class Bill implements Decoration{
         this.Cost = Cost;
     }
 
-    public void setMy_order(int My_order) {
+    public  void  setMy_order(int My_order) {
         this.My_order = My_order;
     }
 
     public void setTime(String Time) {
-        this.Time = Time;
+         this.Time = Time;
     }
 
     public int getId() {
@@ -66,7 +86,7 @@ public class Bill implements Decoration{
         return Cost;
     }
  public String toString() {
-      return "HEllo bill  :)  "
-              + Get_Cost()+"\n";
+     
+      return "HEllo bill  :)  \n Date       :" +System_manage.Get_System_manage().Get_this_date(Date_id)+"\n Team    :"+Time+"\n OrederID : "+My_order+"\n Cost:      "+Cost+"\n";
     }
 }

@@ -43,6 +43,79 @@ public class Service_Management {
 
     
 
+    
+    
+    
+    
+    
+    
+    
+     public ArrayList<String> Show_All_State() {
+        DB_controller.Get_DB_controller().Connect();
+        ResultSet result = DB_controller.Get_DB_controller().Select("State", "state", "1");
+        ArrayList<String> C = new ArrayList<>();
+        
+        try{
+            while (result.next()) {
+             C.add(result.getString("State"));
+            }
+        } 
+        
+        catch (Exception E) {
+           E.printStackTrace();
+        }
+       return C;
+    }
+
+     
+      //Sala7
+    public ArrayList<Request> Show_All_Request(String State) {
+         DB_controller.Get_DB_controller().Connect();
+        ResultSet result = DB_controller.Get_DB_controller().Select("Request_id", "request join state on request.State_id = state.State_id", "State = '" + State +"'");
+        ArrayList<Request> C = new ArrayList<>();
+        
+        try{
+            while (result.next()) {
+               Request r = new Request();
+              r.setID(result.getInt("Request_id"));
+              C.add(r);
+            }
+        
+            return C;
+        } catch (Exception E) {
+           
+        }
+        return null;
+    }
+     
+     
+     //Emad
+    public ArrayList<Request> Show_requists() {
+        DB_controller DB = DB_controller.Get_DB_controller();
+        DB.Connect();
+        ResultSet result = DB.Select("*", "request", "1");
+        ArrayList<Request> R = new ArrayList<Request>();
+        try {
+            while (result.next()) {
+                Request re = new Request();
+                re.setAddress_ID(result.getInt("Address_id"));
+                re.setUser_id(result.getInt("User_id"));
+                re.setID(result.getInt("Request_id"));
+                re.setState_id(result.getInt("State_id"));
+                re.setDate_id(result.getInt("Date_id"));
+                R.add(re);
+            }
+            return R;
+        } catch (Exception E) {
+            System.out.println("Error");
+        }
+        return null;
+    }
+    
+    
+    
+    
+    
     //sala7
 
     public ArrayList<Integer> Get_Technical (int order_id)
@@ -67,10 +140,10 @@ public class Service_Management {
            while(result1.next())
            {
              device_request = result1.getInt("Device_of_this_request_id");
-            
+               System.err.println(device_request);
            
            ResultSet result2 ;
-           result2 = DB.Select("Technical_id", "Order_fixer", "Device_of_this_request = " + device_request);
+           result2 = DB.Select("Technical_id", "order_fixer", "Device_of_this_request_id = " + device_request);
            while(result2.next())
            {
               Technical_id = result2.getInt("Technical_id");
@@ -106,7 +179,16 @@ public class Service_Management {
               order.setMy_requist_id(result.getInt("Requist_id"));
               order.setDate_start_id(result.getInt("Date_start_id"));
               order.setTecnical_description(result.getString("Technical_description"));
-              order.setDate_end_id(result.getInt("recept_Date_id"));
+              ResultSet res2 = DB.Select("Time_chooser_id", "time_choosed", "Time_choosed_id="+result.getInt("recept_Date_id"));
+                while(res2.next())
+                {
+                    int choserid = res2.getInt("Time_chooser_id");
+                    ResultSet res3 = DB.Select("Times","time_chooser", "Time_chooser_id="+choserid);
+                    while(res3.next())
+                    {
+                        order.setDate_end_id(res3.getString("Times"));
+                    }
+                }
               order.setMy_service_id(result.getInt("Service_id"));
               order.setDate_start_id(result.getInt("State_id"));
               ArrayList <Integer> container = Get_Technical(Order_id);
@@ -557,78 +639,229 @@ public class Service_Management {
     
     
     
+ //Mohamed Radwan
 ///////////////////////////////Decorate pattern
     ///////////////////////////////Decorate pattern
+    public boolean Save_bill_toDB(Bill bill) {
+        try {
+            HashMap<String, String> hash = new HashMap<>();
+            hash.put("Date_id", String.valueOf(bill.getDate_id()));
+            hash.put("Cost", String.valueOf(bill.Get_Cost()));
+            hash.put("Payment_method_id", String.valueOf(bill.getPayment_method_id()));
+            hash.put("	Order_id", String.valueOf(bill.getMy_order()));
+            hash.put("	Time", bill.getTime());
+            hash.put("	TEXT_BIll", bill.toString());
+            hash.put("Technical_id", String.valueOf(bill.getTechincal_id()));
+            DB_controller.Get_DB_controller().Insert("bill", hash);
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+    public String Get_NAme_PaymentMethode(int ID) {
+        try {
+            ResultSet res = DB_controller.Get_DB_controller().Select("*", "payment_methode", "Payment_methode_id=" + ID);
+            res.first();
+            return res.getString("Methode");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ArrayList<String> Get_NAmes_PaymentMethodes() {
+        try {
+            ArrayList<String> Names = new ArrayList<>();
+            String name = "";
+            ResultSet res = DB_controller.Get_DB_controller().Select("*", "payment_methode", "1");
+            while (res.next()) {
+                name = res.getString("Methode");
+                Names.add(name);
+            }
+            return Names;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public Offer Add_offer_toBill(Bill bill, int Offer_ID) {
+        Offer off = Get_offer(Offer_ID);
+        int precent = off.getOffer();
+        off = new Offer(bill);
+        off.setOffer(precent);
+        return off;
+    }
+
+    public Offer Add_offer_toBill(Spare_parts bill, int Offer_ID) {
+        Offer off = Get_offer(Offer_ID);
+        int precent = off.getOffer();
+        off = new Offer(bill);
+        off.setOffer(precent);
+        return off;
+    }
     
-    public Offer Add_offer_toBill(Bill bill,int precntage)
-    {
-       Offer offer=new Offer(bill);
-       offer.setOffer(precntage);
-       return offer;
+    public ArrayList<Offer> Get_Offers() {
+        try {
+            ArrayList<Offer> offer = new ArrayList<>();
+            Offer of = new Offer();
+            DB_controller Db = DB_controller.Get_DB_controller();
+            Db.Connect();
+            ResultSet res = Db.Select("*", "offer_bill", "1");
+            while (res.next()) {
+                of.setID(res.getInt("Offer_id"));
+                of.setOffer(res.getInt("Offer"));
+                offer.add(of);
+            }
+            return offer;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
-    public Offer Add_offer_toBill(Spare_parts bill,int precntage)
-    {
-       Offer offer=new Offer(bill);
-       offer.setOffer(precntage);
-       return offer;
+
+    public Offer Get_offer(int Offer_ID) {
+        try {
+            ResultSet res = DB_controller.Get_DB_controller().Select("*", "offer", "Offer_id=" + Offer_ID);
+            Offer offer = new Offer();
+            res.first();
+            offer.setID(res.getInt("Offer_id"));
+            offer.setOffer(res.getInt("Offer"));
+            return offer;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
     }
-    public Offer Add_offer_toBill(Payment_Method bill,int precntage)
-    {
-       Offer offer=new Offer(bill);
-       offer.setOffer(precntage);
-       return offer;
+
+    public Offer Add_offer_toBill(Payment_Method bill, int Offer_ID) {
+        Offer off = Get_offer(Offer_ID);
+        int precent = off.getOffer();
+        off = new Offer(bill);
+        off.setOffer(precent);
+        return off;
     }
-    
-     public Spare_parts Add_SpareParts_toBill(Bill bill,String Name_Spare_parts,double Cost)
-    {
-       Spare_parts spare=new Spare_parts(bill);
-       spare.setName(Name_Spare_parts);
-       spare.setMony(Cost);
-       return spare;
+
+    public Spare_parts Add_SpareParts_toBill(Bill bill, HashMap<String, Double> NameCost) {
+        Spare_parts spare = new Spare_parts(bill);
+        spare.setNAmeMony(NameCost);
+        return spare;
     }
-     public Spare_parts Add_SpareParts_toBill(Offer bill,String Name_Spare_parts,double Cost)
-    {
-       Spare_parts spare=new Spare_parts(bill);
-       spare.setName(Name_Spare_parts);
-       spare.setMony(Cost);
-       return spare;
+
+    public Spare_parts Add_SpareParts_toBill(Offer bill, HashMap<String, Double> NameCost) {
+        Spare_parts spare = new Spare_parts(bill);
+        spare.setNAmeMony(NameCost);
+        return spare;
     }
-     public Spare_parts Add_SpareParts_toBill(Spare_parts bill,String Name_Spare_parts,double Cost)
-    {
-       Spare_parts spare=new Spare_parts(bill);
-       spare.setName(Name_Spare_parts);
-       spare.setMony(Cost);
-       return spare;
+
+    public Spare_parts Add_SpareParts_toBill(Spare_parts bill, HashMap<String, Double> NameCost) {
+        Spare_parts spare = new Spare_parts(bill);
+        spare.setNAmeMony(NameCost);
+        return spare;
     }
-      
-     public Payment_Method Add_Payment_Method_toBill(Bill bill,HashMap <Integer , String > Payment_method_option, int method_id)
-    {
-       Payment_Method payment=new Payment_Method(bill);
-       payment.setMethod_id(method_id);
-       payment.setPayment_method_option(Payment_method_option);
-       return payment;
+
+    public Payment_Method Add_Payment_Method_toBill(Bill bill, HashMap<Integer, String> Payment_method_option, int method_id) {
+        Payment_Method payment = new Payment_Method(bill);
+        payment.setMethod_id(method_id);
+        payment.setPayment_method_option(Payment_method_option);
+        return payment;
     }
-     public Payment_Method Add_Payment_Method_toBill(Spare_parts bill,HashMap <Integer , String > Payment_method_option, int method_id)
-    {
-       Payment_Method payment=new Payment_Method(bill);
-       payment.setMethod_id(method_id);
-       payment.setPayment_method_option(Payment_method_option);
-       return payment;
-    }public Payment_Method Add_Payment_Method_toBill(Offer bill,HashMap <Integer , String > Payment_method_option, int method_id)
-    {
-       Payment_Method payment=new Payment_Method(bill);
-       payment.setMethod_id(method_id);
-       payment.setPayment_method_option(Payment_method_option);
-       return payment;
+
+    public Payment_Method Add_Payment_Method_toBill(Spare_parts bill, HashMap<Integer, String> Payment_method_option, int method_id) {
+        Payment_Method payment = new Payment_Method(bill);
+        payment.setMethod_id(method_id);
+        payment.setPayment_method_option(Payment_method_option);
+        return payment;
     }
-  
+
+    public Payment_Method Add_Payment_Method_toBill(Offer bill, HashMap<Integer, String> Payment_method_option, int method_id) {
+        Payment_Method payment = new Payment_Method(bill);
+        payment.setMethod_id(method_id);
+        payment.setPayment_method_option(Payment_method_option);
+        return payment;
+    }
+
+    public Spare_parts get_spare_parts() {
+        try {
+            ResultSet res = DB_controller.Get_DB_controller().Select("*", "spare_parts", "1");
+            Spare_parts spare = new Spare_parts();
+            HashMap<String, Double> parts = new HashMap<>();
+            while (res.next()) {
+                parts.put(res.getString("Name"), res.getDouble("Cost"));
+            }
+            spare.setNAmeMony(parts);
+            return spare;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
 ///////////////////////////////Decorate pattern
+
+
+
+    public String Get_Bill(int orderID) {
+        try {
+            DB_controller.Get_DB_controller().Connect();
+            ResultSet rset = DB_controller.Get_DB_controller().Select("TEXT_BIll", "bill", "Order_id=" + orderID);
+            rset.first();
+            return rset.getString("TEXT_BIll");
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+
+    }
+
+    public Spare_parts Like_SpareParts(String pattern) {
+        try {
+            DB_controller.Get_DB_controller().Connect();
+            ResultSet res = DB_controller.Get_DB_controller().Select_BY_Like_Statement("*", "spare_parts", "Name LIKE '%" + pattern + "%'");
+            Spare_parts spare = new Spare_parts();
+            HashMap<String, Double> parts = new HashMap<>();
+            while (res.next()) {
+                parts.put(res.getString("Name"), res.getDouble("Cost"));
+            }
+            spare.setNAmeMony(parts);
+            return spare;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public ArrayList<Device> DevicD(ArrayList<Integer> DeviceID) {
+        try {
+            for(Integer devs:DeviceID) {
+            DB_controller.Get_DB_controller().Connect();
+            ResultSet result = DB_controller.Get_DB_controller().Select("*", "device", "Device_id=" + devs);
+            HashMap<String, String> hash = new HashMap<>();
+            Device dev=new Device();
+            ArrayList<Device> arr=new ArrayList<>();
+                int Model = result.getInt("Model_Id");
+                ResultSet res = DB_controller.Get_DB_controller().Select("*", "model", "Model_id=" + Model);
+                hash.put("Name", res.getString("Name"));
+                dev.setMy_info(hash);
+               arr.add(dev);
+               }
+            
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     
     //Emad
     public ArrayList<Order> Show_My_Order(int Employee_id) {
         ArrayList<Order> or = new ArrayList<Order>();
         DB_controller DB = DB_controller.Get_DB_controller();
+        DB.Connect();
         ResultSet result = DB.Select("*", "order_fixable", "Service_ID=" + Employee_id);
         ResultSet result2 = null;
         int ID = -1;
@@ -639,7 +872,17 @@ public class Service_Management {
                 O.setId(ID);
                 O.setState(result.getInt("State_id"));
                 O.setDate_start_id(result.getInt("Date_start_id"));
-                O.setDate_end_id(result.getInt("recept_Date_id"));
+                int id = result.getInt("recept_Date_id");
+                ResultSet res2 = DB.Select("Time_chooser_id", "time_choosed", "Time_choosed_id="+id);
+                while(res2.next())
+                {
+                    int choserid = res2.getInt("Time_chooser_id");
+                    ResultSet res3 = DB.Select("Times","time_chooser", "Time_chooser_id="+choserid);
+                    while(res3.next())
+                    {
+                        O.setDate_end_id(res3.getString("Times"));
+                    }
+                }
                 O.setTecnical_description(result.getString("Technical_description"));
                 O.setMy_Technical_id(Get_Technical(ID));
                 or.add(O);
@@ -680,7 +923,17 @@ public class Service_Management {
                 Order_ID = result.getInt("Order_fixable_id");
                 order.setId(Order_ID);
                 order.setDate_start_id(result.getInt("Date_start_id"));
-                order.setDate_end_id(result.getInt("recept_date_id"));
+                System.err.println(order.getDate_start_id());
+                ResultSet res2 = DB.Select("Time_chooser_id", "time_choosed", "Time_choosed_id="+result.getInt("recept_date_id"));
+                while(res2.next())
+                {
+                    int choserid = res2.getInt("Time_chooser_id");
+                    ResultSet res3 = DB.Select("Times","time_chooser", "Time_chooser_id="+choserid);
+                    while(res3.next())
+                    {
+                        order.setDate_end_id(res3.getString("Times"));
+                    }
+                }
                 order.setState(result.getInt("state_id"));
                 order.setTecnical_description(result.getString("Technical_description"));
                 order.setMy_service_id(result.getInt("Service_id"));
@@ -690,7 +943,7 @@ public class Service_Management {
             }
         } catch (Exception e)
         {
-            System.out.println("Error in Show_all_ORDER");
+            e.printStackTrace();
         }
         DB.Close();
         return O;
@@ -1047,5 +1300,4 @@ public class Service_Management {
         }
         return null;
     }
-
 }

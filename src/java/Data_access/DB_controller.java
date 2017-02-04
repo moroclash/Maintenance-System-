@@ -82,23 +82,45 @@ public class DB_controller {
     
     //sala7
 
-    public  ResultSet Select_BY_Like_Statement(String FieldName, String TableName, String ColumnName, String pattern) {
-            String Query="SELECT " +FieldName+ " FROM "+ TableName+ " WHERE " + ColumnName + "LIKE" + pattern;
-
-        try
-        {
-            PreparedStatement pre=DB_controller.prepareStatement(Query);
-            ResultSet result=pre.executeQuery();
-            return result;
+    public int Login(String email , String Password)
+    {
+        try {
+            String ss = "SELECT User_id FROM user WHERE Email=? and Password = ?" ;
+            PreparedStatement pre = DB_controller.prepareStatement(ss);
+            pre.setString(1, email);
+            pre.setString(2, Password);
+            ResultSet res = pre.executeQuery();
+            int id = -1;
+            while(res.next())
+            {
+                id = res.getInt("User_id");
+            }
+            return id;
+        } catch (SQLException ex) {
+            Logger.getLogger(DB_controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        catch(Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-        return null;
+        return -1;
     }
     
     
+    //sala7
+   public  ResultSet Select_BY_Like_Statement(String FieldName, String TableName, String pattern) {
+           String Query="SELECT " +FieldName+ " FROM "+ TableName+ " WHERE " + pattern;
+       try
+       {
+           PreparedStatement pre=DB_controller.prepareStatement(Query);
+           ResultSet result=pre.executeQuery();
+           return result;
+       }
+       catch(Exception e)
+       {
+           System.out.println(e.getMessage());
+       }
+       return null;
+   }
+    
+   
+   
    //sala7
     public  boolean Delete(String TableName, String condition) {
         String Query = "DELETE FROM " + TableName + " WHERE " + condition;

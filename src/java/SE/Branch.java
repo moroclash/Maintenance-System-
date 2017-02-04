@@ -32,6 +32,24 @@ public class Branch {
         return notfy_message;
     }
     
+    
+      public boolean Add_Phone (ArrayList<String> phone)
+    {
+       DB_controller DB=DB_controller.Get_DB_controller();
+       DB.Connect();
+       HashMap<String,String> M;
+      
+       
+        for (String s:phone) {
+          M=new HashMap<>();
+          M.put("Branch_id", Integer.toString(Id));
+          M.put("phone",s );
+          DB.Insert("branch_phone", M);
+        }
+       return true;
+    }
+    
+    
     //sala7
     public String Get_notify (int branch_id)
     {
@@ -225,7 +243,6 @@ public class Branch {
        System_manage syst = System_manage.Get_System_manage();
        Bill_inf bi_inf = new Bill_inf();
        Payment_Method pay = new Payment_Method();
-       Spare_parts s = new Spare_parts();
        DB_controller DB = DB_controller.Get_DB_controller();
        DB.Connect();
        ResultSet result;
@@ -236,22 +253,18 @@ public class Branch {
        try {
             while (result.next())
             {
-             bill_id = result.getInt("BILL_id");
-                
+             bill_id = result.getInt("BILL_id");        
              bill.setId(result.getInt("BILL_id"));
              bill.setCost(result.getDouble("Cost"));
              bill.setDate_id(result.getInt("Date_id"));
              bill.setMy_order(result.getInt("Order_id"));
              bill.setTime(result.getString("Time"));
+             bill.setTechincal_id(result.getInt("Technical_id"));
              bi_inf.setMy_bill(bill);
-             int offer = bi_inf.Get_offer(bill_id);
-             bi_inf.setOffer(offer);
-             HashMap <Integer,String> sa = pay.Get_payment_type_in_bill(bill_id);
-             bi_inf.setPayment_method_info(sa);
-             ArrayList <Spare_parts> sa2 = syst.Get_spare_parts(bill_id);
-             bi_inf.setSpare_part(sa2);
+             bi_inf.setBILL_St(result.getString("TEXT_BIll"));
+             int Pa=result.getInt("Payment_method_id");
+             bi_inf.setPayment_method_info(Service_Management.Get_Serive_Management().Get_NAme_PaymentMethode(Pa));
              b.add(bi_inf);
-            
             }
             return b;
         } catch (SQLException ex) {
@@ -259,8 +272,9 @@ public class Branch {
                 DB.Close();
                 return null;
         }
-
    }
+   
+   
    //Emad T
    public ArrayList<Employee> Show_employee()
    {
@@ -291,14 +305,7 @@ public class Branch {
                 // Em.setBlock(result.getInt("Block"));
                 Em.setPhones(Ser.Get_User_Phone(USer_ID));
                 Em.setAddresses(Ser.Get_User_Address(USer_ID));
-                if(Gender_ID==1)
-                {
-                    Em.setGander("Male");
-                }
-                else
-                {
-                    Em.setGander("Female");
-                }
+                Em.setGander(Gender_ID);
                 E.add(Em);
             }
          return E;

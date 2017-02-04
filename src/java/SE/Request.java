@@ -11,7 +11,7 @@ import java.util.ArrayList;
  *
  * @author Mohamed Salah
  */
-class Request {
+public class Request {
     private int ID;
     private int Date_id;
     private int State_id;

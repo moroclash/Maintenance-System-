@@ -12,7 +12,7 @@ import java.util.HashMap;
  * @author moroclash
  */
 class History {
-    private int Link_id;
+    private String Link_id;
     private int Date_id;
     private String Time;
     private int User_id;
@@ -29,11 +29,11 @@ class History {
         this.User_id = User_id;
     }
 
-    public void setLink_id(int Link_id) {
+    public void setLink_id(String Link_id) {
         this.Link_id = Link_id;
     }
 
-    public int getLink_id() {
+    public String getLink_id() {
         return Link_id;
     }
 

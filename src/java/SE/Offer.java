@@ -10,17 +10,33 @@ package SE;
  * @author mohamedsalah
  */
 public class Offer extends Component{
-    private double Offer_precentage=40;
+    private int  Offer_precentage;
+    private int ID;
 
-    public void setOffer(double Offer_precentage) {
+    public void setID(int ID) {
+        this.ID = ID;
+    }
+
+    public int getID() {
+        return ID;
+    }
+    
+    Offer() {
+       
+    }
+
+    public void setOffer(int  Offer_precentage) {
         this.Offer_precentage = Offer_precentage;
     }
 
 
-    public double getOffer() {
+    public int  getOffer() {
         return Offer_precentage;
     }
-    
+
+    public Offer(int Offer_precentage) {
+        this.Offer_precentage = Offer_precentage;
+    }
     
     public Offer(Bill bill) {
     this.bill=bill;
@@ -29,12 +45,12 @@ public class Offer extends Component{
 
     double calc()
     {
-        return  super.Get_Cost()*(Offer_precentage/100);
+        return  this.bill.Get_Cost()*((double)Offer_precentage/100.0);
     }
     @Override
     public double Get_Cost() {   
+    return this.bill.Get_Cost()-calc();
     
-    return super.Get_Cost()-calc();
     }
 
     @Override

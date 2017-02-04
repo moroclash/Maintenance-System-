@@ -23,7 +23,7 @@ public class Order {
     private String Tecnical_description;
     private int My_service_id ;
     private int State;
-    private int Date_end_id;
+    private String Date_end;
     private ArrayList<Integer> My_Technical_id ;
     
     public void setDate_start_id(int Date_start_id) {
@@ -44,8 +44,8 @@ public class Order {
     
 
 
-    public void setDate_end_id(int Date_end_id) {
-        this.Date_end_id = Date_end_id;
+    public void setDate_end_id(String Date_end_id) {
+        this.Date_end = Date_end_id;
     }
 
     public void setId(int Id) {
@@ -69,8 +69,8 @@ public class Order {
     }
 
    
-    public int getDate_end_id() {
-        return Date_end_id;
+    public String getDate_end() {
+        return Date_end;
     }
 
     public int getId() {

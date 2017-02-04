@@ -88,10 +88,16 @@ public class Payment_Method extends Component{
     @Override
     public String toString() {
         String s = "";
+        if(Payment_method_option!=null)
+        {
         for (Map.Entry<Integer, String> entry : Payment_method_option.entrySet()) {
-            s ="\n" + entry.getKey() +  "     " +  entry.getValue() + "  \n ";
+            s =  entry.getKey() +  "     " +  entry.getValue() + "  \n ";
         }
-        return s;
+        return bill.toString()+s;
+        }
+        else{return bill.toString();
+            
+        }
     }
 
     

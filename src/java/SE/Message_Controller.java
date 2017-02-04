@@ -185,13 +185,10 @@ public class Message_Controller {
                     {
                         Complain c = new Complain();
                         c.setContent(res.getString("Content"));
-                        ResultSet res2 = DB.Select("Date","date", "Date_id="+res.getInt("Date_id"));
-                        while (res2.next()) {                        
-                            c.setDate_id(res2.getInt("Date"));
-                        }
+                        c.setDate_id(res.getInt("Date_id"));
                         c.setId(Massage_id);
                         c.setMassage_type_id(type);
-                        res2 = DB.Select("*","recieved", "Message_id="+Massage_id);
+                        ResultSet res2 = DB.Select("*","recieved", "Message_id="+Massage_id);
                         while (res2.next()) {                        
                             c.setReciver(res2.getInt("Reciever_id"));
                             c.setState(res2.getInt("State_id"));
@@ -208,15 +205,13 @@ public class Message_Controller {
                     {
                         General_massge c = new General_massge();
                         c.setContent(res.getString("Content"));
-                        ResultSet res2 = DB.Select("Date","date", "Date_id="+res.getInt("Date_id"));
-                        while (res2.next()) {                        
-                            c.setDate_id(res2.getInt("Date"));
-                        }
+                        c.setDate_id(res.getInt("Date_id"));
                         c.setId(Massage_id);
                         c.setMassage_type_id(type);
-                        res2 = DB.Select("*","recieved", "Message_id="+Massage_id);
+                        ResultSet res2 = DB.Select("*","recieved", "Message_id="+Massage_id);
                         while (res2.next()) {                        
                             c.setReciver(res2.getInt("Reciever_id"));
+                            System.err.println("resciver id :" +res2.getInt("Reciever_id"));
                             c.setState(res2.getInt("State_id"));
                         }
                         c.setTime(res.getString("Time"));
@@ -235,17 +230,14 @@ public class Message_Controller {
     public ArrayList<Comment> get_massage_commintes (int Massage_id)
     {
         try {
-                                DB_controller DB = DB_controller.Get_DB_controller();
+             DB_controller DB = DB_controller.Get_DB_controller();
             ArrayList<Comment> commints = new ArrayList<>();
             DB.Connect();
             ResultSet res = DB.Select("*", "message", "Parent_id="+Massage_id);
             while (res.next()) {
                 Comment m = new Comment();
                 m.setContent(res.getString("Content"));
-                ResultSet res2 = DB.Select("Date","date", "Date_id="+res.getInt("Date_id"));
-                   while (res2.next()) {                        
-                   m.setDate_id(res2.getInt("Date"));
-                   }
+                m.setDate_id(res.getInt("Date_id"));
                 m.setId(res.getInt("Message_id"));
                 m.setMassage_type_id(res.getInt("Type_id"));
                 m.setSender_id(res.getInt("sender_id"));
@@ -311,11 +303,10 @@ public class Message_Controller {
         System_manage dwt = System_manage.Get_System_manage();
         int dateid =  dwt.Get_date_iD();
         String time   =  dwt.Get_time();
-        Comment com = new Comment();
         HashMap<String,String> reply=new HashMap<>(10);
-        reply.put("Content",com.getContent());
-        reply.put("sender_id",String.valueOf(com.getSender_id()));
-        reply.put("Type_id", Integer.toString(com.getMassage_type_id()));
+        reply.put("Content",comment.getContent());
+        reply.put("sender_id",String.valueOf(comment.getSender_id()));
+        reply.put("Type_id", Integer.toString(comment.getMassage_type_id()));
         reply.put("Date_id", String.valueOf(dateid));
         reply.put("Time", time);
         reply.put("Parent_id", String.valueOf(Message_id));
